@@ -4,7 +4,7 @@ import api from "../../../../Api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
  
-export default function Studentlogin (){
+export default function Studentlogin ({changeRole}){
     // sample passwords = Pa$$w0rd!
     // unicorn4306@spinly.net
     const [email, setEmail] = useState('');
@@ -20,6 +20,11 @@ export default function Studentlogin (){
             return;
         };
         try {
+            // const response = await api.post("auth-app/login/",{email, password},{
+            //     params: {
+            //         login_type: "student",
+            //     }
+            // });
             const response = await api.post("auth-app/login/",{email, password});
             console.log('RESPONSE ACCESS:', response.data['access_token']);
             console.log('RESPONSE REFRESH:', response.data['refresh_token']);
@@ -48,8 +53,23 @@ export default function Studentlogin (){
         }
     };
 
+    const handleRoleSelection = ( e ) => {
+        e.preventDefault();
+        changeRole();
+    };
+
     return (
         <>
+        <div className="">
+            <div className="bg-slate-100 flex justify-between items-stretch rounded">
+                <button
+                className="text-white bg-gray-400 text-center rounded w-1/2 font-semibold">
+                    STUDENT</button>
+                <a href="" onClick={handleRoleSelection}
+                className="text-black w-1/2 text-center font-semibold">
+                    TUTOR</a>
+            </div>
+        </div>
         <div className="mb-4">
            <label htmlFor="email" className="block text-sm font-medium text-gray-700">EMAIL</label>
              <input type="text" id="email" name="email" required value={email} autoComplete="on"

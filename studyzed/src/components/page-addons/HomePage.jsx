@@ -18,10 +18,10 @@ const Hero = () => {
           <br /> StudyZen is here to support your journey.
         </p>
         <div className="mt-8 flex gap-4">
-        <button className="px-6 py-3 bg-teal-400 text-black rounded-md border border-teal-400 hover:bg-transparent hover:text-teal-400">
+        <button className="default_button p-3">
     Start Learning
   </button>
-          <button className="px-6 py-3 border rounded-md border-teal-400 hover:bg-teal-400 hover:text-black">
+          <button className="black_default_button p-3">
             I'm a Tutor
           </button>
         </div>
