@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { CircleUserRound } from 'lucide-react';
 import './style.css'
 
 const SessionPage = () => {
@@ -15,6 +16,14 @@ const SessionPage = () => {
     
   };
 
+  const handleUserRoundIcon= () => {
+
+  };
+
+  const cancelSessionJoin = () => {
+    setIsJoinSession(false);
+  };
+
   return (
     <div className="min-h-screen text-white">
       <nav className="flex justify-between items-center px-8 py-4">
@@ -24,10 +33,13 @@ const SessionPage = () => {
           <li><a href="#" className="hover:text-teal-300">About Us</a></li>
           <li><a href="#" className="hover:text-teal-300">FAQ</a></li>
         </ul>
-        <div className="space-y-1">
+        <div className="flex items-center justify-between gap-6">
+          <CircleUserRound className='cursor-pointer' onClick={handleUserRoundIcon}/>
+          <div className='space-y-1'>
           <span className="block w-6 h-0.5 bg-white"></span>
           <span className="block w-6 h-0.5 bg-white"></span>
           <span className="block w-6 h-0.5 bg-white"></span>
+          </div>
         </div>
       </nav>
 
@@ -50,14 +62,15 @@ const SessionPage = () => {
       <>
         <div className="flex justify-center items-center min-h-[80vh]">
         <div className="border border-teal-500 p-6 rounded-md bg-black/80 shadow-md flex">
-          <form action="" className='flex '>
+          <form action="" className='flex justify-center '>
             <label htmlFor="session-d" className='font-bold text-xl m-2'>Enter Session ID :</label>
             <input type="text" id='session-id' className='text-green-900 rounded p-2 ml-3' placeholder='XXXXX-XXXX' />
                   <div class="icon-container">
         <ArrowRight class="size-8 m-1 ml-3" onClick={SubmitSessionRequest} />
         <div class="tooltip">Submit</div>
       </div>
-
+      <p onClick={cancelSessionJoin}
+       className='p-1 bg-red-500 rounded-xl m-1'>Cancel</p>  
           </form>
         </div>
         </div>

@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from '../pages/landing/Home';
-import Signin from '../pages/user/login/Sign-in';
-import Signup from '../pages/user/sign-up/sign-up';
+import Signin from '../pages/user/Login/Sign-in';
+import Signup from '../pages/user/Sign-up/sign-up';
 import SessionChoice from '../pages/user/SessionChoice/sessionchoice';
+import MyProfile from '../pages/user/MyProfile/userProfile';
 
 export default function UserRoutes () {
     return (
@@ -10,7 +11,9 @@ export default function UserRoutes () {
             <Route path='/' element={<Home />} />
             <Route path='/sign-in' element={<Signin />} />
             <Route path='/sign-up' element={<Signup />} />
-            <Route path='/choose-session' element={<SessionChoice />} /> 
+            <Route path='/choose-session' element={<SessionChoice />} />
+            <Route path='/profile' element={<MyProfile />} />
+            {/* <Route path='' element={} /> */}
         </Routes>
     );
 };

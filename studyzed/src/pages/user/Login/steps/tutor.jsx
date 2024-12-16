@@ -4,7 +4,7 @@ import api from "../../../../Api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
  
-export default function Tutorlogin ({changeRole}){
+export default function Tutorlogin ({changeRole, passwordForgot}){
     // sample passwords = Pa$$w0rd!
     // unicorn4306@spinly.net
     const [email, setEmail] = useState('');
@@ -25,7 +25,8 @@ export default function Tutorlogin ({changeRole}){
             //         login_type: "student",
             //     }
             // });
-            const response = await api.post("auth-app/login/",{email, password});
+            const role = "Tutor"
+            const response = await api.post("auth-app/login/",{email, password, role});
             console.log('RESPONSE ACCESS:', response.data['access_token']);
             console.log('RESPONSE REFRESH:', response.data['refresh_token']);
             console.log('RESPONSE USER :', response.data['user']);
@@ -53,20 +54,26 @@ export default function Tutorlogin ({changeRole}){
         }
     };
 
-    const handleRoleSelection = () => {
+    const handleRoleSelection = (e) => {
+        e.preventDefault();
         changeRole();
+    };
+
+    const handleForgotPassword = ( e ) => {
+        e.preventDefault();
+        passwordForgot();
     };
 
     return (
         <>
         <div className="">
             <div className="bg-slate-100 flex justify-between items-stretch rounded">
-                <a href="" onClick={handleRoleSelection}
+                <a href="#" onClick={handleRoleSelection} 
                 className="text-black w-1/2 text-center font-semibold">
                     STUDENT</a>"
-                <a  
+                <button  disabled
                 className="text-white bg-gray-400 text-center rounded w-1/2 font-semibold">
-                    TUTOR</a>
+                    TUTOR</button>
             </div>
         </div>
         <div className="mb-4">
@@ -80,7 +87,8 @@ export default function Tutorlogin ({changeRole}){
         <div className="mb-4 relative">
             <div className="flex justify-between items-center">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 w-1/2">PASSWORD</label>
-                <a href="/forgot-password" className="text-sm text-blue-500 hover:underline">
+                <a href="#" onClick={handleForgotPassword}
+                className="text-sm text-blue-500 hover:underline">
                 Forgot Password?
                 </a>
             </div>
@@ -92,6 +100,7 @@ export default function Tutorlogin ({changeRole}){
                 name="password"
                 required
                 value={password}
+                autoComplete="off"
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 pr-10" // pr-10 adds padding for the button
             />

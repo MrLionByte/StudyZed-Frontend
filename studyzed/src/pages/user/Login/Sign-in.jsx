@@ -1,15 +1,24 @@
 import { useState, useEffect } from "react";
 import { Smile } from "lucide-react";
-import Tutorlogin from "./steps/tutor";
-import Studentlogin from "./steps/student";
+import Tutorlogin from "./steps/tutor.jsx";
+import Studentlogin from "./steps/student.jsx";
+import ForgotPassword from "../Login/steps/forgotpassword.jsx";
 import LoginPic from "../../../assets/loginpic.png";
 
 export default function Signin (){
     const [student, setstudent] = useState(true)
+    const [isForgotPassword, setIsForgotPassword] = useState(false)
 
     const handleTutorRole = () => {
       setstudent((prev) => !prev);
     };
+
+    const handleForgotPassword = () => {
+      setIsForgotPassword((prev) =>!prev);
+    };
+
+    console.log("IS FORGOT",isForgotPassword);
+    
     
     return (
         <>
@@ -21,10 +30,15 @@ export default function Signin (){
                   <h2 className="text-2xl font-bold text-black text-center mb-6">Login</h2>
                   
                   <form>
-                      
-                  { student && <Studentlogin changeRole={handleTutorRole} /> }
-                  { !student && <Tutorlogin changeRole={handleTutorRole} /> }
-
+                  { !isForgotPassword ? 
+                  <>
+                    { student && <Studentlogin changeRole={handleTutorRole} passwordForgot={handleForgotPassword} /> }
+                    { !student && <Tutorlogin changeRole={handleTutorRole} passwordForgot={handleForgotPassword} /> }
+                  </>  
+                  : 
+                  <>
+                    <ForgotPassword />
+                  </>}
                   </form>
               </div>
 

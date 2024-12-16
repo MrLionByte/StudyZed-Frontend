@@ -4,7 +4,7 @@ import api from "../../../../Api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
  
-export default function Studentlogin ({changeRole}){
+export default function Studentlogin ({changeRole, passwordForgot}){
     // sample passwords = Pa$$w0rd!
     // unicorn4306@spinly.net
     const [email, setEmail] = useState('');
@@ -25,7 +25,8 @@ export default function Studentlogin ({changeRole}){
             //         login_type: "student",
             //     }
             // });
-            const response = await api.post("auth-app/login/",{email, password});
+            const role = "Student"
+            const response = await api.post("auth-app/login/",{email, password, role});
             console.log('RESPONSE ACCESS:', response.data['access_token']);
             console.log('RESPONSE REFRESH:', response.data['refresh_token']);
             console.log('RESPONSE USER :', response.data['user']);
@@ -58,14 +59,19 @@ export default function Studentlogin ({changeRole}){
         changeRole();
     };
 
+    const handleForgotPassword = ( e ) => {
+        e.preventDefault();
+        passwordForgot();
+    };
+
     return (
         <>
         <div className="">
             <div className="bg-slate-100 flex justify-between items-stretch rounded">
-                <button
+                <button disabled
                 className="text-white bg-gray-400 text-center rounded w-1/2 font-semibold">
                     STUDENT</button>
-                <a href="" onClick={handleRoleSelection}
+                <a href="#" onClick={handleRoleSelection}
                 className="text-black w-1/2 text-center font-semibold">
                     TUTOR</a>
             </div>
@@ -81,7 +87,8 @@ export default function Studentlogin ({changeRole}){
         <div className="mb-4 relative">
             <div className="flex justify-between items-center">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 w-1/2">PASSWORD</label>
-                <a href="/forgot-password" className="text-sm text-blue-500 hover:underline">
+                <a href="#" onClick={handleForgotPassword} 
+                className="text-sm text-blue-500 hover:underline">
                 Forgot Password?
                 </a>
             </div>
