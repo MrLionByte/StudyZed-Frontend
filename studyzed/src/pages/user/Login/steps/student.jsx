@@ -3,7 +3,10 @@ import { Smile } from "lucide-react";
 import api from "../../../../Api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
- 
+import {savedAuthState, clearSavedAuthState} from '../../../../utils/Localstorage';
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../../redux/slice";
+
 export default function Studentlogin ({changeRole, passwordForgot}){
     // sample passwords = Pa$$w0rd!
     // unicorn4306@spinly.net
@@ -12,6 +15,7 @@ export default function Studentlogin ({changeRole, passwordForgot}){
     const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,19 +24,23 @@ export default function Studentlogin ({changeRole, passwordForgot}){
             return;
         };
         try {
-            // const response = await api.post("auth-app/login/",{email, password},{
-            //     params: {
-            //         login_type: "student",
-            //     }
-            // });
             const role = "Student"
             const response = await api.post("auth-app/login/",{email, password, role});
-            console.log('RESPONSE ACCESS:', response.data['access_token']);
-            console.log('RESPONSE REFRESH:', response.data['refresh_token']);
-            console.log('RESPONSE USER :', response.data['user']);
-            console.log('RESPONSE USER :', response);
+            
+            const authState = {
+                accessToken: response.data["access_token"],
+                refreshToken: response.data["refresh_token"],
+                role: role,
+                userId: response.data['user']['id'],
+                firstName: response.data['user']['first_name'],
+                lastName: response.data['user']['last_name'],
+            }
+
+            savedAuthState(authState);
+            dispatch(setUser({user:response.data['user'], role: role}))
+
             alert('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
-            navigate('/choose-session/');
+            navigate('/student/choose-session/');
         }
         catch (error) {
             console.log('ERROR :', error);
@@ -42,16 +50,6 @@ export default function Studentlogin ({changeRole, passwordForgot}){
 
     const handleSignup= () => {
         navigate('/sign-up/');
-    };
-
-    const handleSample = async () => {
-        try{
-            const response = await api.post("auth-app/sample-request/", {});
-
-            console.log('RESPONSE :', response);
-        }catch (error) {
-            console.log("Error :", error)
-        }
     };
 
     const handleRoleSelection = ( e ) => {

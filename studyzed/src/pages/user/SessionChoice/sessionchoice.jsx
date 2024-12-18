@@ -17,7 +17,7 @@ const SessionPage = () => {
   };
 
   const handleUserRoundIcon= () => {
-
+    navigate('/student/profile/')
   };
 
   const cancelSessionJoin = () => {

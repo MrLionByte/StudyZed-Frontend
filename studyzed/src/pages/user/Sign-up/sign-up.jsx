@@ -16,7 +16,7 @@ export default function signup () {
     console.log("NEXT :",nextStep, "PREV :",prevStep, "CURRENT :",currentstate);
 
     const handlesignin = () => {
-        navigate('/sign-in/'); 
+        navigate('//log-in/'); 
     }
 
     // const onLoginSuccess = () => {

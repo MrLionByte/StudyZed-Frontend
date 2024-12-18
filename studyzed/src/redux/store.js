@@ -3,7 +3,8 @@ import reducer from './slice.js';
 
 const store = configureStore({
     reducer: {
-       auth : reducer.userAuthREducer, 
+       auth : reducer.userAuthReducer, 
+       adminAuth: reducer.adminAuthReducer,
     },
 });
 

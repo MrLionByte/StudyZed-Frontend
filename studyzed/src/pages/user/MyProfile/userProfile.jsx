@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useUserProfile } from './userprofilehandler.js'
+import { fetchUserProfile } from './userprofilehandler.js'
 import api from '../../../Api/axios_api_call.js'
 
 export default function MyProfile () {
-    // const { state } = useUserProfile();
-
+    const [userData, setUserData] = useState({ firstName: '', lastName: '', });
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
     const [profilepicture, setProfilepicture] = useState('');

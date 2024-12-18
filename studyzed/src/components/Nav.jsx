@@ -10,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handlelogin = () => {
-    navigate('sign-in/')
+    navigate('/log-in/')
   }
 
   const handlesignup = () => {

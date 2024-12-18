@@ -1,6 +1,7 @@
 import axios from "axios"
 import { ACCESS_TOKEN } from './helpers/constrands'
 import Cookies from 'js-cookie'
+import { savedAuthState, clearSavedAuthState } from "../utils/Localstorage";
 
 
 const api = axios.create({
@@ -13,11 +14,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {        
-        // const token = localStorage.getItem(ACCESS_TOKEN);
-        // const accessToken = null
-        const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0MzUzNzQxLCJpYXQiOjE3MzQzNTAxNDEsImp0aSI6IjM2NDc4OTI4Nzc2NTRiMzliYjgxOThiNmE5MTMxZGY3IiwidXNlcl9pZCI6Mn0.OJUa0zwAV8Cs0BpzQqCN6KV17glefBbgd0TAe_y45Gc"
-        
-        const token = accessToken;
+        const token = localStorage.getItem(ACCESS_TOKEN);
         if (token){
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -26,6 +23,40 @@ api.interceptors.request.use(
     (error) => {
         return Promise.reject(error);
     }
+);
+
+api.interceptors.response.use(
+    (response) => response,
+    async (error)=> {
+        const originalRequest = error.config;
+
+        if (error.response && error.response.status === 401 &&
+            !originalRequest._retry){
+            const authState = getAuthState();
+
+            try {
+                const refreshResponse = await axios.post(
+                    api.baseURL+'auth-app/user/login/refresh/',
+                    {refresh_token: authState?.refreshToken}
+                );
+                const newAuthState = {
+                   ...authState,
+                    accessToken: refreshResponse.data.access_token,
+                    refreshToken: refreshResponse.data.refresh_token,
+                };
+                savedAuthState(newAuthState);
+
+                originalRequest.headers.Authorization = `Bearer ${newAuthData.accessToken}`;
+                return api(originalRequest);
+            } catch (refreshError) {
+                console.error("Token refresh failed:", refreshError);
+                clearSavedAuthState();
+                window.location.href = "/login";
+                return Promise.reject(refreshError);
+            }
+        }
+        return Promise.reject(error);
+    }   
 );
 
 export default api;
