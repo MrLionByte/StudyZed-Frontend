@@ -1,69 +1,23 @@
-import { useState, useEffect } from 'react';
-import { UserPen } from 'lucide-react';
-import api from '../../../../api/axios_api_call.js';
+import { UserPen, Pen } from 'lucide-react';
+import { useUserProfile } from './_lib.js';
 
 export default function MyProfile() {
-    const [userData, setUserData] = useState({ firstName: '', lastName: '', email: '', phone: '' });
-    const [file, setFile] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState('');
-    const [profilePicture, setProfilePicture] = useState('');
-    const [nowEdit, setNowEdit] = useState(false);
+    const {
+        userData,
+        profilePicture,
+        previewUrl,
+        nowEdit,
+        setNowEdit,
+        handleChange,
+        handleImageUpload,
+        } = useUserProfile();
 
-    useEffect(() => {
-        async function fetchUserData() {
-            try {
-                const response = await api.get('user-app/user-profile/');
-                const data = response.data;
-                console.log(data);
-                console.log(data.email);
-                console.log(response.data);
-                setUserData({
-                    firstName: data.first_name,
-                    lastName: data.last_name,
-                    email: data.email,
-                    phone: data.phone,
-                });
-                setProfilePicture(data.profile.profile_picture);
-            } catch (error) {
-                console.error('Failed to fetch user data:', error);
-            }
-        }
-        fetchUserData();
-    }, []);
-
-    function handleChange(e) {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviewUrl(reader.result);
-                setFile(e.target.files[0]);
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    }
-
-    const handleImageUpload = async () => {
-        if (!file) return alert('Please select an image file');
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-            const response = await api.post('user-app/upload-profile-pic/', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            alert(response.data.message);
-            setProfilePicture(response.data.data.profile_picture);
-            setNowEdit(false);
-        } catch (error) {
-            console.error(error);
-            alert('Failed to upload profile picture. Please try again.');
-        }
-    };
 
     return (
         <div className="bg-gradient-to-r from-black to-cyan-900 min-h-screen flex items-center justify-center p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl ">
                 {/* Left Card */}
-                <div className="bg-gray-300 p-6 rounded-lg shadow-md text-black">
+                <div className="bg-gray-300 p-6 rounded-lg shadow-md text-black h-max">
                     <div className="flex flex-col items-center mb-6">
                         <div className="w-32 h-32 bg-teal-800 rounded-full flex items-center justify-center relative">
                             {/* Edit Profile Picture */}
@@ -128,21 +82,37 @@ export default function MyProfile() {
                                 </>
                             )}
                         </div>
-                        <div className="mt-4">
-                            <p className="text-sm font-semibold text-gray-600">
-                                USERNAME: <span className="font-bold">mrlionbyte</span>
-                            </p>
-                        </div>
                     </div>
                     {/* User Details */}
-                    <div className="flex gap-4">
-                        <div className="flex-1">
-                            <p className="text-sm text-gray-600 mb-1">FIRST NAME</p>
-                            <div className="bg-white rounded p-2">{userData.firstName}</div>
+
+                    <div className="mt-4 flex">
+                        <div className="flex-auto">
+                            <div className="bg-white rounded p-2 flex justify-between items-center">
+                            <p className="text-sm text-gray-600 mb-1">USERNAME : 
+                                <span className='text-black font-semibold pl-2'>{userData.userName}</span>
+                            </p>
+                            <Pen onClick={()=>setNowEdit(true)} className="cursor-pointer hover:text-teal-500 size-3 hover:size-4" />
+                            </div>
                         </div>
-                        <div className="flex-1">
-                            <p className="text-sm text-gray-600 mb-1">LAST NAME</p>
-                            <div className="bg-white rounded p-2">{userData.lastName}</div>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className="flex-1 pt-5">
+                            <div className="bg-white rounded p-2 flex justify-between items-center">
+                                <p className="text-sm text-gray-600">
+                                    FIRST NAME:
+                                    <span className="text-black font-semibold pl-2">{userData.firstName}</span>
+                                </p>
+                                <Pen className="cursor-pointer hover:text-teal-500 size-3 hover:size-4" />
+                            </div>
+                        </div>
+                        <div className="flex-1 pt-5">
+                            <div className="bg-white rounded p-2 flex justify-between items-center">
+                                <p className="text-sm text-gray-600">
+                                    LAST NAME:
+                                    <span className="text-black font-semibold pl-2">{userData.lastName}</span>
+                                </p>
+                                <Pen className="cursor-pointer hover:text-teal-500 size-3 hover:size-4" />
+                            </div>
                         </div>
                     </div>
                     <div className="mt-4">

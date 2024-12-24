@@ -1,7 +1,7 @@
 import axios from "axios"
 import { ACCESS_TOKEN } from './helpers/constrands'
 import Cookies from 'js-cookie'
-import { savedAuthState, clearSavedAuthState } from "../utils/Localstorage";
+import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Localstorage";
 
 
 const api = axios.create({
@@ -13,8 +13,11 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(
-    (config) => {        
-        const token = localStorage.getItem(ACCESS_TOKEN);
+    (config) => {
+        const authData = JSON.parse(localStorage.getItem("authData"));      
+        const token = (authData ? authData["accessToken"] : null ) 
+        console.log("TOKEN :", token);
+        
         if (token){
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -32,7 +35,7 @@ api.interceptors.response.use(
 
         if (error.response && error.response.status === 401 &&
             !originalRequest._retry){
-            const authState = getAuthState();
+            const authState = getSavedAuthData();
 
             try {
                 const refreshResponse = await axios.post(
@@ -44,13 +47,13 @@ api.interceptors.response.use(
                     accessToken: refreshResponse.data.access_token,
                     refreshToken: refreshResponse.data.refresh_token,
                 };
-                savedAuthState(newAuthState);
+                savedAuthData(newAuthState);
 
                 originalRequest.headers.Authorization = `Bearer ${newAuthData.accessToken}`;
                 return api(originalRequest);
             } catch (refreshError) {
                 console.error("Token refresh failed:", refreshError);
-                clearSavedAuthState();
+                clearSavedAuthData();
                 window.location.href = "/login";
                 return Promise.reject(refreshError);
             }

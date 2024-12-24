@@ -8,7 +8,6 @@ export const Student_Protected_Route = ({children}) => {
     const role = useSelector((state)=> state.auth.role);
     if (!isAuthenticated){
         console.log("NOT AUTH STU");
-        
         return <Navigate to="/log-in" />;
     } 
     if (role !== 'Student'){
@@ -21,13 +20,15 @@ export const Student_Protected_Route = ({children}) => {
 export const Tutor_Protected_Route = ({children}) => {
     const isAuthenticated = useSelector((state)=> state.auth.isAuthenticated);
     const role = useSelector((state)=> state.auth.role);
+    console.log("ROLe :", role, isAuthenticated);
+    
     if (!isAuthenticated){
         console.log("NOT AUTH TEC");
-        return <Navigate to="/log-in" />;
+        return <Navigate to="/login" />;
     } 
     if (role !== 'Tutor'){
         console.log("NOT AUTH TEC ROLE");
-        return <Navigate to="/log-in" />;
+        return <Navigate to="/login" />;
     }
     return children;
 };

@@ -6,7 +6,7 @@ export default function TutorStates () {
     return (
         <Routes>
             <Route path={ 'choose-session/' } element={<TutorSessionPage />} />
-            <Route path='tutor-profile/' element={<MyProfile />} />
+            <Route path='profile/' element={<MyProfile />} />
         </Routes>
     );
 };

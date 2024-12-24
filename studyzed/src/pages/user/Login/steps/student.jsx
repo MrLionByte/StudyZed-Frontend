@@ -3,7 +3,7 @@ import { Smile } from "lucide-react";
 import api from "../../../../api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
-import {savedAuthState, clearSavedAuthState} from '../../../../utils/Localstorage';
+import {savedAuthData, clearSavedAuthData} from '../../../../utils/Localstorage';
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../../redux/slice";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../api/helpers/constrands";
@@ -42,7 +42,7 @@ export default function Studentlogin ({changeRole, passwordForgot}){
                 lastName: response.data['user']['last_name'],
             }
 
-            savedAuthState(authState);
+            savedAuthData(authState);
             dispatch(setUser({user:response.data['user'], role: role}))
             localStorage.setItem(ACCESS_TOKEN, response.data['access_token']);
             localStorage.setItem(REFRESH_TOKEN, response.data['refresh_token']);
