@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../../Api/axios_api_call";
+import api from "../../../../api/axios_api_call";
 import OTP_fields from "../../../../components/OTP_fields";
 
 export default function otpstep ({onNext, onBack}) {
@@ -38,7 +38,7 @@ export default function otpstep ({onNext, onBack}) {
         e.preventDefault();
         try {
             const email = localStorage.getItem("Temp_email");
-            const response = await api.post('auth-app/verify-otp/', {email}); 
+            const response = await api.post('auth-app/verify-otp/', {email, otp}); 
             console.log('RESPONSE :', response);
                 
             if (response.data['auth-status'] === 'success' && response.status === 200){

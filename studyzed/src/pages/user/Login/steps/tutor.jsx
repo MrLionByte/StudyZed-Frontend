@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Smile } from "lucide-react";
-import api from "../../../../Api/axios_api_call"
+import api from "../../../../api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
 import { savedAuthState, clearSavedAuthState } from "../../../../utils/Localstorage";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../../redux/slice";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../api/helpers/constrands";
 
 export default function Tutorlogin ({changeRole, passwordForgot}){
     // sample passwords = Pa$$w0rd!
@@ -25,8 +26,13 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
         };
         try {
             const role = "Tutor"
-            const response = await api.post("auth-app/login/",{email, password, role});
+            const response = await api.post("auth-app/login/",{email, password});
             
+            if (role.toLowerCase() !== (response['data']['role']).toLowerCase()){
+                alert("You are not a tutor.");
+                return false;
+            }
+
             const authState = {
                 accessToken: response.data["access_token"],
                 refreshToken: response.data["refresh_token"],
@@ -34,12 +40,19 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
                 role: role,
                 isAuthenticated: true,
               };
+              console.log(role, response['data']['role']);
+              
+         
             
+
             savedAuthState(authState);
             dispatch(setUser({user:response.data['user'], role: role}))
 
+            localStorage.setItem(ACCESS_TOKEN, response.data['access_token']);
+            localStorage.setItem(REFRESH_TOKEN, response.data['refresh_token']);
+
             alert('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
-            navigate('tutor/choose-session/');
+            navigate('/tutor/choose-session/');
         }
         catch (error) {
             console.log('ERROR :', error);

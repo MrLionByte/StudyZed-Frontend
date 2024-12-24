@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css';
 import UserRoutes from './routes/UserRoutes';
+import AdminRoutes from './routes/AdminRoutes';
 import { GoogleOAuthProvider } from "@react-oauth/google"
-import NotFound from './components/errors/NotFound.jsx'
+import NotFound from './components/Errors/NotFound.jsx'
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
 
@@ -13,6 +14,7 @@ function App() {
       <BrowserRouter>
         <Provider store={store}>
           <Routes>
+            <Route path='/admin/*'  element={<AdminRoutes />} />
             <Route path='/*' element={<UserRoutes />} />
             <Route path='*' element={<NotFound />} />
           </Routes>

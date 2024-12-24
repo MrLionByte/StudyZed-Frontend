@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Logo from "../assets/studyzed_main.png"
 import { useNavigate } from "react-router-dom";
+import XmasCap from '../assets/xmascap.png';
+import './style/nav.css'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +12,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handlelogin = () => {
-    navigate('/log-in/')
+    navigate('login/')
   }
 
   const handlesignup = () => {
@@ -25,6 +27,8 @@ const Navbar = () => {
     <nav className="flex justify-between items-center px-6 py-5">
     {/* Logo */}
     <div className="flex items-center max-w-40 cursor-pointer" onClick={handleTohome}>
+      {/* <img src={XmasCap} className="cap size-6 scale-x-[-1] z-10 mb-7 absolute"
+      style={{ marginLeft: '145px', transform: 'rotate(40deg) scaleX(-1)' }} alt="" /> */}
       <img className="size-fit" src={Logo} alt="Logo" />
     </div>
 

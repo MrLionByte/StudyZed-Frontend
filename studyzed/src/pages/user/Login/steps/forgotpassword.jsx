@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../../../../Api/axios_api_call"
+import api from "../../../../api/axios_api_call"
 
 export default function ForgotPassword () {
 

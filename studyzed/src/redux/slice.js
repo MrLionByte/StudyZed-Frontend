@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../Api/helpers/constrands.js';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../api/helpers/constrands.js';
 
 const savedUserState = JSON.parse(localStorage.getItem('authState'));
 const savedAdminState = JSON.parse(localStorage.getItem('adminAuthState'));

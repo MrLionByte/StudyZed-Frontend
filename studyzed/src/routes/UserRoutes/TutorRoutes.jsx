@@ -1,0 +1,12 @@
+import { Routes, Route } from 'react-router-dom'
+import TutorSessionPage from  '../../pages/user/SessionChoice/Tutor/sessionchoice'
+import MyProfile from '../../pages/user/MyProfile/Tutor/userProfile'
+
+export default function TutorStates () {
+    return (
+        <Routes>
+            <Route path={ 'choose-session/' } element={<TutorSessionPage />} />
+            <Route path='tutor-profile/' element={<MyProfile />} />
+        </Routes>
+    );
+};

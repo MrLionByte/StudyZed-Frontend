@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { Smile } from "lucide-react";
-import api from "../../../../Api/axios_api_call"
+import api from "../../../../api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
 import {savedAuthState, clearSavedAuthState} from '../../../../utils/Localstorage';
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../../redux/slice";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../api/helpers/constrands";
 
 export default function Studentlogin ({changeRole, passwordForgot}){
     // sample passwords = Pa$$w0rd!
@@ -25,7 +26,12 @@ export default function Studentlogin ({changeRole, passwordForgot}){
         };
         try {
             const role = "Student"
-            const response = await api.post("auth-app/login/",{email, password, role});
+            const response = await api.post("auth-app/login/",{email, password});
+
+            if (role.toLowerCase() !== (response['data']['role']).toLowerCase()){
+                alert("You are not a student.");
+                return false;
+            }
             
             const authState = {
                 accessToken: response.data["access_token"],
@@ -38,7 +44,8 @@ export default function Studentlogin ({changeRole, passwordForgot}){
 
             savedAuthState(authState);
             dispatch(setUser({user:response.data['user'], role: role}))
-
+            localStorage.setItem(ACCESS_TOKEN, response.data['access_token']);
+            localStorage.setItem(REFRESH_TOKEN, response.data['refresh_token']);
             alert('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
             navigate('/student/choose-session/');
         }
@@ -122,7 +129,7 @@ export default function Studentlogin ({changeRole, passwordForgot}){
             Login
             </button>
 
-            <p className="text-black p-3">Already have account ? <span type="button" onClick={handleSignup}
+            <p className="text-black p-3">Don’t have an account ? <span type="button" onClick={handleSignup}
             className="text-blue-500 cursor-pointer hover:underline">Sign-up</span>  </p>
 
         {/* <button className="bg-black m-2 p-1" onClick={handleSample}>TEST</button> */}

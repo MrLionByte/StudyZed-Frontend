@@ -1,0 +1,7 @@
+https://www.geeksforgeeks.org/folder-structure-for-a-react-js-project/
+
+https://www.django-rest-framework.org/api-guide/renderers/#setting-the-renderers
+
+https://stackoverflow.com/questions/47173483/django-rest-framework-custom-format-for-all-out-responses/63780771#63780771
+
+

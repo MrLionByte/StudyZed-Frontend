@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../../Api/axios_api_call";
+import api from "../../../../api/axios_api_call";
 import { useNavigate } from "react-router-dom";
 
 
@@ -31,7 +31,9 @@ export default function emailstep ( {onNext} ) {
                 localStorage.setItem('Temp_email', email);
                 
                 if (response.data['auth-status'] === 'success' && response.status === 200){
-                onNext(); }
+                onNext();
+                localStorage.removeItem("otp-expire-timer"); 
+            }
                 else {
                     alert('Failed to send OTP. Please try again.');
                 }
@@ -54,7 +56,7 @@ export default function emailstep ( {onNext} ) {
     
     
     const handleSignin = () => {
-        navigate('//log-in/'); 
+        navigate('/log-in'); 
     }
 
     return (
@@ -73,7 +75,7 @@ export default function emailstep ( {onNext} ) {
                 className="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition duration-200"
                 > Verify Email </button>
             <p className="text-black mt-5">Already have account ? 
-                <span className="text-red-600 cursor-pointer hover:underline" onClick={handleSignin}>/log-in</span>
+                <span className="text-red-600 cursor-pointer hover:underline" onClick={handleSignin}>Sign-in</span>
             </p>
         </div>
         </>
