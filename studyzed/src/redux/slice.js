@@ -43,6 +43,8 @@ const adminAuth = createSlice({
     initialState: initialAdminState,
     reducers :{
         setAdmin: (state, action)=>{
+            console.log("REDUX :",action, state);
+            
             const { id, username, email, is_superuser } = action.payload;
             state.admin = { id, username, email, is_superuser };
             state.isAdminAuthenticated = is_superuser || false;

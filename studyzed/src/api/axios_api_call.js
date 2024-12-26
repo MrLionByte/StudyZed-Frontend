@@ -54,7 +54,7 @@ api.interceptors.response.use(
             } catch (refreshError) {
                 console.error("Token refresh failed:", refreshError);
                 clearSavedAuthData();
-                window.location.href = "/login";
+                // window.location.href = "/login";
                 return Promise.reject(refreshError);
             }
         }

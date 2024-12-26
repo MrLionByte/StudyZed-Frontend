@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from '../pages/home/Home.jsx';
 import Signin from '../pages/user/Login/Log-in.jsx';
-import Signup from '../pages/user/Sign-up/sign-up';
+import Signup from '../pages/user/Sign-up/sign-up.jsx';
 import StudentRoutes from './UserRoutes/StudentRoutes.jsx'
 import TutorRoutes from './UserRoutes/TutorRoutes.jsx'
 import {Student_Protected_Route} from '../components/ProtectedRoute.jsx';

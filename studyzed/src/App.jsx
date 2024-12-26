@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css';
-import UserRoutes from './routes/UserRoutes';
-import AdminRoutes from './routes/AdminRoutes';
+import UserRoutes from './routes/userRoutes.jsx';
+import AdminRoutes from './routes/adminRoutes.jsx';
 import { GoogleOAuthProvider } from "@react-oauth/google"
 import NotFound from './components/Errors/NotFound.jsx'
 import { Provider } from 'react-redux';
