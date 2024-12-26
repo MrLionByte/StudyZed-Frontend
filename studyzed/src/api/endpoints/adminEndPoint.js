@@ -1,3 +1,3 @@
-const adminCommonEndPoints = {
-    'AdminLogin'    : 'auth-app/admin-login'
+export const adminEndPoints = {
+    'AdminLogin'    : 'admin-app/login-strict/'
 };

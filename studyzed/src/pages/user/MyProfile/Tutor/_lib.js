@@ -1,18 +1,21 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import api  from '../../../../api/axios_api_call.js';
+import {mapFormToApi} from '../../../../api/helpers/apiMapper.js';
+
 
 export const useUserProfile = () => {
-    const [userData, setUserData] = useState({ firstName: '', lastName: '', email: '', phone: '', userName:'' });
+    const [userData, setUserData] = useState({ first_name: '', last_name: '', email: '', phone: '', username:'' });
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
     const [nowEdit, setNowEdit] = useState(false);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const [editUserData, setEditUserData] = useState ({
-        firstName: false,
-        lastName: false,
-        userName: false,
+        first_name: false,
+        last_name: false,
+        username: false,
         phone: false,
         email: false,
     })
@@ -28,9 +31,9 @@ export const useUserProfile = () => {
                 console.log(data.email);
                 console.log(response.data);
                 setUserData({
-                    userName: data.username,
-                    firstName: data.first_name,
-                    lastName: data.last_name,
+                    username: data.username,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
                     email: data.email,
                     phone: data.phone,
                 });
@@ -59,8 +62,11 @@ export const useUserProfile = () => {
         }
     }
 
-    const handleImageUpload = async () => {
+    const handleImageUpload = async (e) => {
+        e.preventDefault();
         if (!file) return alert('Please select an image file');
+        if (loading) return ;
+        setLoading(true);
         try {
             const formData = new FormData();
             formData.append('file', file);
@@ -70,8 +76,11 @@ export const useUserProfile = () => {
             alert(response.data.message);
             setProfilePicture(response.data.data.profile_picture);
             setNowEdit(false);
+            setLoading(false);
+            setPreviewUrl('');
         } catch (error) {
             console.error(error);
+            setLoading(false);
             alert('Failed to upload profile picture. Please try again.');
         }
     };
@@ -80,6 +89,10 @@ export const useUserProfile = () => {
         setEditUserData((prevState) => ({
             ...prevState,
             [field]: true,
+        }));
+        setNewData((prevState) => ({
+            ...prevState,
+            [field]: userData[field],
         }));
     };
 
@@ -90,10 +103,34 @@ export const useUserProfile = () => {
         }));
     };
 
+    const handleCancelProfilePicEdit = () => {
+        setNowEdit(false); // Reset editing mode (optional, for tracking)
+        setPreviewUrl(null); // Reset preview URL
+    };
+
+    const handleCancelEdit = (field) => {
+        setEditUserData((prevState) => ({
+            ...prevState,
+            [field]: false,
+        }));
+    };
+
+    const fileInputRef = useRef(null); // Ref for hidden file input
+
+    const handleProfilePictureEdit = () => {
+        setNowEdit(true); // Set editing mode (optional, for tracking)
+        if (fileInputRef.current) {
+            fileInputRef.current.click(); // Programmatically click the hidden file input
+        }
+    };
+
     const handleSave = async (field) => {
         if (newData[field] !== undefined) {
             try {
-                await api.put(`user-app/`, {[field]: newData[field]})
+                console.log("NEW DATA ", newData[field], field);
+                await api.patch(`user-app/update-profile/`, {
+                    [field]: newData[field]
+                });
                 setUserData((prevState) => ({
                     ...prevState,
                     [field]: newData[field],
@@ -115,7 +152,6 @@ export const useUserProfile = () => {
         }
     }
 
-
     return {
         userData,
         setUserData,
@@ -125,9 +161,18 @@ export const useUserProfile = () => {
         setNowEdit,
         handleChange,
         handleImageUpload,
-        // handleProfileChange,
-        // setEditUserData,
-        // setChangedData,
+        setPreviewUrl,
+        editUserData,
+        newData,
+        setEditUserData,
+        handleEdit,
+        handleUserDataEdit,
+        handleSave,
+        handleCancelProfilePicEdit,
+        handleCancelEdit,
+        fileInputRef,
+        handleProfilePictureEdit,
+        loading
     }
     
 }
