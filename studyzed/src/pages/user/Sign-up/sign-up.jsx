@@ -8,15 +8,18 @@ import StepProgressBar from './Progress.jsx';
 import GoogleAuthApp from '../../../utils/GoogleAuth.jsx';
 import { Mosaic } from 'react-loading-indicators';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../../api/helpers/constrands.js';
+import { useSelector } from 'react-redux';
+import { getSavedAuthData } from '../../../utils/Localstorage.js';
+
 
 export default function Signup() {
     const [currentStep, setCurrentStep] = useState(1);
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
-
+    const isAuthenticated = useSelector((state)=> state.auth.isAuthenticated);
     const handleSignin = () => {
-        navigate('/log-in');
+        navigate('/login');
     };
 
     const nextStep = async () => {
@@ -40,6 +43,11 @@ export default function Signup() {
         localStorage.removeItem(REFRESH_TOKEN);
         if (savedStep) {
             setCurrentStep(Number(savedStep));
+        }
+        
+        const role = getSavedAuthData(); 
+        if (isAuthenticated) {
+            navigate(`/${role.role.toLowerCase()}/choose-session/`);
         }
     }, []);
 
@@ -78,8 +86,8 @@ export default function Signup() {
                             )}
                         </form>
                     )}
-                   
-                    {/* <GoogleAuthApp onLoginSuccess={handleLoginSuccess} /> */}
+                    
+                     {/* <GoogleAuthApp onLoginSuccess={handleLoginSuccess} /> */}
                 </div>
             </div>
         </div>

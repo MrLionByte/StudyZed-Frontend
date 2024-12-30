@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../../../api/axios_api_call";
 import OTP_fields from "../../../../components/OTP_fields";
+import {toast, ToastContainer} from 'react-toastify'
 
 export default function otpstep ({onNext, onBack}) {
     const [otp, setOtp] = useState("");
@@ -34,8 +35,20 @@ export default function otpstep ({onNext, onBack}) {
         return () => clearInterval(timerInterval);
     }, []);
 
+    const validateOTP = (otp) => {
+        return /^[0-9]{6}$/.test(otp);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!otp) {
+            toast.warning('OTP cannot be empty.');;
+            return;
+        }
+        if (!validateOTP(otp)) {
+            toast.warning('Please enter a valid 6-digit OTP.');
+            return;
+        }
         try {
             const email = localStorage.getItem("Temp_email");
             const response = await api.post('auth-app/verify-otp/', {email, otp}); 
@@ -45,14 +58,20 @@ export default function otpstep ({onNext, onBack}) {
                 localStorage.setItem("signup-step", 3);
                 onNext(); }
             else {
-                alert("Failed to verify OTP.", response.data['message']);
+                toast.error("Failed to verify OTP.", response.data['message']);
                 }                
             } catch (error) {
                 console.log('ERROR :', error)
-                alert(error)
+                if (error.status == 400) {
+                    toast.error("Failed to verify OTP.OTP incorrect.");
+                } else {
+                toast.error('Error occured ,please try again')
+                }
                 throw error
             }     
     };
+
+    
 
     const handleResendOtp = async (e) => {
         e.preventDefault();
@@ -66,11 +85,10 @@ export default function otpstep ({onNext, onBack}) {
                 localStorage.setItem("signup-step", 3);
                 onNext(); }
             else {
-                alert("Failed to verify OTP.", response.data['message']);
+                toast.error("Failed to verify OTP.", response.data['message']);
                 }                
             } catch (error) {
-                console.log('ERROR :', error)
-                alert(error)
+                toast.error("OTP is not valid, give proper OTP")
                 throw error
             }    
     };
@@ -80,10 +98,6 @@ export default function otpstep ({onNext, onBack}) {
         localStorage.removeItem("signup-step");
         onBack();
     }
-
-    const validateOTP = (otp) => {
-        return /^\d{6}$/.test(otp);
-    };
     
     const getOTP = (otpString) => {
             setOtp(otpString);
@@ -129,6 +143,7 @@ export default function otpstep ({onNext, onBack}) {
                     <a href="" className="text-black p-2 hover:text-red-600" onClick={handleBack}>
                         Want to change email ? </a>
                 </div>
+                <ToastContainer autoClose='1000' position="top-center"/>
             </div>
     );
 }

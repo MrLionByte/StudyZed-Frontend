@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../../../api/axios_api_call";
 import { useNavigate } from "react-router-dom";
-
+import {toast, ToastContainer} from 'react-toastify'
 
 export default function emailstep ( {onNext} ) {
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,33 +18,43 @@ export default function emailstep ( {onNext} ) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!email){alert("Please enter a valid email")}
+        if (submitting){
+            toast.info("Please wait, your initail request has been loading")
+            return
+        }
+        if (!email){toast.warning("Please enter a valid email")}
         else {
             if (!validateEmail(email)) {
-                setError('Please enter a valid email address.');
+                toast.warning('Please enter a valid email address.');
                 return;
             }
             try {
+                setSubmitting(true);
                 const response = await api.post('auth-app/user-email/', {email}); 
                 console.log('RESPONSE :', response);
                 console.log('RESPONSE :', response['auth-status']);
                 console.log("Browser cookies:", document.cookie);
                 localStorage.setItem('Temp_email', email);
-                
+                setSubmitting(false);
                 if (response.data['auth-status'] === 'success' && response.status === 200){
                 onNext();
                 localStorage.removeItem("otp-expire-timer"); 
             }
                 else {
-                    alert('Failed to send OTP. Please try again.');
+                    setSubmitting(false);
+                    toast.error('Failed to send OTP. Please try again.');
                 }
             }
             catch (error){
+                setSubmitting(false);
                 console.log('ERROR :', error)
-                if ((error.response.data['error'])==="Invalid data"){
-                    alert("Email is already in use. Please try with a different email address")
+                if (error.status== 400 ){
+                    setSubmitting(false);
+                    toast.error("Email is already in use. Please try with a different email address")
                 }else {
-                alert(error.response.data['error'])
+                    setSubmitting(false);
+                    console.log("Email :",error)
+                toast.error('Error occurred, try again later')
             }
                 throw error
             }
@@ -56,7 +67,7 @@ export default function emailstep ( {onNext} ) {
     
     
     const handleSignin = () => {
-        navigate('/log-in'); 
+        navigate('/login'); 
     }
 
     return (
@@ -78,6 +89,7 @@ export default function emailstep ( {onNext} ) {
                 <span className="text-red-600 cursor-pointer hover:underline" onClick={handleSignin}>Sign-in</span>
             </p>
         </div>
+        <ToastContainer autoClose='1000' position="top-center"/>
         </>
     )
 }

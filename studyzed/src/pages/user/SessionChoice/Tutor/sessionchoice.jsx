@@ -3,10 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { CircleUserRound } from 'lucide-react';
 import './style.css'
+import { useDispatch } from 'react-redux';
+import {logout} from '../../../../redux/slice'
 
 const TutorSessionPage = () => {
   const [isJoinSession, setIsJoinSession] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleJoinSession = () => {
     setIsJoinSession(true); //
@@ -24,6 +27,13 @@ const TutorSessionPage = () => {
     setIsJoinSession(false);
   };
 
+  const handleLogout = () => {
+    console.log("LOGOUTINGG");
+    
+    dispatch(logout());
+    navigate('/login/');
+  };
+
   return (
     <div className="min-h-screen text-white">
       <nav className="flex justify-between items-center px-8 py-4">
@@ -36,9 +46,10 @@ const TutorSessionPage = () => {
         <div className="flex items-center justify-between gap-6">
           <CircleUserRound className='cursor-pointer' onClick={handleUserRoundIcon}/>
           <div className='space-y-1'>
+          {/* <span className="block w-6 h-0.5 bg-white"></span>
           <span className="block w-6 h-0.5 bg-white"></span>
-          <span className="block w-6 h-0.5 bg-white"></span>
-          <span className="block w-6 h-0.5 bg-white"></span>
+          <span className="block w-6 h-0.5 bg-white"></span> */}
+          <button className='bg-red-900 rounded p-2 cursor-pointer' onClick={handleLogout}>LOG-OUT</button>
           </div>
         </div>
       </nav>

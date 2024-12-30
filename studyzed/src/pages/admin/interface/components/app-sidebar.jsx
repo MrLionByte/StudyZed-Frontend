@@ -27,11 +27,16 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
+let admin = '';
+if (localStorage.getItem("adminAuthState")) {
+  admin = (JSON.parse(localStorage.getItem("adminAuthState"))).admin;
+  console.log(admin['username']);
+}
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: admin?.username || "shadcn",
+    email: admin?.email || "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
@@ -125,21 +130,21 @@ const data = {
     },
   ],
   projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
+    // {
+    //   name: "Design Engineering",
+    //   url: "#",
+    //   icon: Frame,
+    // },
+    // {
+    //   name: "Sales & Marketing",
+    //   url: "#",
+    //   icon: PieChart,
+    // },
+    // {
+    //   name: "Travel",
+    //   url: "#",
+    //   icon: Map,
+    // },
   ],
 };
 

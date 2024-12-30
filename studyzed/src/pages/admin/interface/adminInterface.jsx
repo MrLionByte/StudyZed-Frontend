@@ -1,24 +1,25 @@
 import { AppSidebar } from "./components/app-sidebar.jsx"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+import {DynamicBreadcrumb} from './brudcrumbsManager.jsx';
 import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { useNavigate, Outlet } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 
 
 export default function AdminHome() {
 
-
+  const routes = [
+    { path: "/", breadcrumb: "Home" },
+    { path: "/admin", breadcrumb: "Admin" },
+    { path: "/admin/tutor-management", breadcrumb: "Tutor Management" },
+    { path: "/admin/student-management", breadcrumb: "Student Management" },
+  ];
+  
+  console.log("DASHBOIARD");
+  
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -27,23 +28,12 @@ export default function AdminHome() {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+           
+            <DynamicBreadcrumb routes={routes}/>
+
           </div>
         </header>
 
-      {/* COMPONENT CHNAGES ACCORDING TO URL*/}
         <Outlet />
 
       </SidebarInset>

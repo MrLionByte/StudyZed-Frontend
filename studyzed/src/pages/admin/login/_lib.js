@@ -2,61 +2,91 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import api from '../../../api/axios_api_call.js'
 import { adminEndPoints } from '../../../api/endpoints/adminEndPoint.js';
 import { useNavigate } from 'react-router-dom';
-import { savedAuthData } from '../../../utils/Localstorage.js';
-import { useDispatch } from 'react-redux';
-import { setAdmin } from "../../../redux/slice.js";
+import { savedAuthData, clearSavedAuthData } from '../../../utils/Localstorage.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAdmin, adminLogout } from "../../../redux/slice.js";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 export const adminLoginLogic = () => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    
+    const [error, setError] = useState('');
+
+    const isAdminAuthenticated = useSelector((state) => state.adminAuth.isAdminAuthenticated);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    console.log("ADTH :",isAdminAuthenticated);
+    
+    useEffect(() => {
+        if (isAdminAuthenticated) {
+          navigate("/admin/dashboard");
+        }
+      }, [isAdminAuthenticated, navigate]);
+
+    const handleNotification = (message) => {
+        toast(message)
+      }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!email || !password) {
-            alert("Please enter a valid email & password");
+        if (!username || !password) {
+            alert("Please enter a valid username & password");
             return;
         };
         try {
             const response = await api.post(adminEndPoints.AdminLogin,
-                {email, password});
-                console.log("ADMIN LOGIN", response.data.data);
-            const adminAuthState = {
-                accessToken: response.data.data["access_token"],
-                refreshToken: response.data.data["refresh_token"],
-                // role: 'Admin',
-                // userId: response.data['user']['id'],
-                // firstName: response.data['user']['first_name'],
-                // lastName: response.data['user']['last_name'],
+                {username, password});
+                console.log("ADMIN LOGIN", response.data);
+            const authData = {
+                accessToken: response.data["access_token"],
+                refreshToken: response.data["refresh_token"],
+                role: 'Admin',
+                userId: response.data['user']['id'],
+                firstName: response.data['user']['first_name'],
+                lastName: response.data['user']['last_name'],
+                email: response.data['user']['email']
             }
-            console.log("ADMIN LOGIN", adminAuthState);
+            console.log("ADMIN LOGIN", authData);
             
-            savedAuthData(adminAuthState);
+            savedAuthData(authData);
+            toast.success("Welcome Mr Admin")
             dispatch(setAdmin({user:response.data['user'], role: 'Admin'}))
-            // localStorage.setItem(ACCESS_TOKEN, response.data['access_token']);
-            // localStorage.setItem(REFRESH_TOKEN, response.data['refresh_token']);
-            // alert('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
-            // navigate('/student/choose-session/');
+            
+            navigate('/admin/dashboard/');
         }
         catch (error) {
-            console.log('ERROR :', error);
-            alert("Failed to login. Please try again.");
-            navigate('/admin/login/');
+            if (error.response && error.response.status === 403){
+                toast.error("You are not an Admin, not allowded to login.")
+                clearSavedAuthData();
+                dispatch(adminLogout());
+            } else if (error.response && error.response.status === 404) {
+                dispatch(adminLogout());
+                toast.error("User does not exist or invalid password");
+                clearSavedAuthData();
+                
+            } else {
+                toast.error("Invalid username or password.");
+                clearSavedAuthData();
+                dispatch(adminLogout());
+            }
+            // console.log('ERROR :', error.status);
+            // navigate('/admin/login/');
         }
     };
 
     return {
-        email,
+        username,
         password,
-        setEmail,
+        setUsername,
         setPassword,
         setShowPassword,
         showPassword,
         handleSubmit,
+        error,
+        setError,
     }
     
 }

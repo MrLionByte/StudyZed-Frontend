@@ -6,6 +6,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google"
 import NotFound from './components/Errors/NotFound.jsx'
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
+import 'react-toastify/ReactToastify.css'
 
 function App() {
 

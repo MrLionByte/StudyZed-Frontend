@@ -6,6 +6,7 @@ import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Lo
 
 const api = axios.create({
     baseURL: "http://127.0.0.1:8005/",
+    timeout: 10000,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
@@ -16,7 +17,6 @@ api.interceptors.request.use(
     (config) => {
         const authData = JSON.parse(localStorage.getItem("authData"));      
         const token = (authData ? authData["accessToken"] : null ) 
-        console.log("TOKEN :", token);
         
         if (token){
             config.headers['Authorization'] = `Bearer ${token}`;
@@ -39,7 +39,7 @@ api.interceptors.response.use(
 
             try {
                 const refreshResponse = await axios.post(
-                    api.baseURL+'auth-app/user/login/refresh/',
+                    api.baseURL+'auth-app/user/refresh/',
                     {refresh_token: authState?.refreshToken}
                 );
                 const newAuthState = {

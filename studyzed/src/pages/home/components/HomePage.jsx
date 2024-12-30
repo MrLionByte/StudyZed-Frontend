@@ -16,16 +16,16 @@ const LandingPage = () => {
           Learn from the best tutors, Teach with the best tools—
           <br /> StudyZen is here to support your journey.
         </p>
-        <div className="mt-8 flex gap-6">
+        <div className="mt-16 flex gap-6">
         <button className="default_button p-3">
-    Start Learning
-  </button>
+          Start Learning
+        </button>
           <button className="black_default_button p-3">
             I'm a Tutor
           </button>
         </div>
       </div>
-      <div className="hidden md:block">
+      <div className="hidden mt-40 md:block">
         {/* <img src={XmasCap} className="absolute childhat"  
          alt="" /> */}
         <img

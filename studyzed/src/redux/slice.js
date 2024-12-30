@@ -43,17 +43,21 @@ const adminAuth = createSlice({
     initialState: initialAdminState,
     reducers :{
         setAdmin: (state, action)=>{
-            console.log("REDUX :",action, state);
+            console.log("STATE" ,state);
             
-            const { id, username, email, is_superuser } = action.payload;
+            const { id, username, email, is_superuser } = action.payload['user'];
             state.admin = { id, username, email, is_superuser };
             state.isAdminAuthenticated = is_superuser || false;
-                localStorage.setItem('adminAuthState', JSON.stringify(state));
+            localStorage.setItem('adminAuthState', JSON.stringify(state));
         },
         adminLogout(state) {
             state.admin = null;
             state.isAdminAuthenticated = false;
+            if (localStorage.getItem('adminAuthState')){
             localStorage.removeItem('adminAuthState');
+            console.log("REMOVING");
+            }
+            
         },
     },
 });

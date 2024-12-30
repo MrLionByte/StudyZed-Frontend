@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../../../../api/axios_api_call";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
+import { toast, ToastContainer } from "react-toastify";
 
 export default function UserDetailStep({ NextToSignin, onBack }) {
   const [formData, setFormData] = useState({
@@ -28,14 +29,48 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.first_name) newErrors.first_name = "First name is required.";
-    if (!formData.username) newErrors.username = "Username is required.";
-    if (!formData.role) newErrors.role = "Role selection is required.";
-    if (!formData.password) newErrors.password = "Password is required.";
-    if (formData.password !== formData.confirmPassword)
+    if (!formData.first_name.trim()) {
+      newErrors.first_name = "First name is required.";
+    }
+    if (!formData.username.trim()){
+      newErrors.username = "Username is required.";
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      newErrors.username = "Username can only contain lettters, numbers, and underscores.";
+    }
+    if (!formData.role){
+      newErrors.role = "Role selection is required.";
+    }
+    if (!formData.password){
+      newErrors.password = "Password is required.";
+    } else if (formData.password.length < 8){
+      newErrors.password = "Password must be at least 8 characters long. with upper, lower and number each atleast one";
+    } else if (!/[A-Z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one uppercase letter.";
+    } else if (!/[a-z]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one lowercase letter.";
+    } else if (!/[0-9]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one number.";
+    } else if (!/[!@#$%^&*]/.test(formData.password)) {
+      newErrors.password = "Password must contain at least one special character (!@#$%^&*).";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password.";
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match.";
-    if (newErrors){
-        console.log("Please enter" + newErrors)
+    }
+    if (Object.keys(newErrors).length > 0) {
+        Object.values(newErrors).forEach((error) => {
+        toast.error(error, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        });
+      });
     }
     return newErrors;
   };
@@ -61,20 +96,24 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
       if (response.data['auth-status'] === 'success' && response.status === 201){
         localStorage.removeItem("Temp_email");
         localStorage.removeItem("signup-step");
-        alert("USER CREATED SUCCESSFULLY");
-        NextToSignin(); }
+        toast.success("USER CREATED SUCCESSFULLY");
+        setTimeout(()=>{
+          NextToSignin(); 
+        
+        }, 1000)
+      }
         else if (response.data['auth-status'] === 'unauthorized' && response.status ===401){
-          alert(response.data['error']);
+          toast.error(response.data['error']);
           localStorage.removeItem("Temp_email");
           localStorage.removeItem("signup-step");
         }
         else {
           console.log(response.data);
-          alert(response.data['message']);
+          toast.error(response.data['message']);
         }
     } catch (error) {
       console.error("ERROR:", error);
-      alert("Something went wrong. Please try again.",error);
+      toast.error("Something went wrong. Please try again.",error);
     } finally {
       setIsSubmitting(false);
     }
@@ -83,7 +122,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
 
   return (
     <div className="p-6 max-w-lg mx-auto">
-      
+      <ToastContainer position="top-center" autoClose='1000' />
       <div className="flex space-x-4 mb-2">
           
           <div className="w-1/2">
@@ -99,7 +138,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
               className="mt-1 block w-full text-xs border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
               placeholder="Enter your first name"
             />
-            {errors.first_name && <p className="text-red-600 text-sm">{errors.first_name}</p>}
+            {/* {errors.first_name && <p className="text-red-600 text-sm">{errors.first_name}</p>} */}
           </div>
 
           
@@ -133,7 +172,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
             className="mt-1 block w-full text-xs border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
             placeholder="Choose a username"
           />
-          {errors.username && <p className="text-red-600 text-sm">{errors.username}</p>}
+          {/* {errors.username && <p className="text-red-600 text-sm">{errors.username}</p>} */}
         </div>
 
         <div className="mb-2 relative">
@@ -159,7 +198,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
               <p>{showPassword ? <Eye className="size-4" />:<EyeClosed className="size-4" /> }</p>
             </button>
           </div>
-          {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>}
+          {/* {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>} */}
         </div>
 
         
@@ -186,7 +225,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
                 <p>{showConfirmPassword ? <Eye className="size-4" />:<EyeClosed className="size-4" /> }</p>
               </button>
             </div>
-            {errors.confirmPassword && <p className="text-red-600 text-sm">{errors.confirmPassword}</p>}
+            {/* {errors.confirmPassword && <p className="text-red-600 text-sm">{errors.confirmPassword}</p>} */}
         </div>
 
 
@@ -218,7 +257,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
               <span className="ml-2 text-sm text-gray-700">Student</span>
             </label>
           </div>
-          {errors.role && <p className="text-red-600 text-sm">{errors.role}</p>}
+          {/* {errors.role && <p className="text-red-600 text-sm">{errors.role}</p>} */}
         </div>
 
         <button

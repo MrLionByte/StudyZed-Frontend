@@ -7,6 +7,7 @@ import { savedAuthData, clearSavedAuthData } from "../../../../utils/Localstorag
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../../redux/slice";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../api/helpers/constrands";
+import {toast, ToastContainer} from "react-toastify"
 
 export default function Tutorlogin ({changeRole, passwordForgot}){
     // sample passwords = Pa$$w0rd!
@@ -21,7 +22,7 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password) {
-            alert("Please enter a valid email & password");
+            toast.error("Please enter a valid email & password");
             return;
         };
         try {
@@ -29,7 +30,7 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
             const response = await api.post("auth-app/login/",{email, password});
             
             if (role.toLowerCase() !== (response['data']['role']).toLowerCase()){
-                alert("You are not a tutor.");
+                toast.warning("You are not a tutor.");
                 return false;
             }
 
@@ -51,12 +52,12 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
             localStorage.setItem(ACCESS_TOKEN, response.data['access_token']);
             localStorage.setItem(REFRESH_TOKEN, response.data['refresh_token']);
 
-            alert('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
+            toast.success('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
             navigate('/tutor/choose-session/');
         }
         catch (error) {
             console.log('ERROR :', error);
-            alert("Failed to login. Please try again.");
+            toast.error("Failed to login. Please try again.");
         }
     };
 
@@ -88,7 +89,8 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
         <>
         <div className="">
             <div className="bg-slate-100 flex justify-between items-stretch rounded">
-                <a href="#" onClick={handleRoleSelection} 
+                <a href="#" 
+                onClick={handleRoleSelection} 
                 className="text-black w-1/2 text-center font-semibold">
                     STUDENT</a>"
                 <button  disabled
@@ -149,6 +151,7 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
             className="text-blue-500 cursor-pointer hover:underline">Sign-up</span>  </p>
 
         {/* <button className="bg-black m-2 p-1" onClick={handleSample}>TEST</button> */}
+        <ToastContainer  position="top-center" autoClose='1000' />
     </>
     )
 };

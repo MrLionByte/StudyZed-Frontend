@@ -1,6 +1,7 @@
 import { UserPen, Pen, CircleCheck, CircleX, X, Check } from 'lucide-react'; // Ensure you have these icons imported
 import { useUserProfile } from './_lib.js';
 import { OrbitProgress, ThreeDot } from 'react-loading-indicators';
+import { ToastContainer } from 'react-toastify';
 
 export default function MyProfile() {
     const {
@@ -22,7 +23,8 @@ export default function MyProfile() {
         handleCancelEdit,
         fileInputRef,
         handleProfilePictureEdit,
-        loading
+        loading,
+        handleBackToSession
     } = useUserProfile();
 
 
@@ -36,6 +38,7 @@ export default function MyProfile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
                 {/* Left Card */}
                 <div className="bg-gray-300 p-6 rounded-lg shadow-md text-black h-max">
+                    <h1 className='text-black font-bold'>TUTOR</h1>
                     <div className="flex flex-col items-center mb-6">
                         {/* Profile Picture */}
 {!loading ?
@@ -171,7 +174,9 @@ export default function MyProfile() {
                         </p>
                     </div>
                 </div>
+                <button onClick={handleBackToSession} className='bg-slate-400 rounded p-2'>GO BACK TO SESSION</button>
             </div>
+            <ToastContainer position='top-center' />
         </div>
     );
 }

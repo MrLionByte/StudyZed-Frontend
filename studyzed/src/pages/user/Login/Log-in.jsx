@@ -4,20 +4,40 @@ import Tutorlogin from "./steps/tutor.jsx";
 import Studentlogin from "./steps/student.jsx";
 import ForgotPassword from "./steps/forgotpassword.jsx";
 import LoginPic from "../../../assets/loginpic.png";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {getSavedAuthData} from "../../../utils/Localstorage.js"
 
 export default function Signin (){
     const [student, setstudent] = useState(true)
     const [isForgotPassword, setIsForgotPassword] = useState(false)
 
+    const navigate = useNavigate();
+
     const handleTutorRole = () => {
-      setstudent((prev) => !prev);
-    };
+      setstudent((prev) => {
+          return !prev;
+      });
+  };
 
     const handleForgotPassword = () => {
       setIsForgotPassword((prev) =>!prev);
     };
 
-    console.log("IS FORGOT",isForgotPassword);
+    const isAuthenticated = useSelector((state)=> state.auth.isAuthenticated);
+
+    useEffect(() => {
+      try{
+        const role = getSavedAuthData();
+          console.log("ROLE :", role.role.toLowerCase());
+        if (isAuthenticated) {
+          navigate(`/${role.role.toLowerCase()}/choose-session/`);
+        }
+        }catch (error) {
+          return;
+        }
+    }, [isAuthenticated, navigate, student])
+    console.log("student :",student);
     
     
     return (
@@ -37,7 +57,7 @@ export default function Signin (){
                   </>  
                   : 
                   <>
-                    <ForgotPassword />
+                    <ForgotPassword passwordForgot={handleForgotPassword}/>
                   </>}
                   </form>
               </div>

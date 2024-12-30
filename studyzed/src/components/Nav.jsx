@@ -25,14 +25,14 @@ const Navbar = () => {
 
   return (
     <nav className="flex justify-between items-center px-6 py-5">
-    {/* Logo */}
+    
     <div className="flex items-center max-w-40 cursor-pointer" onClick={handleTohome}>
       {/* <img src={XmasCap} className="cap size-6 scale-x-[-1] z-10 mb-7 absolute"
       style={{ marginLeft: '145px', transform: 'rotate(40deg) scaleX(-1)' }} alt="" /> */}
       <img className="size-fit" src={Logo} alt="Logo" />
     </div>
 
-    {/* Hamburger Menu (Mobile) */}
+   
     <div className="md:hidden">
       <button onClick={toggleMenu} className="text-white focus:outline-none">
         {isOpen ? (
@@ -59,7 +59,7 @@ const Navbar = () => {
       </button>
     </div>
 
-    {/* Menu Links (Desktop) */}
+   
     <div className="hidden md:flex gap-8">
       <a href="#home" className="hover:text-teal-400">
         Home
@@ -72,7 +72,7 @@ const Navbar = () => {
       </a>
     </div>
 
-    {/* Sign Up and Log In Buttons */}
+   
     <div className="hidden md:flex gap-4">
       <a
         onClick={handlesignup}
@@ -88,7 +88,7 @@ const Navbar = () => {
       </a>
     </div>
 
-    {/* Mobile Menu */}
+    
     {isOpen && (
       <div className="absolute top-20 left-0 w-full bg-slate-400 flex flex-col gap-4 items-center md:hidden shadow-lg">
         <a href="#home" className="hover:text-teal-400 py-2">

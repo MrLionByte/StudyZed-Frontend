@@ -4,23 +4,26 @@ import {mapFormToApi} from '../../../../api/helpers/apiMapper.js';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
+
 export const useUserProfile = () => {
-    const [userData, setUserData] = useState({ first_name: '', last_name: '', email: '', phone: '', username:'' });
+    const [userData, setUserData] = useState({ first_name: '', last_name: '', email: '', phone: '', username:'' ,role:''});
     const [file, setFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
     const [nowEdit, setNowEdit] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+
     const [editUserData, setEditUserData] = useState ({
         first_name: false,
         last_name: false,
         username: false,
         phone: false,
         email: false,
+        
     })
-
+    
+    const navigate = useNavigate();
     const [newData, setNewData] = useState({}); 
 
     useEffect(() => {
@@ -37,6 +40,7 @@ export const useUserProfile = () => {
                     last_name: data.last_name,
                     email: data.email,
                     phone: data.phone,
+                    role: data.role,
                 });
                 const ProfilePicUrl = data.profile.profile_picture
                 const validProfilepicUrl = ProfilePicUrl.startsWith("image/upload/https://")
@@ -44,7 +48,7 @@ export const useUserProfile = () => {
                 : ProfilePicUrl;
                 
                 setProfilePicture(validProfilepicUrl);
-               
+                // setPreviewUrl(validProfilepicUrl);
             } catch (error) {
                 console.error('Failed to fetch user data:', error);
             }
@@ -74,7 +78,7 @@ export const useUserProfile = () => {
             const response = await api.post('user-app/upload-profile-pic/', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            toast.success(response.data.message);
+            toast.success (response.data.message);
             setProfilePicture(response.data.data.profile_picture);
             setNowEdit(false);
             setLoading(false);
@@ -82,7 +86,7 @@ export const useUserProfile = () => {
         } catch (error) {
             console.error(error);
             setLoading(false);
-            toast.error('Failed to upload profile picture. Try smaller size.');
+            toast.error('Failed to upload profile picture. try lower size.');
         }
     };
 
@@ -106,7 +110,7 @@ export const useUserProfile = () => {
 
     const handleCancelProfilePicEdit = () => {
         setNowEdit(false); 
-        setPreviewUrl(null); 
+        setPreviewUrl(null);
     };
 
     const handleCancelEdit = (field) => {
@@ -148,12 +152,15 @@ export const useUserProfile = () => {
                 toast.success(`Your profile updated successfully`);
             } catch (error) {
                 console.error('Failed to update profile:', error);
-                toast.error('Error updating profile');
+                toast.error('Error updating profile, try again.');
             }
         }
     }
+
     const handleBackToSession = () => {
-        navigate(`/tutor/choose-session/`)
+        console.log("userData :",userData.role);
+        
+        navigate(`/${userData.role.toLowerCase()}/choose-session/`)
     }
 
     return {
@@ -177,7 +184,7 @@ export const useUserProfile = () => {
         fileInputRef,
         handleProfilePictureEdit,
         loading,
-        handleBackToSession
+        handleBackToSession,
     }
     
 }

@@ -5,19 +5,20 @@ import AdminHome from '../pages/admin/interface/adminInterface.jsx'
 import Dashboard from '../pages/admin/interface/dashboard/dashboard.jsx';
 import TutorManagement from '../pages/admin/interface/userManagement/tutorManagement/tutorManagement.jsx';
 import StudentManagement from '../pages/admin/interface/userManagement/studentManagement/studentManagement.jsx';
+import  Admin_Protected  from './AdminRoutes/adminProtected.jsx';
 
 export default function AdminRoutes () {
     return (
         <Routes>
-
-            <Route path='login/' element={<AdminLogin />} />
-            
-            <Route path='' element={<AdminHome />} >
-                <Route index element={<Navigate to="dashboard" replace />} /> 
-                <Route path='dashboard/' element={<Dashboard />} />
-                <Route path='tutor-management/' element={<TutorManagement />} />
-                <Route path='student-management/' element={<StudentManagement />} />
-            </Route>
-        </Routes>
+      
+        <Route path='/login' element={<AdminLogin />} />
+        <Route path='/*' element={
+                <Admin_Protected_Route>
+                   <Admin_Protected />
+                </Admin_Protected_Route>
+            } />
+                
+    </Routes>
+    
     );
 };

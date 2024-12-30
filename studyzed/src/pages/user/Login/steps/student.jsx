@@ -3,12 +3,13 @@ import { Smile } from "lucide-react";
 import api from "../../../../api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeClosed } from 'lucide-react';
-import {savedAuthData, clearSavedAuthData} from '../../../../utils/Localstorage';
+import { savedAuthData, clearSavedAuthData } from "../../../../utils/Localstorage";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../../redux/slice";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../../../api/helpers/constrands";
+import {toast, ToastContainer} from "react-toastify"
 
-export default function Studentlogin ({changeRole, passwordForgot}){
+export default function Tutorlogin ({changeRole, passwordForgot}){
     // sample passwords = Pa$$w0rd!
     // unicorn4306@spinly.net
     const [email, setEmail] = useState('');
@@ -21,37 +22,46 @@ export default function Studentlogin ({changeRole, passwordForgot}){
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password) {
-            alert("Please enter a valid email & password");
+            toast.error("Please enter a valid email & password");
             return;
         };
         try {
             const role = "Student"
             const response = await api.post("auth-app/login/",{email, password});
-
+            
             if (role.toLowerCase() !== (response['data']['role']).toLowerCase()){
-                alert("You are not a student.");
+                toast.warning("You are not a student.");
                 return false;
             }
-            
+
             const authState = {
                 accessToken: response.data["access_token"],
                 refreshToken: response.data["refresh_token"],
+                user: response.data["user"],
                 role: role,
-                userId: response.data['user']['id'],
-                firstName: response.data['user']['first_name'],
-                lastName: response.data['user']['last_name'],
-            }
-
+                isAuthenticated: true,
+              };
+              console.log(role, response['data']['role']);
+            
             savedAuthData(authState);
             dispatch(setUser({user:response.data['user'], role: role}))
+
             localStorage.setItem(ACCESS_TOKEN, response.data['access_token']);
             localStorage.setItem(REFRESH_TOKEN, response.data['refresh_token']);
-            alert('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
-            navigate('/student/choose-session/');
+
+            toast.success('LOGIN SUCCESSFUL. Welcome '+ response.data['user']['first_name']);
+            setTimeout(()=>{
+                navigate('/student/choose-session/');
+            }, 2000);
+            
         }
         catch (error) {
             console.log('ERROR :', error);
-            alert("Failed to login. Please try again.");
+            if (error.status === 404) {
+                toast.error('Your email or password is incorrect');
+            }else {
+            toast.error("Failed to login. Please try again.");
+            }
         }
     };
 
@@ -59,7 +69,17 @@ export default function Studentlogin ({changeRole, passwordForgot}){
         navigate('/sign-up/');
     };
 
-    const handleRoleSelection = ( e ) => {
+    const handleSample = async () => {
+        try{
+            const response = await api.post("auth-app/sample-request/", {});
+
+            console.log('RESPONSE :', response);
+        }catch (error) {
+            console.log("Error :", error)
+        }
+    };
+
+    const handleRoleSelection = (e) => {
         e.preventDefault();
         changeRole();
     };
@@ -73,12 +93,13 @@ export default function Studentlogin ({changeRole, passwordForgot}){
         <>
         <div className="">
             <div className="bg-slate-100 flex justify-between items-stretch rounded">
-                <button disabled
-                className="text-white bg-gray-400 text-center rounded w-1/2 font-semibold">
-                    STUDENT</button>
-                <a href="#" onClick={handleRoleSelection}
-                className="text-black w-1/2 text-center font-semibold">
-                    TUTOR</a>
+                <a href="#"  disabled
+                className="text-white bg-gray-400 text-center rounded w-1/2 font-semibold"
+               >
+                    STUDENT</a>"
+                <button  className="text-black w-1/2 text-center font-semibold"  onClick={handleRoleSelection}
+                >
+                    TUTOR</button>
             </div>
         </div>
         <div className="mb-4">
@@ -92,7 +113,7 @@ export default function Studentlogin ({changeRole, passwordForgot}){
         <div className="mb-4 relative">
             <div className="flex justify-between items-center">
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 w-1/2">PASSWORD</label>
-                <a href="#" onClick={handleForgotPassword} 
+                <a href="#" onClick={handleForgotPassword}
                 className="text-sm text-blue-500 hover:underline">
                 Forgot Password?
                 </a>
@@ -105,6 +126,7 @@ export default function Studentlogin ({changeRole, passwordForgot}){
                 name="password"
                 required
                 value={password}
+                autoComplete="off"
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 pr-10" // pr-10 adds padding for the button
             />
@@ -129,10 +151,11 @@ export default function Studentlogin ({changeRole, passwordForgot}){
             Login
             </button>
 
-            <p className="text-black p-3">Don’t have an account ? <span type="button" onClick={handleSignup}
+            <p className="text-black p-3">Don’t have an account? <span type="button" onClick={handleSignup}
             className="text-blue-500 cursor-pointer hover:underline">Sign-up</span>  </p>
 
         {/* <button className="bg-black m-2 p-1" onClick={handleSample}>TEST</button> */}
+        <ToastContainer autoClose='1000' position="top-center"/>
     </>
     )
 };
