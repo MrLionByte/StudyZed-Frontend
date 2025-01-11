@@ -5,6 +5,7 @@ import { CircleUserRound } from 'lucide-react';
 import './style.css'
 import { useDispatch } from 'react-redux';
 import {logout} from '../../../../redux/slice'
+import { clearSavedAuthData } from '../../../../utils/Localstorage';
 
 const SessionPage = () => {
   const [isJoinSession, setIsJoinSession] = useState(false);
@@ -30,6 +31,7 @@ const SessionPage = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    clearSavedAuthData()
     navigate('/login/');
   };
 

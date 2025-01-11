@@ -57,7 +57,11 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
         }
         catch (error) {
             console.log('ERROR :', error);
+            if (error.status === 404) {
+                toast.error('Your email or password is incorrect, or you are blocked');
+            }else {
             toast.error("Failed to login. Please try again.");
+            }
         }
     };
 

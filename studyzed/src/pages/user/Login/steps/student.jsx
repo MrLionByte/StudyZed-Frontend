@@ -58,7 +58,7 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
         catch (error) {
             console.log('ERROR :', error);
             if (error.status === 404) {
-                toast.error('Your email or password is incorrect');
+                toast.error('Your email or password is incorrect, or you are blocked');
             }else {
             toast.error("Failed to login. Please try again.");
             }
@@ -67,16 +67,6 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
 
     const handleSignup= () => {
         navigate('/sign-up/');
-    };
-
-    const handleSample = async () => {
-        try{
-            const response = await api.post("auth-app/sample-request/", {});
-
-            console.log('RESPONSE :', response);
-        }catch (error) {
-            console.log("Error :", error)
-        }
     };
 
     const handleRoleSelection = (e) => {

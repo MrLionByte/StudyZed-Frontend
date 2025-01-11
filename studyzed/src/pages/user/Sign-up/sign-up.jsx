@@ -45,11 +45,15 @@ export default function Signup() {
             setCurrentStep(Number(savedStep));
         }
         
-        const role = getSavedAuthData(); 
-        if (isAuthenticated) {
-            navigate(`/${role.role.toLowerCase()}/choose-session/`);
-        }
+        // const role = getSavedAuthData(); 
+        // if (isAuthenticated) {
+        //     navigate(`/${role.role.toLowerCase()}/choose-session/`);
+        // }
     }, []);
+
+    const handleLoginSuccess = () => {
+
+    }
 
     return (
         <div className="flex justify-center items-center min-h-screen">

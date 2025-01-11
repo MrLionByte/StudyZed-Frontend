@@ -5,7 +5,7 @@ import {toast, ToastContainer} from 'react-toastify'
 
 export default function otpstep ({onNext, onBack}) {
     const [otp, setOtp] = useState("");
-    const [timeout, setTimeout] = useState(300); //seconds
+    const [timeout, setTimeout] = useState(5000); //seconds
 
     useEffect(() => {
         const storeTime = localStorage.getItem("otp-expire-timer");
@@ -78,19 +78,21 @@ export default function otpstep ({onNext, onBack}) {
         
         try {
             const email = localStorage.getItem("Temp_email");
-            const response = await api.post('auth-app/verify-otp/', {otp, email}); 
+            const response = await api.post('auth-app/resend-otp/', {otp, email}); 
             console.log('RESPONSE :', response);
                 
-            if (response.data['auth-status'] === 'success' && response.status === 200){
-                localStorage.setItem("signup-step", 3);
-                onNext(); }
+            if (response.data['auth-status'] === 'resend' && response.status === 200){
+                localStorage.setItem("signup-step", 2);
+                setTimeout(5000);
+                toast.success("OTP  resend successfully", response.data['message'])
+                 }
             else {
-                toast.error("Failed to verify OTP.", response.data['message']);
+                toast.error("Failed to send OTP.", response.data['message']);
                 }                
             } catch (error) {
-                toast.error("OTP is not valid, give proper OTP")
+                toast.error("Failed to resend OTP, try again after sometime.")
                 throw error
-            }    
+            }
     };
 
     const handleBack = () => {

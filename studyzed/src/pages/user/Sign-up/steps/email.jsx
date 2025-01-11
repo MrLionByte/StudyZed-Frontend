@@ -13,6 +13,7 @@ export default function emailstep ( {onNext} ) {
         const savedEmail = localStorage.getItem("Temp_email");
         if (savedEmail) {
             setEmail(savedEmail);
+            
         }
     },[])
 
