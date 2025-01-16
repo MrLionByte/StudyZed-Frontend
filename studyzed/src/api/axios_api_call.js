@@ -3,15 +3,24 @@ import { ACCESS_TOKEN } from './helpers/constrands'
 import Cookies from 'js-cookie'
 import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Localstorage";
 
+export const api_dictnory = {
+    "Usermanagement_Service": "http://127.0.0.1:8005/",
+    "Payment_Service"       : "http://127.0.0.1:8008/",
+    "Session_Service"       : "http://127.0.0.1:8009/",
+};
+
+const key = "Usermanagement_Service";
+const baseURL = api_dictnory[key];
 
 const api = axios.create({
-    baseURL: "http://127.0.0.1:8005/",
+    // baseURL: "http://127.0.0.1:8005/",
+    baseURL: baseURL,
     timeout: 10000,
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
       }
-});
+}); 
 
 api.interceptors.request.use(
     (config) => {
@@ -61,5 +70,7 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }   
 );
+
+
 
 export default api;

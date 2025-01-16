@@ -5,8 +5,11 @@ import { toast, ToastContainer } from "react-toastify";
 
 export default function ForgotPassword ({passwordForgot}) {
 
-    const [email, setEmail] = useState("");
     const forgot_paragraph = "Forgot your account’s password? Enter your email address and we’ll send you a recovery OTP."
+    const OTP_paragraph = "Confirm your email using the OTP sent to your Email, Enter the OTP below. Don't reload or close your browser."
+    const password_paragraph = "Enter your new password here, don't reload or close your browser. Use a Capital, small, symbol and number"
+
+    const [email, setEmail] = useState("");
     const [emailVarified, setEmailVarified] = useState(false);
     const [otp, setOtp] = useState('');
     const [isOtpVarified, setIsOtpVarified] = useState(false)
@@ -122,7 +125,7 @@ export default function ForgotPassword ({passwordForgot}) {
         : !isOtpVarified ? (
         <>
         <div className="mb-4">
-            <p className="text-black mb-3">{forgot_paragraph}</p>
+            <p className="text-black mb-3">{OTP_paragraph}</p>
 
            <label htmlFor="email" className="block text-sm font-bold text-gray-700">
             OTP</label>
@@ -139,13 +142,13 @@ export default function ForgotPassword ({passwordForgot}) {
             onClick={handleOtp}
             className="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition duration-200"
             >
-            Send Recovery Mail
+            Submit OTP
             </button>
 
         </div>
         </>) : (<>
             <div className="mb-4">
-            <p className="text-black mb-3">{forgot_paragraph}</p>
+            <p className="text-black mb-3">{password_paragraph}</p>
 
            <label htmlFor="password" className="block text-sm font-bold text-gray-700">
             ENTER PASSWORD</label>

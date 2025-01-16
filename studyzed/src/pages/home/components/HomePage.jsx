@@ -1,8 +1,30 @@
-import React from "react";
+import { useEffect } from "react";
 import Landingpageimage from '../../../assets/landingpageimage.png';
 import XmasCap from '../../../assets/xmascap.png';
+import { clearSavedAuthData, getSavedAuthData } from "../../../utils/Localstorage";
+import { logout } from "../../../redux/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state)=> state.auth.isAuthenticated);
+  const navigate = useNavigate()
+  useEffect (() => {
+    // if (isAuthenticated){
+    //   dispatch(logout());
+    //   clearSavedAuthData();
+    // }
+    try{
+            const role = getSavedAuthData();
+              console.log("ROLE :", role.role.toLowerCase());
+            if (isAuthenticated) {
+              navigate(`/${role.role.toLowerCase()}/choose-session/`);
+            }
+            }catch (error) {
+              return;
+            }
+        }, [isAuthenticated, navigate])
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-7xl  px-9 py-5 ">

@@ -39,6 +39,7 @@ export default function Tutorlogin ({changeRole, passwordForgot}){
                 refreshToken: response.data["refresh_token"],
                 user: response.data["user"],
                 role: role,
+                user_code: response.data["user_code"],
                 isAuthenticated: true,
               };
               console.log(role, response['data']['role']);

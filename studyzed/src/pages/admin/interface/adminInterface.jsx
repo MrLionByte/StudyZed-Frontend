@@ -16,6 +16,7 @@ export default function AdminHome() {
     { path: "/admin", breadcrumb: "Admin" },
     { path: "/admin/tutor-management", breadcrumb: "Tutor Management" },
     { path: "/admin/student-management", breadcrumb: "Student Management" },
+    { path: "/admin/tutor-session", breadcrumb: "Tutor Session" },
   ];
    
   console.log("DASHBOIARD");

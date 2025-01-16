@@ -34,6 +34,8 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
     }
     if (!formData.username.trim()){
       newErrors.username = "Username is required.";
+    } else if (formData.username.length < 5) {
+      newErrors.username = "Username should be minimum 5 letters";
     } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
       newErrors.username = "Username can only contain lettters, numbers, and underscores.";
     }
@@ -170,7 +172,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
             value={formData.username}
             onChange={handleInputChange}
             className="mt-1 block w-full text-xs border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
-            placeholder="Choose a username"
+            placeholder="username- minimum 5 letters"
           />
           {/* {errors.username && <p className="text-red-600 text-sm">{errors.username}</p>} */}
         </div>

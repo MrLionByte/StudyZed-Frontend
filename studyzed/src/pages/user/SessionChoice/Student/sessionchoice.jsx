@@ -5,20 +5,54 @@ import { CircleUserRound } from 'lucide-react';
 import './style.css'
 import { useDispatch } from 'react-redux';
 import {logout} from '../../../../redux/slice'
-import { clearSavedAuthData } from '../../../../utils/Localstorage';
+import { clearSavedAuthData, getSavedAuthData } from '../../../../utils/Localstorage';
+import api, {api_dictnory} from '../../../../api/axios_api_call';
+import {studentEndPoints} from '../../../../api/endpoints/userEndPoints';
+import { toast, ToastContainer, Bounce } from 'react-toastify';
 
 const SessionPage = () => {
   const [isJoinSession, setIsJoinSession] = useState(false);
-  const navigate = useNavigate();
+  const [sessionCode, setSessionCode] = useState("");
+  const [fetchFromBackend, setFetchFromBackend] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [studentCode, setStudentCode] = useState('')
+  const [error, setError] = useState(false)
+  const [sessions, setSessions] = useState([])
 
+  const [tutorData, setTutorData] = useState({})
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleJoinSession = () => {
     setIsJoinSession(true); //
   };
+  
+  const SubmitSessionRequest = async(e) => {
+    e.preventDefault();
+    try {
+      const enter_data = {
+        "student_code": studentCode,
+        "session_code": sessionCode,
+      }
+      
+      console.log("Payload being sent:", enter_data);
 
-  const SubmitSessionRequest = (e) => {
+      const url = api_dictnory["Session_Service"]
+      const response = await api.post(studentEndPoints.ChooseSession,
+        enter_data,{ 
+        baseURL: url,
+    });
+    if (response.status === 201){
+      toast.success("Successfully Joined the session")
+      setIsJoinSession(false)
+    }
+    console.log("RESPONSE JOIN :",response);
     
+    } catch (error) {
+      console.error("Error while submitting session request:", error.response || error);
+      toast.error("The given session code doesnot exsist. Give a valid one")
+    }
   };
 
   const handleUserRoundIcon= () => {
@@ -34,6 +68,40 @@ const SessionPage = () => {
     clearSavedAuthData()
     navigate('/login/');
   };
+
+  useEffect(()=> {
+    const student_data = getSavedAuthData()
+    console.log(student_data.user_code);
+    
+    setStudentCode(student_data.user_code)
+
+    async function fetchSessionsData () {
+        setLoading(true);
+        
+        console.log(student_data.user_code);
+        const qury_data = {"student_code": student_data.user_code}
+        try {
+            const url = api_dictnory["Session_Service"]
+            const response = await api.get(studentEndPoints.AllSessions, {
+                baseURL: url,
+                params : qury_data
+            });
+            
+            setSessions(response.data);
+            console.log("RESPONSE BRUT",response.data)
+            console.log("RESPONSE BRUT",response)
+        } catch (e) {
+            setError(e);
+            setLoading(false);
+            console.error("Error :", e);
+        }
+    };
+    
+    if (fetchFromBackend){
+        fetchSessionsData();
+        setFetchFromBackend(false);
+    }
+  } ,[fetchFromBackend]);
 
   return (
     <div className="min-h-screen text-white">
@@ -56,6 +124,7 @@ const SessionPage = () => {
       </nav>
 
       {(!isJoinSession) ? <>
+      
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="border border-teal-500 p-6 rounded-md bg-black/80 shadow-md">
           <p className="text-xl font-semibold">Session By:</p>
@@ -76,9 +145,10 @@ const SessionPage = () => {
         <div className="border border-teal-500 p-6 rounded-md bg-black/80 shadow-md flex">
           <form action="" className='flex justify-center '>
             <label htmlFor="session-d" className='font-bold text-xl m-2'>Enter Session ID :</label>
-            <input type="text" id='session-id' className='text-green-900 rounded p-2 ml-3' placeholder='XXXXX-XXXX' />
+            <input onChange={(e) => setSessionCode(e.target.value)} maxLength={15}
+            type="text" id='session-id' className='text-green-900 rounded p-2 ml-3' placeholder='XXXXX-XXXX' />
                   <div class="icon-container">
-        <ArrowRight class="size-8 m-1 ml-3" onClick={SubmitSessionRequest} />
+        <ArrowRight class="size-8 m-1 ml-3 cursor-pointer" onClick={SubmitSessionRequest} />
         <div class="tooltip">Submit</div>
       </div>
       <p onClick={cancelSessionJoin}
@@ -88,6 +158,22 @@ const SessionPage = () => {
         </div>
       </>
       }
+
+              <ToastContainer
+                position="bottom-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+                className="toast-center"
+              />
+
       </div>
   );
 };

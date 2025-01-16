@@ -64,20 +64,24 @@ const data = {
       ],
     },
     {
-      title: "Models",
+      title: "Session",
       url: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
+          title: "Approval",
+          url: "/admin/session-approval/",
+        },
+        {
+          title: "Active",
+          url: "/admin/active-session/",
+        },
+        {
+          title: "Inactive",
           url: "#",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          title: "Blocked",
           url: "#",
         },
       ],

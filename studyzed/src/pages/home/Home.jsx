@@ -10,7 +10,7 @@ export default function Home () {
 
     return (
       <div className="home">
-        <Snowfall color="#fff" snowflakeCount={50} style={{zIndex: 1}}/>
+        {/* <Snowfall color="#fff" snowflakeCount={50} style={{zIndex: 1}}/> */}
         <Navbar />
         <HomepageAddon />
         
