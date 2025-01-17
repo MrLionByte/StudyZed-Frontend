@@ -16,91 +16,46 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Info } from 'lucide-react';
-import {TutorEndPoints} from './../../../../../api/endpoints/userEndPoints'
+import {TutorEndPoints} from '../../../../api/endpoints/userEndPoints'
 import axios from "axios"
-import { getSavedAuthData } from "../../../../../utils/Localstorage"
-import { toast, ToastContainer } from "react-toastify"
+import { getSavedAuthData } from "../../../../utils/Localstorage"
+import { api_dictnory } from "../../../../api/axios_api_call"
 
 
 export default function CardWithForm({cancelModeal}) {
-    const [sessionName, setSessionName] = useState("");
+    const [studentData, setStudentData] = useState([]);
     const [duration, setDuration] = useState("1"); 
-    const [amount, setAmount] = useState(100); 
-    const [description, setDescription] = useState("");
-    const [grade, setGrade] = useState("A");
-
-    
-    const handleDurationChange = (e) => {
-        const selectedDuration = e.target.value;
-        setDuration(selectedDuration);
-
-        const calculatedAmount = selectedDuration * 100;
-        setAmount(calculatedAmount);
-    };
-
-    const handleGradeChange = (e) => {
-        const value = e.target.value;
-        if (/^[a-zA-Z0-9]*$/.test(value) && value.length <= 2) {
-          setGrade(value);
-        }
-    };
+    const [fetchFromBackend,setFetchFromBackend] = useState(true)
 
     const handleCancelButton = () => {
       cancelModeal()
     }
 
-    const handleSubmit = async (e) => {
-      // For adding Cart
-        e.preventDefault();
-      try{
-        const teacher_data = getSavedAuthData()
-        
-        const sessionData = {
-          session_name: sessionName,
-          session_duration: duration,
-          session_discription: description,
-          tutor_code : teacher_data.user_code
-        };
+    useEffect(()=> {
 
-        console.log("Session Data:", sessionData);
+      async function fetchStudentsData () {
+          setLoading(true);
+          try {
 
-        const response = await axios.post(
-          TutorEndPoints.CreateNewSession, sessionData,
-          {headers: {'Content-type': 'application/json'}}
-        );
-        console.log("RESPONSE CREATE", response);
-        const paymentData = {
-          session_code: response.data.data.session_code,
-          tutor_code: response.data.data.tutor_code,
-          session_name: sessionName,
-          amount: amount,
-        };
-        if (response.data.status === 201){
-          const payment_response = await axios.post(TutorEndPoints.CreateSessionPayment, paymentData,
-            {headers: {'Content-type': 'application/json'}}
-          )
-          if (payment_response.data?.checkout_url){
-            window.location.href = payment_response.data.checkout_url;
+              const response = await api.get(TutorEndPoints.StudentsInSession,{
+                  baseURL: url,
+                  params: qury_data,
+              });
+              setStudents(response.data);
+              console.log("RESPONSE BRUT",response.data)
+          } catch (e) {
+              setError(e);
+              setLoading(false);
+              console.error("Error :", e);
           }
-        }
-        console.log(response.data.error);    
-        if (response.data.status===400){
-            toast.warning("Session with same name already exist for you")
-        }
-        
-        
-      } catch {
-        console.error('Error creating payment session:', error);
-        alert('There was an error initiating payment.');
+      };
+      if (fetchFromBackend){
+          fetchStudentsData();
+          setFetchFromBackend(false);
       }
-
-    }
-  
-    const handleBuySession = () =>{
-
-    }
+  } ,[fetchFromBackend]);
 
   return (
     <>
@@ -176,9 +131,7 @@ export default function CardWithForm({cancelModeal}) {
         {/* <Button>Add to Cart</Button> */}
         <Button onClick={handleSubmit} className="hover:bg-green-600">Buy Session</Button>
       </CardFooter>
-      <ToastContainer />
     </Card>
-   
     </>
   )
 }

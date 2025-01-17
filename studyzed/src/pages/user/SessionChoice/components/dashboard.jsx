@@ -9,10 +9,6 @@ import {
   UserCircle,
   School
 } from 'lucide-react';
-import Navbar from '../SessionChoice/components/navbar';
-import { clearSavedAuthData } from '../../../utils/Localstorage';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../../redux/slice';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', id: 'dashboard' },
@@ -25,31 +21,12 @@ const menuItems = [
   { icon: UserCircle, label: 'My Account', id: 'account' },
 ];
 
-export default function Dashboard({}) {
+export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('dashboard');
 
-  const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    dispatch(logout());
-    clearSavedAuthData()
-    navigate('/login/');
-    console.log("wadadasd");
-    
-};
-
-const handleAccounts= () => {
-  navigate('/student/student-profile/')
-};
-
-
   return (
-    <div className=''>
-    <Navbar  logout={handleLogout} userProfile={handleAccounts} />
-    
-    <div className="flex gap-8 mt-6">
-      
-      
+    <div className="flex gap-8">
+  
       <div className="w-64 space-y-2">
         {menuItems.map((item) => (
           <button
@@ -67,9 +44,10 @@ const handleAccounts= () => {
         ))}
       </div>
 
+    
       <div className="flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-         
+          
           <div className="lg:col-span-2 bg-teal-900/30 rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4 text-emerald-400">Pending Tasks</h2>
             <div className="space-y-4">
@@ -77,12 +55,12 @@ const handleAccounts= () => {
             </div>
           </div>
 
-        
+         
           <div className="bg-teal-900/30 rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4 text-emerald-400">Leaderboard</h2>
             <div className="space-y-3">
               {[
-                { name: 'David Villa', score: 400 },
+                { name: 'Davvid Villa', score: 400 },
                 { name: 'Mahesh PN', score: 355 },
                 { name: 'Fernando Torres', score: 300 },
               ].map((user, index) => (
@@ -101,7 +79,6 @@ const handleAccounts= () => {
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

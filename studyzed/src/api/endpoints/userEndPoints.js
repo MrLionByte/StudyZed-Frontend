@@ -31,6 +31,9 @@ export const TutorEndPoints = {
     'TutorDetails' : 'user-app/user-profile/',
     'CreateNewSession'   : `${Session_Task_Service}/session-tutor/create-session/`,  
     'CreateSessionPayment'   : `${Payment_Service}/session-buy/create-checkout-session/`,
-    
+
+    'TutorSessions'          : 'session-tutor/tutor-sessions/',
+    'StudentsInSession'      : 'session-tutor/all-session-students/',
+    'ApproveStudentInSession': 'session-tutor/approve-student-to-session/',
 }
 
