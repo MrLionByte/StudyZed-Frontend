@@ -22,8 +22,36 @@ const api = axios.create({
       }
 }); 
 
-api.interceptors.request.use(
+const excludedUrls = {    
+    'auth-app/user-email/':{ method: 'POST' },
+    'auth-app/verify-otp/':{ method: 'POST' },
+    'auth-app/resend-otp/':{ method: 'POST' },
+    'auth-app/user-details/':{ method: 'POST' },
+
+    'auth-app/login/google-account/':{ method: 'POST' },
+    'auth-app/login/forgot-password/':{ method: 'POST' },
+    'auth-app/login/forgot-password/otp-verify/':{ method: 'POST' },
+    'auth-app/login/forgot-password/change-password/':{ method: 'POST' },
+
+    'auth-app/login/': { method: 'POST' },
+    'auth-app/user/refresh/': { method: 'POST' },
+
+    'admin-app/login-strict/':{ method: 'POST' },
+};
+
+
+api.interceptors.request.use( 
     (config) => {
+        console.log("cofig :",config);
+        
+        const exclusion = Object.keys(excludedUrls).find(url => config.url.includes(url));
+        
+        if (exclusion && excludedUrls[exclusion].method === config.method.toUpperCase()) {
+            console.log("EXCLUDE WORKING :::");
+            
+            return config;
+        }
+
         const authData = JSON.parse(localStorage.getItem("authData"));      
         const token = (authData ? authData["accessToken"] : null ) 
         
@@ -42,10 +70,20 @@ api.interceptors.response.use(
     async (error)=> {
         const originalRequest = error.config;
 
+        console.log("REFRESHER ::",error);
+        
+        const exclusion = Object.keys(excludedUrls).find(url => originalRequest.url.includes(url));
+        
+        if (exclusion) {
+            console.log("EXCLUDE WORKING REFRSh:::");
+            
+            return originalRequest;
+        }
+
         if (error.response && error.response.status === 401 &&
             !originalRequest._retry){
             const authState = getSavedAuthData();
-
+            
             try {
                 const refreshResponse = await axios.post(
                     api.baseURL+'auth-app/user/refresh/',

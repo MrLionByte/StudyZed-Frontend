@@ -33,31 +33,40 @@ export const adminLoginLogic = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!username || !password) {
-            alert("Please enter a valid username & password");
+            toast.warning("Please enter a valid username & password");
             return;
         };
         try {
             const response = await api.post(adminEndPoints.AdminLogin,
                 {username, password});
-                console.log("ADMIN LOGIN", response.data);
-            const authData = {
-                accessToken: response.data["access_token"],
-                refreshToken: response.data["refresh_token"],
-                role: 'Admin',
-                userId: response.data['user']['id'],
-                firstName: response.data['user']['first_name'],
-                lastName: response.data['user']['last_name'],
-                email: response.data['user']['email']
+            console.log("ADMIN LOGIN", response);
+            if (response.data["auth-status"] === "success"){
+            
+                const authData = {
+                    accessToken: response.data["access_token"],
+                    refreshToken: response.data["refresh_token"],
+                    role: 'Admin',
+                    userId: response.data['user']['id'],
+                    firstName: response.data['user']['first_name'],
+                    lastName: response.data['user']['last_name'],
+                    email: response.data['user']['email']
+                }
+                console.log("ADMIN LOGIN", authData);
+                
+                savedAuthData(authData);
+                toast.success("Welcome Mr Admin")
+                dispatch(setAdmin({user:response.data['user'], role: 'Admin'}))
+                
+                navigate('/admin/dashboard/');
+                
+            } else {
+                
             }
-            console.log("ADMIN LOGIN", authData);
             
-            savedAuthData(authData);
-            toast.success("Welcome Mr Admin")
-            dispatch(setAdmin({user:response.data['user'], role: 'Admin'}))
-            
-            navigate('/admin/dashboard/');
         }
         catch (error) {
+            console.log(error);
+            
             if (error.response && error.response.status === 403){
                 toast.error("You are not an Admin, not allowded to login.")
                 clearSavedAuthData();
