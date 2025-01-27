@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {adminEndPoints} from '../../../../../api/endpoints/adminEndPoint.js'
 import { ToastContainer, toast } from 'react-toastify';
 import axios from "axios";
-import api, {api_dictnory} from "../../../../../api/axios_api_call.js";
+import api, {api_dictatory} from "../../../../../api/axios_api_call.js";
 
 export const useApproveSessionManagement = () => {
     
@@ -19,7 +19,7 @@ export const useApproveSessionManagement = () => {
         async function fetchSessionsData () {
             setLoading(true);
             try {
-                const url = api_dictnory["Session_Service"]
+                const url = api_dictatory["Session_Service"]
                 const response = await api.get(adminEndPoints.SeeSessionsToApprove, {
                     baseURL: url, 
                 });
@@ -46,7 +46,7 @@ export const useApproveSessionManagement = () => {
            
             const Pkey = sessionPayment.session_key;
             
-            const url = api_dictnory["Session_Service"];
+            const url = api_dictatory["Session_Service"];
             const response = await api.patch(adminEndPoints.GiveApprovelForSession+`${Pkey}/`,
               Pkey,{
                 baseURL: url,
@@ -68,7 +68,7 @@ export const useApproveSessionManagement = () => {
         e.preventDefault();
         try {
           const session_data = { session_code, tutor_code };
-          const url = api_dictnory["Payment_Service"];
+          const url = api_dictatory["Payment_Service"];
           const response = await api.get(adminEndPoints.SeeSessionPayment, {
             baseURL: url,
             params: session_data,

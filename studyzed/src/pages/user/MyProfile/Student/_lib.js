@@ -159,8 +159,15 @@ export const useUserProfile = () => {
 
     const handleBackToSession = () => {
         console.log("userData :",userData.role);
+        if (userData.role){
+            console.log("Working : 11 ", userData.role);
+            
+            navigate(`/student/choose-session/`)
+        } else {
+            console.log("Working : 11 2");
+            navigate(`/login/`)
+        }
         
-        navigate(`/${userData.role.toLowerCase()}/choose-session/`)
     }
 
     return {

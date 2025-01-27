@@ -2,11 +2,12 @@ import { useState } from "react";
 import api from "../../../../api/axios_api_call"
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import Test from "../../../../assets/test.svg";
 
 export default function ForgotPassword ({passwordForgot}) {
 
     const forgot_paragraph = "Forgot your account’s password? Enter your email address and we’ll send you a recovery OTP."
-    const OTP_paragraph = "Confirm your email using the OTP sent to your Email, Enter the OTP below. Don't reload or close your browser."
+    const otp_paragraph = "Confirm your email using the OTP sent to your Email, Enter the OTP below. Don't reload or close your browser."
     const password_paragraph = "Enter your new password here, don't reload or close your browser. Use a Capital, small, symbol and number"
 
     const [email, setEmail] = useState("");
@@ -15,7 +16,6 @@ export default function ForgotPassword ({passwordForgot}) {
     const [isOtpVarified, setIsOtpVarified] = useState(false)
     const [newPassword, setNewPassword] = useState('');
 
-    const navigate = useNavigate()
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email) return toast.error("Enter Email");
@@ -94,82 +94,126 @@ export default function ForgotPassword ({passwordForgot}) {
           return errors
     }
 
-    return (
-        <>
-        <ToastContainer autoClose={1000} position="top-center" />
-        {!emailVarified ? 
-        <>
-        <div className="mb-4">
-            <p className="text-black mb-3">{forgot_paragraph}</p>
+    const handleChangeEmail = () => {
+      setEmailVarified(false)
+      setIsOtpVarified(false)
+    }
 
-           <label htmlFor="email" className="block text-sm font-bold text-gray-700">
-            EMAIL</label>
-             <input type="text" id="email" name="email" required value={email} autoComplete="on"
-                onChange={(e) => {
-                setEmail(e.target.value);}}  
-                className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
-                />
+    const handleBackToLogin = () => {
+      passwordForgot()
+    }
+
+    return (
+      <div className="flex-1 size-80">
+        <div className="flex items-center gap-2 mb-4">
+          <img src={Test} alt="Logo" className="w-14 h-14" />
+          <h2 className="text-xl font-semibold">Forgot Password</h2>
         </div>
-        <div className="mb-4 relative">
-           
-            <button
+        {      
+          !emailVarified ? (
+            <p className="text-sm text-gray-300 mb-6">{forgot_paragraph}</p>
+          ) : !isOtpVarified ? (
+            
+            <p className="text-sm text-gray-300 mb-6">{otp_paragraph}</p>
+          ) : (
+            
+            <p className="text-sm text-gray-300 mb-6">{password_paragraph}</p>
+          )
+        }
+
+  {!emailVarified ? (
+    <>
+      <div className="space-y-4 mb-6">
+        <div>
+          <label className="text-sm text-gray-300">Email</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            required
+            value={email}
+            autoComplete="on"
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 bg-gray-700/30 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
+        </div>
+
+        <div className="relative">
+          <button
             type="submit"
             onClick={handleSubmit}
             className="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition duration-200"
-            >
+          >
             Send Recovery Mail
-            </button>
-
+          </button>
         </div>
-        </>
-        : !isOtpVarified ? (
-        <>
-        <div className="mb-4">
-            <p className="text-black mb-3">{OTP_paragraph}</p>
-
-           <label htmlFor="email" className="block text-sm font-bold text-gray-700">
-            OTP</label>
-             <input type="text" id="otp" name="otp" required value={otp} autoComplete="off"
-                onChange={(e) => {
-                setOtp(e.target.value);}}  
-                className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
-                />
+      </div>
+    </>
+  ) : !isOtpVarified ? (
+    <>
+      <div className="space-y-4 mb-6">
+        <div>
+          <label className="text-sm text-gray-300">OTP</label>
+          <input
+            type="text"
+            id="otp"
+            name="otp"
+            required
+            value={otp}
+            autoComplete="off"
+            onChange={(e) => setOtp(e.target.value)}
+            className="w-full p-2 bg-gray-700/30 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
         </div>
-        <div className="mb-4 relative">
-           
-            <button
+
+        <div className="relative">
+          <button
             type="submit"
             onClick={handleOtp}
             className="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition duration-200"
-            >
+          >
             Submit OTP
-            </button>
-
+          </button>
         </div>
-        </>) : (<>
-            <div className="mb-4">
-            <p className="text-black mb-3">{password_paragraph}</p>
-
-           <label htmlFor="password" className="block text-sm font-bold text-gray-700">
-            ENTER PASSWORD</label>
-             <input type="password" id="password" name="password" required value={newPassword}
-                onChange={(e) => {
-                    setNewPassword(e.target.value);}}  
-                className="mt-1 block w-full border text-black border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
-                />
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="space-y-4 mb-6">
+        <div>
+          <label className="text-sm text-gray-300">Enter Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="w-full p-2 bg-gray-700/30 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
         </div>
-        <div className="mb-4 relative">
-           
-            <button
+
+        <div className="relative">
+          <button
             type="submit"
             onClick={handleNewPassword}
             className="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition duration-200"
-            >
+          >
             Change Password
-            </button>
-
+          </button>
         </div>
-        </>)}
-        </>
+      </div>
+    </>
+  )}
+  <div className="flex justify-between">
+
+  <p className="text-end text-slate-400 hover:text-green-600 cursor-pointer" onClick={handleBackToLogin}>Back to login</p>
+  {emailVarified &&
+  <p className="text-end text-slate-400 hover:text-red-600 cursor-pointer" onClick={handleChangeEmail}>Change Email</p>
+  }
+
+  </div>
+</div>
+
     );
 };

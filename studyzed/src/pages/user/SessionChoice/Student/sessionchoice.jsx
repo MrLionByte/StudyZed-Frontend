@@ -6,7 +6,7 @@ import './style.css'
 import { useDispatch } from 'react-redux';
 import {logout} from '../../../../redux/slice'
 import { clearSavedAuthData, getSavedAuthData } from '../../../../utils/Localstorage';
-import api, {api_dictnory} from '../../../../api/axios_api_call';
+import api, {api_dictatory} from '../../../../api/axios_api_call';
 import {studentEndPoints} from '../../../../api/endpoints/userEndPoints';
 import { toast, ToastContainer, Bounce } from 'react-toastify';
 import Navbar from '../components/navbar.jsx';
@@ -39,7 +39,7 @@ const SessionPage = () => {
       
       console.log("Payload being sent:", enter_data);
 
-      const url = api_dictnory["Session_Service"]
+      const url = api_dictatory["Session_Service"]
       const response = await api.post(studentEndPoints.ChooseSession,
         enter_data,{ 
         baseURL: url,
@@ -65,20 +65,9 @@ const SessionPage = () => {
     setFetchFromBackend(true)
   };
 
-  const handleUserRoundIcon= () => {
-    navigate('/student/student-profile/')
-  };
 
   const cancelSessionJoin = () => {
     setIsJoinSession(false);
-  };
-
-  const handleLogout = () => {
-    dispatch(logout());
-    clearSavedAuthData()
-    navigate('/login/');
-    console.log("wadadasd");
-    
   };
 
   const handleEnterSession = (e,tutor_code, session_code, is_approved) =>{
@@ -106,7 +95,7 @@ const SessionPage = () => {
         console.log(student_data.user_code);
         const qury_data = {"student_code": student_data.user_code}
         try {
-            const url = api_dictnory["Session_Service"]
+            const url = api_dictatory["Session_Service"]
             const response = await api.get(studentEndPoints.AllSessions, {
                 baseURL: url,
                 params : qury_data
@@ -130,7 +119,7 @@ const SessionPage = () => {
 
   return (
     <div className="min-h-screen text-white">
-      <Navbar logout={handleLogout} userProfile={handleUserRoundIcon} />
+      <Navbar  />
       {/* <nav className="flex justify-between items-center px-8 py-4">
         <div className="text-lg font-bold">StudyZen</div>
         <ul className="flex space-x-8">

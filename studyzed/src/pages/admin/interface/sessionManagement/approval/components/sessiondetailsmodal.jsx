@@ -13,7 +13,7 @@ import { Info } from 'lucide-react';
 import {adminEndPoints} from './../../../../../../api/endpoints/adminEndPoint'
 
 
-export default function SessionPaymentDetails({SessionData, cancelModeal, handleSessionApproval}) {
+export default function SessionPaymentDetails({SessionData, cancelModal, handleSessionApproval}) {
 
   return (
     <>
@@ -71,7 +71,7 @@ export default function SessionPaymentDetails({SessionData, cancelModeal, handle
           Approve
         </Button>
       
-        <Button onClick={cancelModeal} className="hover:bg-red-600" variant="outline">
+        <Button onClick={cancelModal} className="hover:bg-red-600" variant="outline">
           Close
         </Button>
       </div>

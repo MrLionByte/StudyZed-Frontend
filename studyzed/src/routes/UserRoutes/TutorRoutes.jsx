@@ -5,6 +5,7 @@ import NotFound from '../../components/Errors/NotFound';
 import PaymentSuccess from '../../pages/user/SessionPayment/payment_success';
 import PaymentFailed from '../../pages/user/SessionPayment/payment_failed';
 import PaymentCancelled from '../../pages/user/SessionPayment/payment_cancel';
+import Wallet from '../../pages/user/Wallet/wallet';
 import Dashboard from '../../pages/user/Dashboard/tutorDashboard';
 
 export default function TutorStates () {
@@ -18,6 +19,8 @@ export default function TutorStates () {
             <Route path={ 'enter-session/' } element={<Dashboard />} />
 
             <Route path='profile/' element={<MyProfile />} />
+            
+            <Route path='tutor-wallet/' element={<Wallet />} />
 
             <Route path='/*' element={<NotFound />} />
         </Routes>

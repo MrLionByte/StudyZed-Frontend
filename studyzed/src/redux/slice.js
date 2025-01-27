@@ -23,13 +23,13 @@ const userAuth = createSlice({
             const { user, role } = action.payload;
             console.log(user, role, "SLICE WORK");
             
-            state.user = user;
+            // state.user = user;
             state.role = role;
             state.isAuthenticated = true;
             localStorage.setItem('authState',JSON.stringify(state));
         },
         logout: (state) => {
-            state.user = null;
+            // state.user = null;
             state.role = null;
             state.isAuthenticated = false;
             localStorage.removeItem('authState');
@@ -46,12 +46,12 @@ const adminAuth = createSlice({
             console.log("STATE" ,state);
             
             const { id, username, email, is_superuser } = action.payload['user'];
-            state.admin = { id, username, email, is_superuser };
+            // state.admin = { id, username, email, is_superuser };
             state.isAdminAuthenticated = is_superuser || false;
             localStorage.setItem('adminAuthState', JSON.stringify(state));
         },
         adminLogout(state) {
-            state.admin = null;
+            // state.admin = null;
             state.isAdminAuthenticated = false;
             if (localStorage.getItem('adminAuthState')){
             localStorage.removeItem('adminAuthState');

@@ -80,7 +80,7 @@ const ActiveSessions = memo(() => {
  
     {isModalOpen && (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <SessionPaymentDetails SessionData={sessionPayment[0]} cancelModeal={closeModal} 
+    <SessionPaymentDetails SessionData={sessionPayment[0]} cancelModal={closeModal} 
     handleSessionApproval={handleApproveSession} />
   </div>
 )}

@@ -21,16 +21,16 @@ import { Info } from 'lucide-react';
 import {TutorEndPoints} from '../../../../api/endpoints/userEndPoints'
 import axios from "axios"
 import { getSavedAuthData } from "../../../../utils/Localstorage"
-import { api_dictnory } from "../../../../api/axios_api_call"
+import { api_dictatory } from "../../../../api/axios_api_call"
 
 
-export default function CardWithForm({cancelModeal}) {
+export default function CardWithForm({cancelModal}) {
     const [studentData, setStudentData] = useState([]);
     const [duration, setDuration] = useState("1"); 
     const [fetchFromBackend,setFetchFromBackend] = useState(true)
 
     const handleCancelButton = () => {
-      cancelModeal()
+      cancelModal()
     }
 
     useEffect(()=> {

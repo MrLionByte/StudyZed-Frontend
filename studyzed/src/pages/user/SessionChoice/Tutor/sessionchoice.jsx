@@ -7,11 +7,11 @@ import { useDispatch } from 'react-redux';
 import {logout} from '../../../../redux/slice'
 import CreateNewSession from './components/create_session_card'
 import Navbar from '../components/navbar';
-import api,{api_dictnory} from '../../../../api/axios_api_call';
+import api,{api_dictatory} from '../../../../api/axios_api_call';
 import { getSavedAuthData } from '../../../../utils/Localstorage';
 import { TutorEndPoints } from '../../../../api/endpoints/userEndPoints';
 import { toast, ToastContainer, Bounce } from 'react-toastify';
-
+import { GraduationCap, Clock, Users, ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react';
 const TutorSessionPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isJoinSession, setIsJoinSession] = useState(false);
@@ -21,6 +21,9 @@ const TutorSessionPage = () => {
   const [tutorCode, setTutorCode] = useState('')
   const [error, setError] = useState(false)
   const [sessions, setSessions] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [copiedId, setCopiedId] = useState(null);
+  const itemsPerPage = 8;
   
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,6 +67,23 @@ const TutorSessionPage = () => {
     
   }
 
+  const handleCopyCode = (code) => {
+    console.log("Code to copy:", code);
+    if (!code) {
+        toast.error("Invalid code to copy.");
+        return;
+    }
+    navigator.clipboard.writeText(code)
+        .then(() => {
+            setCopiedId(code);
+            setTimeout(() => setCopiedId(null), 2000);
+        })
+        .catch((err) => {
+            console.error("Clipboard error:", err);
+            toast.error("Failed to copy code.");
+        });
+};
+
   useEffect(()=> {
     const tutor_data = getSavedAuthData()
     
@@ -75,7 +95,7 @@ const TutorSessionPage = () => {
         console.log(tutor_data.user_code);
         const qury_data = {"tutor_code": tutor_data.user_code}
         try {
-            const url = api_dictnory["Session_Service"]
+            const url = api_dictatory["Session_Service"]
             const response = await api.get(TutorEndPoints.TutorSessions, {
                 baseURL: url,
                 params : qury_data
@@ -98,24 +118,105 @@ const TutorSessionPage = () => {
     }
   } ,[fetchFromBackend]);
 
+
   return (
     <div className="min-h-screen text-white">
     <Navbar logout={handleLogout} userProfile={handleUserRoundIcon} />
 
-    <div className="flex justify-center items-center min-h-[80vh]">
-    {sessions?.length > 0 ? (
+    <div className="flex flex-row gap-4 justify-center items-center min-h-[80vh]">
+    {sessions?.length > 0 ? 
+    // (sessions.map((session) => (
+    //   <div
+    //     key={session.id}
+    //     className="relative group rounded-xl gap-6
+    //     overflow-hidden h-[250px] hover:transform hover:scale-105 transition-all duration-300"
+    //   >
+    //     {/* Card Background Image */}
+    //     <div 
+    //       className="absolute inset-0 bg-cover bg-center bg-slate-400"
+    //       style={{ backgroundImage: `url(${session.image})` }}
+    //     />
+    //     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
+        
+    //     <div className="relative h-full p-6 flex flex-col">
+    //       <div className="flex items-center justify-between mb-4">
+    //         <div className="flex items-center gap-2">
+    //           <span className="text-emerald-400 text-sm font-medium">
+    //             {session.session_code}
+    //           </span>
+    //           <button
+    //             onClick={() => handleCopyCode(session.id)}
+    //             className="p-1 hover:bg-white/10 rounded-md transition-colors"
+    //             title="Copy session code"
+    //           >
+    //             {copiedId === session.id ? (
+    //               <Check className="w-4 h-4 text-emerald-400" />
+    //             ) : (
+    //               <Copy className="w-4 h-4 text-gray-400" />
+    //             )}
+    //           </button>
+    //         </div>
+    //         <span className="bg-emerald-400/20 text-emerald-400 px-3 py-1 rounded-full text-sm">
+    //           {session.subject}
+    //         </span>
+    //       </div>
+          
+    //       <h3 className="text-white text-xl font-bold mb-4 group-hover:text-emerald-400 transition-colors">
+    //         {session.session_name }
+    //       </h3>
+          
+    //       <div className="space-y-3 mt-auto">
+    //         <div className="flex items-center text-gray-300">
+    //           <GraduationCap className="w-5 h-5 mr-2 text-emerald-400" />
+    //           <span>{session.instructor}</span>
+    //         </div>
+            /* <div className="flex items-center text-gray-300">
+              <Users className="w-5 h-5 mr-2 text-emerald-400" />
+              <span>{session.students} Students</span>
+            </div>
+            <div className="flex items-center text-gray-300">
+              <Clock className="w-5 h-5 mr-2 text-emerald-400" />
+              <span>{session.duration}</span>
+            </div> */
+            
+    //         <button onClick={(e)=>handleEnterSession(e,session.tutor_code, session.session_code, session.is_active)}
+    //         className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+    //           Enter Session
+    //         </button>
+    //       </div>
+    //     </div>
+    //   </div>
+    // )))
+    
+    (
         sessions.map((session, index) => (
           <div
             key={index}
             className="border border-teal-500 p-6 rounded-md bg-black/80 shadow-md cursor-pointer"
           >
+            <span className="text-emerald-400 text-sm font-medium">
+               {session.session_code}
+               </span>
+               <button
+                  onClick={() => handleCopyCode(session.session_code)}
+                  className="p-1 hover:bg-white/10 rounded-md transition-colors"
+                  title="Copy session code"
+              >
+                  {copiedId === session.session_code ? (
+                      <Check className="w-4 h-4 text-emerald-400" />
+                  ) : (
+                      <Copy className="w-4 h-4 text-gray-400" />
+                  )}
+              </button>
             <p className="text-xl font-semibold mt-4">Session Name:</p>
             <p className="text-lg">{session.session_name || "Unnamed"}</p>
             <button onClick={(e)=>handleEnterSession(e,session.tutor_code, session.session_code, session.is_active)} 
             className='bg-blue-800 text-center rounded p-2 hover:bg-green-700'>Enter Session</button>
           </div>
         ))
-      ) : (
+      ) 
+      : 
+      (
         <p className="text-white text-lg">No sessions available</p>
       )}
     </div>
@@ -128,7 +229,7 @@ const TutorSessionPage = () => {
 
     {isModalOpen && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <CreateNewSession cancelModeal={closeModal} />
+          <CreateNewSession cancelModal={closeModal} />
       </div>
     )}
 

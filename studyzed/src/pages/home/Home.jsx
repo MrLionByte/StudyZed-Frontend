@@ -9,11 +9,11 @@ export default function Home () {
     const navigate = useNavigate();
 
     return (
-      <div className="home">
+      <>
         {/* <Snowfall color="#fff" snowflakeCount={50} style={{zIndex: 1}}/> */}
         <Navbar />
         <HomepageAddon />
         
-      </div>
+      </>
     )
 };

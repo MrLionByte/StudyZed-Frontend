@@ -1,21 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GraduationCap, Menu, UserCircle, LogOut } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../../../assets/studyzed_main.png'
+import { clearSavedAuthData, getSavedAuthData } from '../../../../utils/Localstorage';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../../../redux/slice';
 
-export default function Navbar({logout, userProfile}) {
+export default function Navbar() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [userRole, setUserRole] = useState();
 
-    const handleLogout = () => {
-    logout()
-    setShowAccountMenu(false)
-       
-    }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
     const handleUserProfile = () => {
-        userProfile()
+      const path_role = userRole.toLowerCase();
+      navigate(`/${path_role}/profile/`)
         setShowAccountMenu(false)
     }
+
+    const handleLogout = () => {
+      dispatch(logout());
+      clearSavedAuthData()
+      setShowAccountMenu(false)
+      navigate('/login/');
+    };
+
+    const userData =  getSavedAuthData()
+
+    useEffect(()=>{
+      if (!userRole){
+        setUserRole(userData.role)
+      }
+    }, [])
 
   return (
     <nav className="bg-teal-900/50 backdrop-blur-sm relative">
@@ -27,8 +44,16 @@ export default function Navbar({logout, userProfile}) {
           </Link>
           
           <div className="flex items-center space-x-4">
+          {userRole === "STUDENT" ? 
             <Link to="/student/choose-session" className="hover:text-emerald-400">Home</Link>
-            <Link to="/wallet" className="hover:text-emerald-400">Wallet</Link>
+            :
+            <Link to="/tutor/choose-session" className="hover:text-emerald-400">Home</Link>
+            }
+          {userRole === "STUDENT" ? 
+            <Link to="/student/student-wallet/" className="hover:text-emerald-400">Wallet</Link>
+            :
+            <Link to="/tutor/tutor-wallet/" className="hover:text-emerald-400">Wallet</Link>
+            }
             <button 
               className="p-2 hover:bg-teal-800 rounded-full relative"
               onClick={() => setShowAccountMenu(!showAccountMenu)}

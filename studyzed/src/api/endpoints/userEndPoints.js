@@ -18,7 +18,11 @@ export const userCommonEndPoints = {
 export const studentEndPoints = {
     'StudentProfilePic'     : 'user-app/upload-profile-pic/',
     'StudentCoverPic'       : 'user-app/upload-cover-pic/',
-    'StudentDetails'        : 'user-app/user-profile/',  
+    'StudentDetails'        : 'user-app/user-profile/',
+    
+    'GetWalletDetails': 'wallet/student-wallet/',
+    'AddToWallet': 'wallet/create-wallet-transaction/',
+
     // 'ChooseSession'      : '/tutor-app/student/session/',
     'AllSessions'           : '/session-student/view-session/',
     'ChooseSession'         : 'session-student/enter-session/',
@@ -29,8 +33,13 @@ export const TutorEndPoints = {
     'TutorProfilePic' : 'user-app/upload-profile-pic/',
     'TutorCoverPic': 'user-app/upload-cover-pic/',
     'TutorDetails' : 'user-app/user-profile/',
-    'CreateNewSession'   : `${Session_Task_Service}/session-tutor/create-session/`,  
-    'CreateSessionPayment'   : `${Payment_Service}/session-buy/create-checkout-session/`,
+    'CreateNewSession'   : `session-tutor/create-session/`,  
+    'CreateSessionPayment'   : `session-buy/create-checkout-session/`,
+
+    'CreateSessionUsingWallet' : 'session-buy/pay-using-wallet/',
+
+    'GetWalletDetails': 'wallet/tutor-wallet/',
+    'AddToWallet': 'wallet/create-wallet-transaction/',
 
     'TutorSessions'          : 'session-tutor/tutor-sessions/',
     'StudentsInSession'      : 'session-tutor/all-session-students/',

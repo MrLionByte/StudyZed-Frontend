@@ -119,3 +119,41 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+// import { Link } from 'react-router-dom';
+// import { BookOpen, Menu } from 'lucide-react';
+// import Logo from "../assets/studyzed_main.png"
+// import { useState } from 'react';
+
+
+// const Navbar = () => {
+
+//   const [isOpen, setIsOpen] = useState(false);
+
+//   const toggleMenu = () => setIsOpen(!isOpen);
+
+//   return (
+//     <nav className="absolute top-0 w-full p-4 flex justify-between items-center z-50">
+//       <Link to="/" className="flex items-center gap-2">
+//         <BookOpen className="h-6 w-6 text-emerald-400" />
+//         <span className="font-bold text-xl">StudyZen</span>
+//       </Link>
+//       <div className="flex items-center gap-6">
+//         <Link to="/" className="hover:text-emerald-400">Home</Link>
+//         <Link to="/about" className="hover:text-emerald-400">About Us</Link>
+//         <Link to="/faq" className="hover:text-emerald-400">FAQ</Link>
+//         <Menu className="h-6 w-6 cursor-pointer hover:text-emerald-400" />
+//       </div>
+//       <div className="flex items-center gap-4">
+//         <Link to="/start-learning" className="px-4 py-2 rounded-full bg-emerald-400 text-black hover:bg-emerald-300">
+//           Sign up
+//         </Link>
+//         <Link to="/start-learning" className="px-4 py-2 rounded-full border border-emerald-400 hover:bg-emerald-400/10">
+//           Log In
+//         </Link>
+//       </div>
+//     </nav>
+//   );
+// };
+
+// export default Navbar;

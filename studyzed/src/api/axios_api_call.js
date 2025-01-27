@@ -3,14 +3,14 @@ import { ACCESS_TOKEN } from './helpers/constrands'
 import Cookies from 'js-cookie'
 import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Localstorage";
 
-export const api_dictnory = {
+export const api_dictatory = {
     "Usermanagement_Service": "http://127.0.0.1:8005/",
     "Payment_Service"       : "http://127.0.0.1:8008/",
     "Session_Service"       : "http://127.0.0.1:8009/",
 };
 
 const key = "Usermanagement_Service";
-const baseURL = api_dictnory[key];
+const baseURL = api_dictatory[key];
 
 const api = axios.create({
     // baseURL: "http://127.0.0.1:8005/",
@@ -47,7 +47,7 @@ api.interceptors.request.use(
         const exclusion = Object.keys(excludedUrls).find(url => config.url.includes(url));
         
         if (exclusion && excludedUrls[exclusion].method === config.method.toUpperCase()) {
-            console.log("EXCLUDE WORKING :::");
+            console.log("EXCL");
             
             return config;
         }
@@ -69,39 +69,39 @@ api.interceptors.response.use(
     (response) => response,
     async (error)=> {
         const originalRequest = error.config;
-
-        console.log("REFRESHER ::",error);
+        console.log("REFRESH ERROR :",error.status);
         
-        const exclusion = Object.keys(excludedUrls).find(url => originalRequest.url.includes(url));
-        
-        if (exclusion) {
-            console.log("EXCLUDE WORKING REFRSh:::");
-            
-            return originalRequest;
-        }
-
-        if (error.response && error.response.status === 401 &&
+        if (error.response && 
+            (error.response.status === 401 || error.response.status === 403) &&
             !originalRequest._retry){
-            const authState = getSavedAuthData();
-            
-            try {
-                const refreshResponse = await axios.post(
-                    api.baseURL+'auth-app/user/refresh/',
-                    {refresh_token: authState?.refreshToken}
-                );
-                const newAuthState = {
-                   ...authState,
-                    accessToken: refreshResponse.data.access_token,
-                    refreshToken: refreshResponse.data.refresh_token,
-                };
-                savedAuthData(newAuthState);
 
-                originalRequest.headers.Authorization = `Bearer ${newAuthData.accessToken}`;
+            originalRequest._retry = true;
+                console.log("RESEND REFRESH WORLINGG");
+            try { 
+                const authData = getSavedAuthData();
+                const refresh_token = authData.refreshToken || null;
+                console.log("Auth Data  :", authData, refresh_token);
+
+                if (!refresh_token){
+                    throw new Error("No refresh token available");
+                }
+
+                const refreshResponse = await axios.post(
+                    'http://127.0.0.1:8005/auth-app/user/refresh/',
+                    {"refresh": refresh_token}
+                );
+                console.log("refreshResponse CAme:", refreshResponse);
+                
+                authData.accessToken = refreshResponse.data.access;
+                savedAuthData(authData);
+
+                originalRequest.headers.Authorization = `Bearer ${authData.accessToken}`;
+                
                 return api(originalRequest);
             } catch (refreshError) {
                 console.error("Token refresh failed:", refreshError);
                 clearSavedAuthData();
-                // window.location.href = "/login";
+                window.location.href = "/login";
                 return Promise.reject(refreshError);
             }
         }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Bounce, toast, ToastContainer } from "react-toastify"
 import {TutorEndPoints} from "../../../../api/endpoints/userEndPoints";
-import api,{api_dictnory} from "../../../../api/axios_api_call";
+import api,{api_dictatory} from "../../../../api/axios_api_call";
 import { LucideSquareArrowRight } from "lucide-react";
   
 
@@ -26,7 +26,7 @@ export default function StudentsInSession({session_data}) {
         async function fetchStudentsData () {
             setLoading(true);
             try {
-                const url = api_dictnory["Session_Service"]
+                const url = api_dictatory["Session_Service"]
                 const qury_data = {"session_code": session_data.sessions.session_code}
                 console.log("QURY ",qury_data);
                 
@@ -53,7 +53,7 @@ export default function StudentsInSession({session_data}) {
             try {
               console.log("STUDENT ID",studentId);
               
-                const url = api_dictnory["Session_Service"]
+                const url = api_dictatory["Session_Service"]
                 const dummy_data = {"dummy":"data"}
                 const response = await api.patch(
                   `${TutorEndPoints.ApproveStudentInSession}${studentId}/`,

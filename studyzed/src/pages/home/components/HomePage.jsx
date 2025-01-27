@@ -27,7 +27,7 @@ const LandingPage = () => {
         }, [isAuthenticated, navigate])
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-7xl  px-9 py-5 ">
+    <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-7xl  px-9">
       <div className="lg:ml-9 mt-6">
         <h1 className="text-6xl font-bold leading-tight">
           Learn,
@@ -47,7 +47,7 @@ const LandingPage = () => {
           </button>
         </div>
       </div>
-      <div className="hidden mt-40 md:block">
+      <div className="hidden mt-16 md:block">
         {/* <img src={XmasCap} className="absolute childhat"  
          alt="" /> */}
         <img

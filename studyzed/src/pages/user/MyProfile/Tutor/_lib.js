@@ -152,9 +152,16 @@ export const useUserProfile = () => {
             }
         }
     }
+
     const handleBackToSession = () => {
+        if (userData.role){
+            console.log("Working : 11 ", userData.role);
         navigate(`/tutor/choose-session/`)
-    }
+        } else {
+            console.log("Working : 112");
+        navigate(`/login/`)
+        }  
+    } 
 
     return {
         userData,
