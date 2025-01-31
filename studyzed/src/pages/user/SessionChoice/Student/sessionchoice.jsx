@@ -71,9 +71,11 @@ const SessionPage = () => {
   };
 
   const handleEnterSession = (e,tutor_code, session_code, is_approved) =>{
+    console.log(tutor_code, session_code);
+    
     e.preventDefault();
     const sessionData = { 
-      tutor_codee: tutor_code, session_code: session_code
+      tutor_code: tutor_code, session_code: session_code
     }
     if (tutor_code && is_approved){
       navigate("/student/enter-session/", { state: { sessions: sessionData } });
@@ -83,34 +85,34 @@ const SessionPage = () => {
     
   }
 
-  useEffect(()=> {
+  async function fetchSessionsData () {
     const student_data = getSavedAuthData()
     console.log(student_data.user_code);
-    
+  
     setStudentCode(student_data.user_code)
 
-    async function fetchSessionsData () {
-        setLoading(true);
-        
-        console.log(student_data.user_code);
-        const qury_data = {"student_code": student_data.user_code}
-        try {
-            const url = api_dictatory["Session_Service"]
-            const response = await api.get(studentEndPoints.AllSessions, {
-                baseURL: url,
-                params : qury_data
-            });
-            
-            setSessions(response.data);
-            console.log("RESPONSE BRUT",response.data)
-            console.log("RESPONSE BRUT",response)
-        } catch (e) {
-            setError(e);
-            setLoading(false);
-            console.error("Error :", e);
-        }
-    };
-    
+      setLoading(true);
+      
+      console.log(student_data.user_code);
+      const qury_data = {"student_code": student_data.user_code}
+      try {
+          const url = api_dictatory["Session_Service"]
+          const response = await api.get(studentEndPoints.AllSessions, {
+              baseURL: url,
+              params : qury_data
+          });
+          
+          setSessions(response.data);
+          console.log("RESPONSE BRUT",response?.data)
+          console.log("RESPONSE BRUT",response)
+      } catch (e) {
+          setError(e);
+          setLoading(false);
+          console.error("Error :", e);
+      }
+  };
+
+  useEffect(()=> {
     if (fetchFromBackend){
         fetchSessionsData();
         setFetchFromBackend(false);
@@ -150,7 +152,7 @@ const SessionPage = () => {
             <p className="text-lg">{session.tutor_code || "Unknown"}</p>
             <p className="text-xl font-semibold mt-4">Session Name:</p>
             <p className="text-lg">{session.session_name || "Unnamed"}</p>
-            <button onClick={(e)=>handleEnterSession(e,session.tutor_code, session.session_code, session.is_allowded)} 
+            <button onClick={(e)=>handleEnterSession(e,session.tutor_code, session.session, session.is_allowded)} 
             className='bg-blue-800 text-center rounded p-2 hover:bg-green-700'>Enter Session</button>
           </div>
         ))

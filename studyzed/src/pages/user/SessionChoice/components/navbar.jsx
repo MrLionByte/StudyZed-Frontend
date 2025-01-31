@@ -10,6 +10,7 @@ export default function Navbar() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [userRole, setUserRole] = useState();
 
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,7 +31,7 @@ export default function Navbar() {
 
     useEffect(()=>{
       if (!userRole){
-        setUserRole(userData.role)
+        setUserRole(userData?.role)
       }
     }, [])
 
@@ -42,7 +43,7 @@ export default function Navbar() {
             <GraduationCap className="h-8 w-8 text-emerald-400" />
             <img className="size-1/4 mt-2" src={Logo} alt="Logo" />
           </Link>
-          
+         
           <div className="flex items-center space-x-4">
           {userRole === "STUDENT" ? 
             <Link to="/student/choose-session" className="hover:text-emerald-400">Home</Link>
@@ -62,7 +63,8 @@ export default function Navbar() {
             </button>
 
            {showAccountMenu && (
-              <div className="absolute right-4 top-16 w-48 py-2 bg-teal-900/95 backdrop-blur-sm rounded-lg shadow-xl z-50">
+              <div className="absolute right-4 z-50
+              top-16 w-48 py-2 bg-teal-900/95 backdrop-blur-sm rounded-lg shadow-xl">
                 <button 
                   className="flex items-center space-x-2 px-4 py-2 hover:bg-teal-800 transition-colors"
                   onClick={handleUserProfile} 
@@ -72,7 +74,8 @@ export default function Navbar() {
                 </button>
                 
                 <button 
-                  className="w-full flex items-center space-x-2 px-4 py-2 hover:bg-teal-800 transition-colors text-red-400"
+                  className="w-full flex
+                  items-center space-x-2 px-4 py-2 hover:bg-teal-800 transition-colors text-red-400"
                   onClick={handleLogout} 
                 >
                   <LogOut className="h-5 w-5" />

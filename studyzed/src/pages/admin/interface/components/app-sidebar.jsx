@@ -30,7 +30,6 @@ import {
 let admin = '';
 if (localStorage.getItem("adminAuthState")) {
   admin = (JSON.parse(localStorage.getItem("adminAuthState"))).admin;
-  console.log(admin['username']);
 }
 
 const data = {

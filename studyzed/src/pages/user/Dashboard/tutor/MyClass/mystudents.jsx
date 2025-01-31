@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Bounce, toast, ToastContainer } from "react-toastify"
-import {TutorEndPoints} from "../../../../api/endpoints/userEndPoints";
-import api,{api_dictatory} from "../../../../api/axios_api_call";
+import {TutorEndPoints} from "../../../../../api/endpoints/userEndPoints";
+import api,{api_dictatory} from "../../../../../api/axios_api_call";
 import { LucideSquareArrowRight } from "lucide-react";
   
 
@@ -36,6 +36,7 @@ export default function StudentsInSession({session_data}) {
                 });
                 setStudents(response.data);
                 console.log("RESPONSE BRUT",response.data)
+                
             } catch (e) {
                 setError(e);
                 setLoading(false);

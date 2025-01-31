@@ -5,6 +5,7 @@ import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Lo
 
 export const api_dictatory = {
     "Usermanagement_Service": "http://127.0.0.1:8005/",
+    "Message_Service"       : "http://127.0.0.1:8006/",
     "Payment_Service"       : "http://127.0.0.1:8008/",
     "Session_Service"       : "http://127.0.0.1:8009/",
 };

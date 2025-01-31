@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   LayoutDashboard, 
   ClipboardList, 
@@ -10,9 +10,13 @@ import {
   School
 } from 'lucide-react';
 import Navbar from '../SessionChoice/components/navbar';
+import DashboardMain from './students/Main/dashboard';
+import Assessment from './students/Assessment/assessment';
 import { clearSavedAuthData } from '../../../utils/Localstorage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slice';
+import {saveSessionData, getSessionData} from "./components/currentSession";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', id: 'dashboard' },
@@ -28,6 +32,12 @@ const menuItems = [
 export default function Dashboard({}) {
   const [activeSection, setActiveSection] = useState('dashboard');
 
+  const [sessionData, setSessionData] = useState('');
+  const [sessionCode, setSessionCode] = useState("");
+
+  const navigate = useNavigate();
+  const location = useLocation(); 
+
   const dispatch = useDispatch();
 
   const handleLogout = () => {
@@ -41,7 +51,42 @@ export default function Dashboard({}) {
 const handleAccounts= () => {
   navigate('/student/student-profile/')
 };
+  const renderActiveSection = () => {
+      switch (activeSection) {
+        case 'dashboard':
+          return <DashboardMain />;
+        case 'assessment':
+          return <Assessment />; 
+        case 'tasks':
+          // return <Profile />; 
+        case 'messages':
+          return //<Messaging session_data={sessionData}/>;
+        case 'class':
+          // return <Profile />; 
+        case 'members':
+          return //<Members session_data={sessionData} />; 
+        case 'account':
+          // return <Profile />; 
+        
+        default:
+          return <div className="text-gray-400">Select a section to view content</div>;
+      }
+    };
 
+    useEffect(() => {
+        if (location.state) {
+          console.log(location.state);
+          
+            setSessionData(location.state);
+            setSessionCode(location.state.sessions.session_code)
+            saveSessionData(location?.state)
+        }
+    
+        if (sessionCode) {
+          const session = getSessionData();
+          setSessionCode(session)
+        }
+        }, [location.state]);
 
   return (
     <div className=''>
@@ -68,38 +113,7 @@ const handleAccounts= () => {
       </div>
 
       <div className="flex-1">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-         
-          <div className="lg:col-span-2 bg-teal-900/30 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 text-emerald-400">Pending Tasks</h2>
-            <div className="space-y-4">
-             
-            </div>
-          </div>
-
-        
-          <div className="bg-teal-900/30 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 text-emerald-400">Leaderboard</h2>
-            <div className="space-y-3">
-              {[
-                { name: 'David Villa', score: 400 },
-                { name: 'Mahesh PN', score: 355 },
-                { name: 'Fernando Torres', score: 300 },
-              ].map((user, index) => (
-                <div
-                  key={user.name}
-                  className="flex items-center justify-between bg-teal-900/50 p-3 rounded"
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="text-emerald-400">#{index + 1}</span>
-                    <span>{user.name}</span>
-                  </div>
-                  <span className="font-semibold">{user.score}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        {renderActiveSection()}
       </div>
     </div>
     </div>

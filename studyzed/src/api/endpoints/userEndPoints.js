@@ -26,6 +26,8 @@ export const studentEndPoints = {
     // 'ChooseSession'      : '/tutor-app/student/session/',
     'AllSessions'           : '/session-student/view-session/',
     'ChooseSession'         : 'session-student/enter-session/',
+
+    'GetStudentAssessments' :'assessment-student/get-session-for-students/',
     
 }
 
@@ -44,5 +46,8 @@ export const TutorEndPoints = {
     'TutorSessions'          : 'session-tutor/tutor-sessions/',
     'StudentsInSession'      : 'session-tutor/all-session-students/',
     'ApproveStudentInSession': 'session-tutor/approve-student-to-session/',
+    
+    'CreateNewAssessment'    :'assessment-tutor/create-assessment/',
+    'GetAllAssessments'      :'assessment-tutor/get-assessments/',
 }
 

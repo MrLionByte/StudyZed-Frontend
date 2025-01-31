@@ -12,6 +12,7 @@ import { getSavedAuthData } from '../../../../utils/Localstorage';
 import { TutorEndPoints } from '../../../../api/endpoints/userEndPoints';
 import { toast, ToastContainer, Bounce } from 'react-toastify';
 import { GraduationCap, Clock, Users, ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react';
+
 const TutorSessionPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isJoinSession, setIsJoinSession] = useState(false);
@@ -82,18 +83,17 @@ const TutorSessionPage = () => {
             console.error("Clipboard error:", err);
             toast.error("Failed to copy code.");
         });
-};
+  };
 
-  useEffect(()=> {
+
+  async function fetchSessionsData () {
     const tutor_data = getSavedAuthData()
+    setTutorCode(tutor_data?.user_code)
     
-    setTutorCode(tutor_data.user_code)
-
-    async function fetchSessionsData () {
-        setLoading(true);
+    setLoading(true);
         
-        console.log(tutor_data.user_code);
-        const qury_data = {"tutor_code": tutor_data.user_code}
+        console.log(tutor_data?.user_code);
+        const qury_data = {"tutor_code": tutor_data?.user_code}
         try {
             const url = api_dictatory["Session_Service"]
             const response = await api.get(TutorEndPoints.TutorSessions, {
@@ -111,10 +111,12 @@ const TutorSessionPage = () => {
             console.error("Error :", e);
         }
     };
-    
+
+  useEffect(()=> {
     if (fetchFromBackend){
-        fetchSessionsData();
-        setFetchFromBackend(false);
+      
+      fetchSessionsData();
+      setFetchFromBackend(false);
     }
   } ,[fetchFromBackend]);
 
