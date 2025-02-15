@@ -1,0 +1,8 @@
+.toast-center {
+    position: fixed !important; /* Override default positioning */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999; /* Ensure it's above other elements */
+  }
+  

@@ -1,0 +1,32 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .letter {
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: 62px;
+      fill: rgb(26, 144, 77);
+    }
+    .bounce1 { animation: bounce 1s ease-in-out infinite; animation-delay: 0.1s; }
+    .bounce2 { animation: bounce 1s ease-in-out infinite; animation-delay: 0.2s; }
+    .bounce3 { animation: bounce 1s ease-in-out infinite; animation-delay: 0.3s; }
+    .bounce4 { animation: bounce 1s ease-in-out infinite; animation-delay: 0.4s; }
+    .bounce5 { animation: bounce 1s ease-in-out infinite; animation-delay: 0.5s; }
+    .bounce6 { animation: bounce 1s ease-in-out infinite; animation-delay: 0.6s; }
+    .bounce7 { animation: bounce 1s ease-in-out infinite; animation-delay: 0.7s; }
+  </style>
+
+  <!-- Loading Text -->
+  <g transform="translate(100, 200)">
+    <g class="bounce1"><text x="0" y="0" class="letter">L</text></g>
+    <g class="bounce2"><text x="35" y="0" class="letter">O</text></g>
+    <g class="bounce3"><text x="75" y="0" class="letter">A</text></g>
+    <g class="bounce4"><text x="115" y="0" class="letter">D</text></g>
+    <g class="bounce5"><text x="155" y="0" class="letter">I</text></g>
+    <g class="bounce6"><text x="175" y="0" class="letter">N</text></g>
+    <g class="bounce7"><text x="215" y="0" class="letter">G</text></g>
+  </g>
+</svg>
