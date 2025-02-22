@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { 
-  LayoutDashboard, 
-  ClipboardList, 
-  CheckSquare, 
+import {
+  LayoutDashboard,
+  ClipboardList,
+  CheckSquare,
   MessageSquare,
   Users,
   TrendingUp,
   UserCircle,
-  School
+  School,
 } from 'lucide-react';
 
 const menuItems = [
@@ -26,7 +26,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex gap-8">
-  
       <div className="w-64 space-y-2">
         {menuItems.map((item) => (
           <button
@@ -44,20 +43,19 @@ export default function Dashboard() {
         ))}
       </div>
 
-    
       <div className="flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
           <div className="lg:col-span-2 bg-teal-900/30 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 text-emerald-400">Pending Tasks</h2>
-            <div className="space-y-4">
-             
-            </div>
+            <h2 className="text-xl font-semibold mb-4 text-emerald-400">
+              Pending Tasks
+            </h2>
+            <div className="space-y-4"></div>
           </div>
 
-         
           <div className="bg-teal-900/30 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 text-emerald-400">Leaderboard</h2>
+            <h2 className="text-xl font-semibold mb-4 text-emerald-400">
+              Leaderboard
+            </h2>
             <div className="space-y-3">
               {[
                 { name: 'Davvid Villa', score: 400 },

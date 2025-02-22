@@ -1,37 +1,45 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CalendarIcon } from '@radix-ui/react-icons';
+import { format } from 'date-fns';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+} from '@/components/ui/form';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 
 const DateTimePickerSchema = z.object({
-  time: z.date({ required_error: "A date and time is required." }),
+  time: z.date({ required_error: 'A date and time is required.' }),
 });
 
 export function DateTimePicker({ label, onChange, selected }) {
-  const form = useForm<z.infer<typeof DateTimePickerSchema>>({
-    resolver: zodResolver(DateTimePickerSchema),
-    defaultValues: {
-      time: selected || undefined,
-    },
-  });
+  const form =
+    useForm <
+    z.infer <
+    typeof DateTimePickerSchema >>
+      {
+        resolver: zodResolver(DateTimePickerSchema),
+        defaultValues: {
+          time: selected || undefined,
+        },
+      };
 
   function handleDateSelect(date) {
     if (date) {
-      form.setValue("time", date);
+      form.setValue('time', date);
       onChange(date);
     }
   }
@@ -52,8 +60,8 @@ export function DateTimePicker({ label, onChange, selected }) {
                     className="w-full pl-3 text-left font-normal"
                   >
                     {field.value
-                      ? format(field.value, "MM/dd/yyyy HH:mm")
-                      : "Select date and time"}
+                      ? format(field.value, 'MM/dd/yyyy HH:mm')
+                      : 'Select date and time'}
                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                   </Button>
                 </FormControl>

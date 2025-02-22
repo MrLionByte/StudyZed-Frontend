@@ -1,13 +1,11 @@
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
 
 const PaymentFailed = () => {
-
   const navigate = useNavigate();
 
-  const handleHomePage = () =>{
-    navigate("/tutor/choose-session/")
-  }
+  const handleHomePage = () => {
+    navigate('/tutor/choose-session/');
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950 px-4 md:px-6">

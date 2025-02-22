@@ -1,64 +1,77 @@
-import { Plus, X } from "lucide-react";
+import { Plus, X } from 'lucide-react';
 
 const AssessmentModal = ({ assessmentData, handleClose }) => {
-    
-    return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-20">
-        <div className="bg-gray-900/95 border border-teal-800/30 rounded-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto m-4">
-          <div className="p-6 space-y-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-xl font-bold text-teal-400">
-                {assessmentData ? "Assessment Details" : "Create Assessment"}
-              </h2>
-              <button onClick={handleClose} className="text-gray-400 hover:text-white">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-      
-            {assessmentData ? (
-              <>
-                <h3 className="text-lg text-white font-bold">{assessmentData.assessment_title}</h3>
-                <p className="text-gray-400">{assessmentData.assessment_description}</p>
-                <p className="text-gray-400">
-                  Start: {new Date(assessmentData.start_time).toLocaleString()}
-                </p>
-                <p className="text-gray-400">
-                  End: {new Date(assessmentData.end_time).toLocaleString()}
-                </p>
-      
-                <div className="space-y-4 mb-4">
-                  {assessmentData.questions?.map((q, index) => (
-                    <div key={q.id} className="bg-black/20 p-3 rounded-lg">
-                      <p className="text-white font-bold">{index + 1} - {q.question}</p>
-                      <p className="text-gray-400">Type: {q.question_type}</p>
-                      <p className="text-gray-400">Max Score: {q.max_score}</p>
-      
-                      
-                      {q.question_type !== "OPEN" && (
-                        <div className="space-y-2 mt-2">
-                          <p className="text-gray-400 font-semibold">Options:</p>
-                          {q.options?.map((option, optionIndex) => (
-                            <div key={option.option_no} className="bg-black/30 p-2 rounded-lg">
-                              <p className="text-white">Option {option.option_no}: {option.option}</p>
-                              <p className={`text-gray-400 ${option.is_correct ? 'text-teal-400' : ''}`}>
-                                {option.is_correct ? 'Correct' : 'Incorrect'}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <p className="text-gray-400">No Assessment Data Available</p>
-            )}
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-20">
+      <div className="bg-gray-900/95 border border-teal-800/30 rounded-lg w-full max-w-3xl max-h-[80vh] overflow-y-auto m-4">
+        <div className="p-6 space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold text-teal-400">
+              {assessmentData ? 'Assessment Details' : 'Create Assessment'}
+            </h2>
+            <button
+              onClick={handleClose}
+              className="text-gray-400 hover:text-white"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </div>
+
+          {assessmentData ? (
+            <>
+              <h3 className="text-lg text-white font-bold">
+                {assessmentData.assessment_title}
+              </h3>
+              <p className="text-gray-400">
+                {assessmentData.assessment_description}
+              </p>
+              <p className="text-gray-400">
+                Start: {new Date(assessmentData.start_time).toLocaleString()}
+              </p>
+              <p className="text-gray-400">
+                End: {new Date(assessmentData.end_time).toLocaleString()}
+              </p>
+
+              <div className="space-y-4 mb-4">
+                {assessmentData.questions?.map((q, index) => (
+                  <div key={q.id} className="bg-black/20 p-3 rounded-lg">
+                    <p className="text-white font-bold">
+                      {index + 1} - {q.question}
+                    </p>
+                    <p className="text-gray-400">Type: {q.question_type}</p>
+                    <p className="text-gray-400">Max Score: {q.max_score}</p>
+
+                    {q.question_type !== 'OPEN' && (
+                      <div className="space-y-2 mt-2">
+                        <p className="text-gray-400 font-semibold">Options:</p>
+                        {q.options?.map((option, optionIndex) => (
+                          <div
+                            key={option.option_no}
+                            className="bg-black/30 p-2 rounded-lg"
+                          >
+                            <p className="text-white">
+                              Option {option.option_no}: {option.option}
+                            </p>
+                            <p
+                              className={`text-gray-400 ${option.is_correct ? 'text-teal-400' : ''}`}
+                            >
+                              {option.is_correct ? 'Correct' : 'Incorrect'}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-400">No Assessment Data Available</p>
+          )}
         </div>
       </div>
-      
-    );
-  };
+    </div>
+  );
+};
 
 export default AssessmentModal;

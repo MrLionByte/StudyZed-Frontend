@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { TutorEndPoints } from "../../../../../api/endpoints/userEndPoints";
-import api, { api_dictatory } from "../../../../../api/axios_api_call.js";
+import api, { API_BASE_URLS } from "../../../../../api/axios_api_call.js";
 import { getSessionData } from "../../components/currentSession.js";
 
 export const useAssessments = () => {
   const [assessments, setAssessments] = useState([]);
+  const [attendedStudents ,setAttendedStudents] = useState([])
+
+  const [studentAttendedAssessment, setStudentAttendedAssessment] = useState([])
 
   const [scheduled, setScheduled] = useState(0);
   const [ongoing, setOngoing] = useState(0);
@@ -26,7 +29,7 @@ export const useAssessments = () => {
   const fetchAssessments = async () => {
     setLoading(true);
     try {
-      const url = api_dictatory["Session_Service"]
+      const url = API_BASE_URLS["Session_Service"]
       const session_data = getSessionData();
       const response = await api.get(TutorEndPoints.GetAllAssessments, {
         baseURL: url,
@@ -50,7 +53,7 @@ export const useAssessments = () => {
   const createAssessment = async (assessmentData) => {
     setLoading(true);
     try {
-      const response = await api.post(TutorEndPoints.CREATE_ASSESSMENT, assessmentData);
+      const response = await api.post(TutorEndPoints.CreateNewAssessment, assessmentData);
       setAssessments((prev) => [response.data, ...prev]);
       toast.success("Assessment created successfully");
     } catch (err) {
@@ -61,7 +64,39 @@ export const useAssessments = () => {
     }
   };
 
-  return { assessments, loading, error,isCreatingAssessment, scheduled, ongoing, completed,
-    setIsCreatingAssessment,fetchAssessments, createAssessment,setFetchFromBackend
+  const handleAttendedAssessmentView = async (assessment) =>{
+    try{
+      const url = API_BASE_URLS["Session_Service"]
+      const response = await api.get(TutorEndPoints.GetStudentsAttendedAssessment,{
+        baseURL: url,
+        params:{assessment_id: assessment.id}
+      });
+      setAttendedStudents(response.data)
+      console.log(response);
+      
+    } catch(error){
+      console.log("ATT ERROR",error);
+      
+    }
+  }
+
+  const handleStudentAssessment = async(student) => {
+    console.log(student);
+    try {
+      const url = API_BASE_URLS["Session_Service"]
+      const response = await api.get(TutorEndPoints.GetAttendedAssessment,{
+        baseURL: url,
+        params:{student_id: student.id}
+      });
+      console.log(response);
+      setStudentAttendedAssessment(response.data)   
+    } catch(error){
+      console.log("ATT ERROR",error);
+    }
+  }
+
+  return { assessments,attendedStudents,studentAttendedAssessment, loading, error,isCreatingAssessment, scheduled, ongoing, completed,
+    setIsCreatingAssessment,fetchAssessments, createAssessment,setFetchFromBackend,
+    handleAttendedAssessmentView,handleStudentAssessment
      };
 };

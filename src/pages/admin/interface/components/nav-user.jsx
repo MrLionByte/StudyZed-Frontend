@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   BadgeCheck,
@@ -7,13 +7,9 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from "lucide-react"
+} from 'lucide-react';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,24 +18,24 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import {adminLogout} from '../../../../redux/slice'
-import { useDispatch } from "react-redux"
+} from '@/components/ui/sidebar';
+import { adminLogout } from '../../../../redux/slice';
+import { useDispatch } from 'react-redux';
 
 export function NavUser({ user }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
   const dispatch = useDispatch();
   const handleLogout = () => {
-    console.log("WORKING ");
-    
+    console.log('WORKING ');
+
     dispatch(adminLogout());
-  }
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -62,7 +58,7 @@ export function NavUser({ user }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -103,13 +99,13 @@ export function NavUser({ user }) {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <button onClick={handleLogout}>
-              <LogOut />
-              Log out
+                <LogOut />
+                Log out
               </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

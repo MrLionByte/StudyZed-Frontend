@@ -61,8 +61,13 @@ export const TutorEndPoints = {
   
     'CreateNewAssessment'    :'assessment-tutor/create-assessment/',
     'GetAllAssessments'      :'assessment-tutor/get-assessments/',
+    'GetStudentsAttendedAssessment': 'assessment-tutor/attended-students/',
+    'GetAttendedAssessment'  : 'assessment-tutor/attended-students/assessment/',
+    'UpdateAssessmentMark'   :'assessment-tutor/attended-students/assessment/update-mark/',
 
     'CreateNewTask'          : 'task-tutor/create-new-task/',
     'GetAllTasks'            : 'task-tutor/get-all-tasks/',
+    'EditTask'            : 'task-tutor/edit-task/',
+    
 }
 
