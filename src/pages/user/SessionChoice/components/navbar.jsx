@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GraduationCap, Menu, UserCircle, LogOut } from 'lucide-react';
+import { GraduationCap, Menu, UserCircle, LogOut, Bell } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../../../assets/studyzed_main.png';
 import {
@@ -8,6 +8,7 @@ import {
 } from '../../../../utils/Localstorage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../../redux/slice';
+import Notification from '../../Dashboard/components/notification';
 
 
 export default function Navbar() {
@@ -90,10 +91,10 @@ export default function Navbar() {
               <div
                 className="absolute right-4 z-50
               top-16 w-48 py-2 bg-teal-900/95 backdrop-blur-sm rounded-lg shadow-xl"
-                style={{ zIndex: 9999 }} // Optional inline z-index override
+                style={{ zIndex: 9999 }} 
               >
                 <button
-                  className="flex items-center space-x-2 px-4 py-2 hover:bg-teal-800 transition-colors"
+                  className="w-full flex items-center space-x-2 px-4 py-2 hover:bg-teal-800 transition-colors"
                   onClick={handleUserProfile}
                 >
                   <UserCircle className="h-5 w-5" />
@@ -110,7 +111,11 @@ export default function Navbar() {
                 </button>
               </div>
             )}
+            <Notification />
           </div>
+           
+              
+        
         </div>
       </div>
     </nav>

@@ -58,9 +58,9 @@ export default function CardWithForm({ cancelModal }) {
     console.log('FOUND PRICE:', selectedPrice.amount);
     setAmount(selectedPrice.amount);
     if (selectedPrice) {
-      setAmount(Number(selectedPrice.amount)); // Use amount from the prices array
+      setAmount(Number(selectedPrice.amount)); 
     } else {
-      setAmount('0.00'); // Default if no match is found
+      setAmount('0.00'); 
     }
   };
 
@@ -137,7 +137,7 @@ export default function CardWithForm({ cancelModal }) {
         const url = API_BASE_URLS['Payment_Service'];
 
         if (selectedPayment === 'wallet') {
-          //  WALLET PAYMENT
+          
           const delay = (ms) =>
             new Promise((resolve) => setTimeout(resolve, ms));
           await delay(2000);
@@ -152,7 +152,7 @@ export default function CardWithForm({ cancelModal }) {
           );
           console.log('WALLET :', payment_response);
         } else {
-          //  STRIPE PAYMENT
+          
 
           const payment_response = await api.post(
             TutorEndPoints.CreateSessionPayment,

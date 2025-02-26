@@ -136,7 +136,7 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
           </Button>
           {/* <Button>Add to Cart</Button> */}
           <Button onClick={handleSubmit} className="hover:bg-green-600">
-            Buy Session
+            ADD MONEY
           </Button>
         </CardFooter>
         <ToastContainer />

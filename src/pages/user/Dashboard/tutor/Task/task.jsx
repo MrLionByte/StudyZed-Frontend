@@ -84,7 +84,7 @@ export default function TutorTask() {
         baseURL: url,
         params: {
           session_code: session_data.sessions.session_code,
-          month: '',
+          // month: '',
         },
       });
       console.log(response);
@@ -161,6 +161,7 @@ export default function TutorTask() {
       );
       console.log('TASk EDIT :', response);
       setBeforeEditTask(selectedTask);
+      setIsEdit(false)
     } catch (error) {
       console.log(error);
     }

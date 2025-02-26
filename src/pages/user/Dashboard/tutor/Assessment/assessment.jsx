@@ -14,6 +14,7 @@ import {
   Settings,
   Smile,
   User,
+  ChevronsLeft,
 } from "lucide-react"
  
 import {
@@ -106,12 +107,15 @@ export default function Assessment({ session_data }) {
         <div className="space-y-8 w-full h-3/5">
 
           <div className="bg-black/20 backdrop-blur-sm border border-teal-800/30 rounded-lg p-4">
+              {/* <button onClick={}>
+                <ChevronsLeft />
+              </button> */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-teal-400">
                 REVIEW ASSESSMENT
               </h2>
               <div className='flex gap-3 items-center h-9'>
-                <form onSubmit={handleSearch} className='w-full flex items-center justify-end'>
+                {/* <form onSubmit={handleSearch} className='w-full flex items-center justify-end'>
                 <input className="p-2 rounded-md md:min-w-[350px] 
                 md:max-w-[400px] text-md text-black"
                   value={searchValue}
@@ -120,8 +124,8 @@ export default function Assessment({ session_data }) {
                     <button className='absolute text-black p-2'>
                       <Search className='size-5'/>
                     </button>
-                  </form>
-                <DropdownMenu>
+                  </form> */}
+                {/* <DropdownMenu>
                   <DropdownMenuTrigger 
                     className="border border-emerald-500 hover:bg-emerald-500 rounded-md p-2 border-opacity-60 font-bold w-28">
                       All <span className='ml-4'>↓</span></DropdownMenuTrigger>
@@ -137,9 +141,9 @@ export default function Assessment({ session_data }) {
                       onChange={()=> setI}
                       placeholder='Student name' />
                     </form> */}
-                    </DropdownMenuLabel>
+                    {/* </DropdownMenuLabel>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                </DropdownMenu> */}
                 
               </div>
               <button
@@ -151,7 +155,7 @@ export default function Assessment({ session_data }) {
               </button>
             </div>
             <div className="space-y-2">
-              {assessments.map((assessment, index) => (
+              {assessments?.map((assessment, index) => (
                 <div
                   key={assessment.id}
                   className="flex items-center space-x-4 p-2 bg-gray-800/50 rounded-lg"
@@ -222,7 +226,7 @@ export default function Assessment({ session_data }) {
 
       </div>
 
-      {/* Create Assessment Modal */}
+
       {isCreatingAssessment && (
         <CreateAssessment
           handleClose={closeModal}
@@ -230,11 +234,12 @@ export default function Assessment({ session_data }) {
         />
       )}
 
-      {/* Assessment Details Modal */}
+   
       {showModal && (
         <AssessmentModal
           assessmentData={selectedAssessment}
           handleClose={() => setShowModal(false)}
+          onSave=''
         />
       )}
 

@@ -21,7 +21,8 @@ const StudentTask = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [answer, setAnswer] = useState('');
-  const [submitted, setSubmitted] = useState([]);
+  const [submitted, setSubmitted] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const GetTasksForStudent = async () => {
     const session = getSessionData();
@@ -31,6 +32,8 @@ const StudentTask = () => {
         `${studentEndPoints.GetTasksForStudent}?session_code=${session.sessions.session_code}`,
         { baseURL: url },
       );
+      console.log(response);
+      
       setTasks(response.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -42,21 +45,31 @@ const StudentTask = () => {
     if (fetchFromBackend) {
       GetTasksForStudent();
       setFetchFromBackend(false);
+      const sub = localStorage.getItem("submitted")
+      setSubmitted(sub)
     }
   }, [fetchFromBackend]);
 
   const getTaskStatus = (taskDate) => {
     const today = new Date();
-    taskDate = new Date(taskDate);
-    
-    if (
-      taskDate.getDate() === today.getDate() &&
-      taskDate.getMonth() === today.getMonth() &&
-      taskDate.getFullYear() === today.getFullYear()
-    ) {
+    const taskDue = new Date(taskDate);
+
+    const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+    const taskDueUTC = new Date(Date.UTC(taskDue.getUTCFullYear(), taskDue.getUTCMonth(), taskDue.getUTCDate()));
+
+    if (taskDueUTC.getTime() === todayUTC.getTime()) {
       return 'today';
     }
-    return taskDate < today ? 'past' : 'upcoming';
+    return taskDueUTC < todayUTC ? 'past' : 'upcoming';
+  };
+
+  const handleOpenDialog = (task) => {
+    setSelectedTask(task);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
   };
 
   const submitAnswer = async (taskId) => {
@@ -76,22 +89,21 @@ const StudentTask = () => {
       } else if (response.status === 201) {
         toast.success('Task submitted successfully');
       }
-      setSubmitted([...submitted, taskId]);
+      setSubmitted(taskId);
       setAnswer('');
+      localStorage.setItem("submitted",taskId)
     } catch (error) {
+      console.log(error);
+      
       toast.error('Failed to submit task');
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    const date = new Date(dateString).toUTCString();
+    return date.slice(0,22)
   };
-
+  
   const getStatusColor = (status) => {
     switch (status) {
       case 'today':
@@ -119,9 +131,9 @@ const StudentTask = () => {
   };
 
   const TaskCard = ({ task, status }) => (
-    
     <Card
-      className={`relative overflow-hidden bg-slate-200 transition-all duration-300 hover:shadow-lg ${
+      className={`relative overflow-y-scroll bg-slate-200 transition-all 
+        max-h-52 duration-300 hover:shadow-lg ${
         status === 'today' ? 'ring-2 ring-emerald-500 ring-opacity-50' : ''
       }`}
     >
@@ -137,7 +149,7 @@ const StudentTask = () => {
         </div>
         
         <div className="space-y-4">
-          <p className="text-gray-600 text-sm line-clamp-3">
+          <p className="text-gray-600 text-sm break-words">
             {task.description}
           </p>
           
@@ -145,63 +157,17 @@ const StudentTask = () => {
             <Calendar className="w-4 h-4" />
             <span>{formatDate(task.due_date)}</span>
           </div>
-
+        
           {status === 'today' && (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-                  onClick={() => setSelectedTask(task)}
-                >
-                  Open Task
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[600px]">
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-semibold">
-                    {selectedTask?.title}
-                  </DialogTitle>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Calendar className="w-4 h-4" />
-                    <span>Due: {formatDate(selectedTask?.due_date)}</span>
-                  </div>
-                </DialogHeader>
-                
-                <div className="mt-4 space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-medium text-gray-900 mb-2">Task Description</h4>
-                    <p className="text-gray-700">{selectedTask?.description}</p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="font-medium text-gray-900">Your Answer</label>
-                    <Textarea
-                      placeholder="Write your answer here..."
-                      value={answer}
-                      onChange={(e) => setAnswer(e.target.value)}
-                      className="min-h-[150px] resize-y"
-                    />
-                  </div>
-                </div>
-
-                <DialogFooter className="mt-6">
-                  <Button
-                    onClick={() => submitAnswer(task.id)}
-                    className="bg-emerald-600 hover:bg-emerald-700"
-                    disabled={submitted.includes(task.id)}
-                  >
-                    {submitted.includes(task.id) ? (
-                      <span className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" />
-                        Submitted
-                      </span>
-                    ) : (
-                      'Submit Answer'
-                    )}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            (submitted != task.id && 
+            <Button
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+              
+              onClick={() => handleOpenDialog(task)}
+            >
+              Open Task
+            </Button>
+            )
           )}
         </div>
       </div>
@@ -223,16 +189,16 @@ const StudentTask = () => {
   };
   
   return (
-    <div className="h-screen flex flex-col bg-transparent">
-      {/* Fixed Header */}
+    <div className="max-h-[80dvh] flex flex-col bg-transparent overflow-auto">
+
       <div className="p-6 pb-0">
         <h1 className="text-2xl font-bold text-emerald-400 mb-2">Tasks</h1>
       </div>
 
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-auto p-6 pt-4">
+    
+      <div className="flex-1 p-6 pt-4">
         <div className="max-w-7xl mx-auto space-y-6">
-          {/* Today's Tasks */}
+       
           {groupedTasks.today.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-4 sticky top-0 py-2">
@@ -247,7 +213,7 @@ const StudentTask = () => {
             </div>
           )}
 
-          {/* Upcoming Tasks */}
+       
           {groupedTasks.upcoming.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-4 sticky top-0 py-2">
@@ -262,7 +228,7 @@ const StudentTask = () => {
             </div>
           )}
 
-          {/* Past Tasks */}
+         
           {groupedTasks.past.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-4 sticky top-0 py-2">
@@ -288,6 +254,55 @@ const StudentTask = () => {
           )}
         </div>
       </div>
+      
+   
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">
+              {selectedTask?.title}
+            </DialogTitle>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Calendar className="w-4 h-4" />
+              <span>Due: {selectedTask ? formatDate(selectedTask.due_date) : ''}</span>
+            </div>
+          </DialogHeader>
+          
+          <div className="mt-4 space-y-4">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="font-medium text-gray-900 mb-2">Task Description</h4>
+              <p className="text-gray-700">{selectedTask?.description}</p>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="font-medium text-gray-900">Your Answer</label>
+              <Textarea
+                placeholder="Write your answer here..."
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                className="min-h-[150px] resize-y text-emerald-800"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="mt-6">
+            <Button
+              onClick={() => selectedTask && submitAnswer(selectedTask.id)}
+              className="bg-emerald-600 hover:bg-emerald-700"
+              disabled={selectedTask && submitted == (selectedTask.id)}
+            >
+              {selectedTask && submitted == (selectedTask.id) ? (
+                <span className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" />
+                  Submitted
+                </span>
+              ) : (
+                'Submit Answer'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       
       <ToastContainer
         position="bottom-right"

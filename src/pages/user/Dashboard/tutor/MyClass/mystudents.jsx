@@ -4,6 +4,7 @@ import { TutorEndPoints } from '../../../../../api/endpoints/userEndPoints';
 import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
 import { LucideSquareArrowRight } from 'lucide-react';
 import { getSessionData } from '../../components/currentSession';
+import { getStudentByCode } from '../../components/studentsInSession';
 
 export default function StudentsInSession() {
   const [students, setStudents] = useState([]);
@@ -11,6 +12,24 @@ export default function StudentsInSession() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isOverlayActive, setIsOverlayActive] = useState(false);
+
+  const studentDetails = getStudentByCode();
+
+  function getStudentNameByCode(studentCode) {
+    const matchedStudent = studentDetails.find(
+      (student) => student.user_code === studentCode,
+    );
+    return matchedStudent ? matchedStudent.username : studentCode;
+  }
+
+  function getStudentProfile(studentCode) {
+    const matchedStudent = studentDetails.find(
+      (student) => student.user_code === studentCode,
+    );
+    return matchedStudent
+      ? matchedStudent.profile?.profile_picture?.slice(13)
+      : '';
+  }
 
   useEffect(() => {
     if (fetchFromBackend) {
@@ -107,7 +126,7 @@ export default function StudentsInSession() {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 mt-8">
       <div className="grid auto-rows-min gap-5 md:grid-cols-5">
         {students && Array.isArray(students) && students.length > 0 ? (
           <>
@@ -117,14 +136,17 @@ export default function StudentsInSession() {
                 className={`aspect-video rounded-xl flex flex-col items-center p-4 
                 bg-muted/50 text-black`}
               >
-                <h4 className="font-semibold">{student.student_code}</h4>
+                <h4 className="font-semibold">
+                  {getStudentNameByCode(student.student_code)}</h4>
 
                 <p className="font-bold">{student.username}</p>
                 <p className="text-sm">Applied on : {student.joined_on}</p>
-                <p className="text-sm flex justify-center items-center gap-3 p-2">
+                <img className='rounded-full size-12'
+                  src={getStudentProfile(student.student_code) || ''} alt="" />
+                {/* <p className="text-sm flex justify-center items-center gap-3 p-2">
                   Student details
                   <LucideSquareArrowRight className="hover:text-blue-900 cursor-pointer" />
-                </p>
+                </p> */}
 
                 {!student.is_allowded ? (
                   <button

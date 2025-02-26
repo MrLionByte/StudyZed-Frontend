@@ -25,6 +25,13 @@ export default function Assessment({ session_data }) {
     
     } = useAssessments();
 
+    const isAfterToday = (dateString) => {
+      if (!dateString) return false;
+      const today = new Date().toISOString().split('T')[0];
+      const givenDate = dateString.slice(0,10) 
+      return givenDate > today;
+    };
+
   const [showAssessment, setShowAssessment] = useState(false);
   const [showAttemptedAssessment, setShowAttemptedAssessment] = useState(false);
 
@@ -33,13 +40,20 @@ export default function Assessment({ session_data }) {
   };
 
   const handleAssessmentView = (assessment) => {
+    const check = isAfterToday(assessment.start_time)
+    if (check){
+      return
+    }
     setSelectedAssessment(assessment);
     setShowAssessment(true);
   };
 
   const handleAttemptedAssessmentView = (attemptedAssessment,assessment) => {
     const matchingAssessment = attemptedAssessment.find(item => item.assessment === assessment.id);
-
+    const check = isAfterToday(assessment.start_time)
+    if (check){
+      return
+    }
     setAttemptedAssessment({
       'Attempted':matchingAssessment,
       'Assessment':assessment});
@@ -48,6 +62,8 @@ export default function Assessment({ session_data }) {
 
   const today = new Date().toISOString().slice(0,10)
   
+
+
   return (
     <>
       <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
@@ -88,7 +104,7 @@ export default function Assessment({ session_data }) {
                 return (
                   <div
                     key={assessment.id}
-                    onClick={
+                    onClick={ 
                       !isAttempted
                         ? () => handleAssessmentView(assessment)
                         : () => handleAttemptedAssessmentView(attemptedAssessments, assessment)
@@ -114,6 +130,12 @@ export default function Assessment({ session_data }) {
                       <span className="ml-auto text-sm text-teal-200 bg-emerald-900 
                         px-2 py-1 rounded">
                         Live Today
+                      </span>
+                    )}
+                    {assessment.end_time.slice(0,10) > today && (
+                      <span className="ml-auto text-sm text-indigo-300 font-semibold 
+                        px-2 py-1 rounded">
+                        Will active on : {assessment.start_time.slice(0,10)}
                       </span>
                     )}
                   </div>

@@ -58,7 +58,7 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
           <div className="space-y-6">
       {assessmentData.map((assessment, index) => (
         <div key={index} className="bg-gray-800 p-4 rounded-lg shadow-lg">
-          {/* Assessment Details */}
+        
           <h3 className="text-lg text-white font-bold">
             {assessment.assessment_title}
           </h3>
@@ -76,14 +76,14 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
             Completed: {new Date(assessment.completed_on).toLocaleString()}
           </p>
 
-          {/* Questions and Responses */}
+      
           <div className="mt-4 space-y-6">
             {assessment.responses.map((response, responseIndex) => (
               <div
                 key={responseIndex}
                 className="bg-black/20 p-4 rounded-lg"
               >
-                {/* Question Details */}
+              
                 <p className="text-white font-bold">
                   {responseIndex + 1}. {response.question.question}
                 </p>
@@ -94,7 +94,7 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
                   Max Score: {response.question.max_score}
                 </p>
 
-                {/* MLC Options */}
+                
                 {response.question.question_type === "MLC" && (
                   <div className="mt-2 space-y-2">
                     <p className="text-gray-400 font-semibold">Ans :</p>
@@ -114,7 +114,7 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
                         }
                     </>
                     ))}
-                    {/* Selected Option */}
+                   
                     <p className="mt-2 text-gray-400 font-semibold">
                       Selected Option:{" "}
                       <span
@@ -132,7 +132,7 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
                   </div>
                 )}
 
-                {/* Open-Ended Response */}
+                
                 {response.question.question_type === "OPEN" && (
                 <div className="mt-2 flex justify-between">
                     <div>
@@ -158,7 +158,7 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
                 </div>
                 )}
 
-                {/* Correctness */}
+               
                 <p
                   className={`mt-2 font-semibold ${
                     response.is_correct
