@@ -195,7 +195,7 @@ const Wallet = () => {
                       variant="outline"
                       size="sm"
                     >
-                      {/* Withdraw */}
+                      
                       <Landmark />
                     </Button>
 
@@ -361,7 +361,7 @@ function CircleCrossIcon(props) {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="red" // Set the stroke color to red
+      stroke="red" 
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

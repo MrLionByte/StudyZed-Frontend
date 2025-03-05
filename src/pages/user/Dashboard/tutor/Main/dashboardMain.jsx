@@ -2,14 +2,16 @@ export default function DashbaordContent() {
   return (
     <div className="flex-1">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-teal-900/30 rounded-lg p-6">
+        
+        <main className="lg:col-span-2 bg-teal-900/30 rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4 text-emerald-400">
             Pending Tasks
           </h2>
           <div className="space-y-4"></div>
-        </div>
-
-        <div className="bg-teal-900/30 rounded-lg p-6">
+        </main>
+        
+        <aside className="bg-teal-900/30 rounded-lg p-6">
+          <div>
           <h2 className="text-xl font-semibold mb-4 text-emerald-400">
             Leaderboard
           </h2>
@@ -31,7 +33,10 @@ export default function DashbaordContent() {
               </div>
             ))}
           </div>
-        </div>
+          </div>
+          
+        </aside>
+
       </div>
     </div>
   );

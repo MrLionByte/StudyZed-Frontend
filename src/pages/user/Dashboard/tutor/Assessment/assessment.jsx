@@ -106,56 +106,27 @@ export default function Assessment({ session_data }) {
       <div className="container w-full mx-auto px-2 py-4 md:flex-row gap-8 h-full">
         <div className="space-y-8 w-full h-3/5">
 
-          <div className="bg-black/20 backdrop-blur-sm border border-teal-800/30 rounded-lg p-4">
-              {/* <button onClick={}>
+          <div className="bg-black/20 backdrop-blur-sm border 
+            border-teal-800/30 rounded-lg p-4">
+              {/* <button >
                 <ChevronsLeft />
               </button> */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-teal-400">
                 REVIEW ASSESSMENT
               </h2>
-              <div className='flex gap-3 items-center h-9'>
-                {/* <form onSubmit={handleSearch} className='w-full flex items-center justify-end'>
-                <input className="p-2 rounded-md md:min-w-[350px] 
-                md:max-w-[400px] text-md text-black"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder="Search using assessment or student name.." />
-                    <button className='absolute text-black p-2'>
-                      <Search className='size-5'/>
-                    </button>
-                  </form> */}
-                {/* <DropdownMenu>
-                  <DropdownMenuTrigger 
-                    className="border border-emerald-500 hover:bg-emerald-500 rounded-md p-2 border-opacity-60 font-bold w-28">
-                      All <span className='ml-4'>↓</span></DropdownMenuTrigger>
-                  <DropdownMenuContent className="z-20">
-                    <DropdownMenuLabel>
-                      <DatePickerWithRange />
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuLabel>
-                    {/* <form onSubmit={handleSubmit} className="w-full">
-                      <input className='w-full p-2 text-sm font-normal opacity-75 border-1 border-gray-300 rounded-md' 
-                      type="text"
-                      onChange={()=> setI}
-                      placeholder='Student name' />
-                    </form> */}
-                    {/* </DropdownMenuLabel>
-                  </DropdownMenuContent>
-                </DropdownMenu> */}
-                
-              </div>
               <button
                 onClick={() => setIsCreatingAssessment(true)}
-                className="flex items-center space-x-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg transition-colors"
+                className="flex items-center space-x-2 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 
+                  rounded-lg transition-colors sm:size-5/12 md:size-fit"
               >
                 <Plus className="w-5 h-5" />
                 <span>Create Assessment</span>
               </button>
             </div>
-            <div className="space-y-2">
-              {assessments?.map((assessment, index) => (
+            <div className="h-64 overflow-y-scroll space-y-2">
+          
+                  {assessments?.map((assessment, index) => (
                 <div
                   key={assessment.id}
                   className="flex items-center space-x-4 p-2 bg-gray-800/50 rounded-lg"
@@ -183,13 +154,14 @@ export default function Assessment({ session_data }) {
           </div>
         </div>
        
-  <div className="mt-2 grid grid-cols-1">
-  <div className="grid grid-cols-1 bg-black/20 backdrop-blur-sm border border-teal-800/30 rounded-lg p-3">
+  <div className="grid grid-cols-1 h-44 mt-5 overflow-scroll">
+  <div className="grid grid-cols-1 bg-gray-900 backdrop-blur-sm border 
+    border-teal-800/30 rounded-lg p-3 ">
   <h2 className="text-xl text-center p-1 underline underline-offset-4 font-bold text-teal-400">
     STUDENTS ATTENDED ASSESSMENT
     </h2>
     {attendedStudents.length>0 ?
-    <div className="grid grid-cols-6 gap-2">
+    <div className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 ">
       {attendedStudents.map((student, index) => (
         <div
           key={student.id}
@@ -219,7 +191,7 @@ export default function Assessment({ session_data }) {
       ))}
     </div>
     :
-    <h4 className='text-red-400'>No one Attended</h4>
+    <h4 className='text-red-400 text-center text-wrap mt-6'>No one Attended yet</h4>
     }
   </div>
 </div>

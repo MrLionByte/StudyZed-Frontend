@@ -126,18 +126,20 @@ export default function StudentsInSession() {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 mt-8">
-      <div className="grid auto-rows-min gap-5 md:grid-cols-5">
+    <div className="flex flex-1 flex-col gap-4 p-0 md:p-3">
+      <div className="grid auto-rows-min gap-5 md:grid-cols-5 h-[550px] overflow-y-scroll">
         {students && Array.isArray(students) && students.length > 0 ? (
           <>
-            {students.map((student) => (
+            {students.map((student, index) => (
               <div
                 key={student.id}
                 className={`aspect-video rounded-xl flex flex-col items-center p-4 
                 bg-muted/50 text-black`}
               >
-                <h4 className="font-semibold">
-                  {getStudentNameByCode(student.student_code)}</h4>
+                <h4 className='text-balance space-x-2'>
+                  <span className='text-white font-medium-'>{index+1}:</span>
+                  <span className=" font-semibold">{getStudentNameByCode(student.student_code)}</span>
+                </h4>
 
                 <p className="font-bold">{student.username}</p>
                 <p className="text-sm">Applied on : {student.joined_on}</p>
@@ -160,6 +162,7 @@ export default function StudentsInSession() {
                 )}
               </div>
             ))}
+            
             {isOverlayActive && <div className="overlay active"></div>}
             <ToastContainer
               autoClose={1000}

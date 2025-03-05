@@ -1,8 +1,3 @@
-const Payment_Service = "http://127.0.0.1:8008"
-const Session_Task_Service = "http://127.0.0.1:8009"
-const User_Service = "http://127.0.0.1:8005"
-
-
 export const adminEndPoints = {
     'AdminLogin'                      : 'admin-app/login-strict/',
     'TutorManagement'                 : 'admin-app/tutor-management/',

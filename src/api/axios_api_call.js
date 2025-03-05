@@ -2,12 +2,13 @@ import axios from "axios"
 import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Localstorage";
 
 export const API_BASE_URLS = {
-    "Usermanagement_Service": "http://127.0.0.1:8005/",
-    "Message_Service"       : "http://127.0.0.1:8006/",
-    "Notification_Service"  : "http://127.0.0.1:8007/",
-    "Payment_Service"       : "http://127.0.0.1:8008/",
-    "Session_Service"       : "http://127.0.0.1:8009/",
+    Usermanagement_Service: import.meta.env.VITE_USERMANAGEMENT_SERVICE,
+    Message_Service: import.meta.env.VITE_MESSAGE_SERVICE,
+    Notification_Service: import.meta.env.VITE_NOTIFICATION_SERVICE,
+    Payment_Service: import.meta.env.VITE_PAYMENT_SERVICE,
+    Session_Service: import.meta.env.VITE_SESSION_SERVICE,
 };
+
 
 const MAX_RETRY_ATTEMPTS = 3;
 

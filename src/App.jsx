@@ -9,8 +9,11 @@ import store from './redux/store.js';
 import 'react-toastify/ReactToastify.css';
 
 function App() {
+
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
   return (
-    <GoogleOAuthProvider clientId="748272012851-lg3mh81cjkah2hob3s43tkp8ltpd4ko3.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={clientId}>
       <BrowserRouter>
         <Provider store={store}>
           <Routes>

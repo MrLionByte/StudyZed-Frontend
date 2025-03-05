@@ -7,6 +7,7 @@ import 'react-clock/dist/Clock.css';
 import { getSessionData } from '../../../components/currentSession';
 import api, { API_BASE_URLS } from '../../../../../../api/axios_api_call';
 import { TutorEndPoints } from '../../../../../../api/endpoints/userEndPoints';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function CreateAssessment({ handleClose, fetchFromBackend }) {
   const [assessment, setAssessment] = useState(false);
@@ -153,9 +154,20 @@ export default function CreateAssessment({ handleClose, fetchFromBackend }) {
     setAssessment(false);
   };
 
+  const handleSetAssessment = () =>{
+    if(!newAssessment.title) {
+      toast.warning(
+        'title is required.',
+      );
+      return;
+    }
+    setAssessment(true)
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-20">
-      <div className="bg-gray-900/95 border border-teal-800/30 rounded-lg w-full h-full overflow-y-auto m-4">
+      <div className="bg-gray-900/95 border border-teal-800/30 
+        rounded-lg w-fit sm:h-fit md:h-fit overflow-y-auto m-4">
         <div className="p-6 space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold text-teal-400">
@@ -217,7 +229,7 @@ export default function CreateAssessment({ handleClose, fetchFromBackend }) {
                 className="bg-slate-200 text-black w-full"
               />
               <button
-                onClick={() => setAssessment(true)}
+                onClick={() => handleSetAssessment()}
                 className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg"
               >
                 Next: Add Questions
@@ -334,6 +346,9 @@ export default function CreateAssessment({ handleClose, fetchFromBackend }) {
           )}
         </div>
       </div>
+      <>
+      <ToastContainer position='bottom' />
+      </>
     </div>
   );
 }

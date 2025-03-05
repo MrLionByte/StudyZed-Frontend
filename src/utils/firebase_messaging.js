@@ -1,28 +1,14 @@
-
-// const firebaseConfig = {
-//     apiKey: "AIzaSyB8FBCrDSy9up5iwKdgfRm4JEU6ttpIO4M",
-//     authDomain: "study-zed-notifications.firebaseapp.com",
-//     projectId: "study-zed-notifications",
-//     storageBucket: "study-zed-notifications.firebasestorage.app",
-//     messagingSenderId: "18987464445",
-//     appId: "1:18987464445:web:4e7fdd79e5085b7870b094",
-//     measurementId: "G-F092M16WY7"
-//   };
-
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-
 import {initializeApp} from 'firebase/app';
 import {getMessaging, getToken, onMessage} from 'firebase/messaging';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB8FBCrDSy9up5iwKdgfRm4JEU6ttpIO4M",
-    authDomain: "study-zed-notifications.firebaseapp.com",
-    projectId: "study-zed-notifications",
-    storageBucket: "study-zed-notifications.firebasestorage.app",
-    messagingSenderId: "18987464445",
-    appId: "1:18987464445:web:4e7fdd79e5085b7870b094",
-    measurementId: "G-F092M16WY7"
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID,
+    measurementId: import.meta.env.VITE_MEASUREMENT_ID
   };
 
 navigator.serviceWorker
@@ -36,5 +22,5 @@ navigator.serviceWorker
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
-const vapidKey = "BLu8ur7rWFdv1DCqieJMJmx2KBVL_iqBAtBWNc1MbhoYFJ3cMrXYgbsZADcVFOzGqecT8_EQjatZBOriPOOHhfI"
+const vapidKey = import.meta.env.VITE_VAPID_KEY
 export { messaging, getToken, onMessage,vapidKey };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -8,69 +8,49 @@ import {
   TrendingUp,
   UserCircle,
   School,
-} from 'lucide-react';
-import Navbar from '../SessionChoice/components/navbar';
-import DashboardMain from './tutor/Main/dashboardMain';
-import Members from './tutor/MyClass/mystudents';
-import Assessment from './tutor/Assessment/assessment';
-import Messaging from './tutor/Messages/message';
-import TutorTask from './tutor/Task/task';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { clearSavedAuthData } from '../../../utils/Localstorage';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../../redux/slice';
-import { saveSessionData, getSessionData } from './components/currentSession';
-import { comment } from 'postcss';
-import api, { API_BASE_URLS } from '../../../api/axios_api_call';
+  Menu,
+  X,
+} from "lucide-react";
+import Navbar from "../SessionChoice/components/navbar";
+import DashboardMain from "./tutor/Main/dashboardMain";
+import Members from "./tutor/MyStudents/mystudents";
+import Assessment from "./tutor/Assessment/assessment";
+import Messaging from "./tutor/Messages/message";
+import TutorTask from "./tutor/Task/task";
+import Class from "./tutor/MyClass/class";
+import MyAccount from "./tutor/MyAccount/myaccount";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearSavedAuthData, getSavedAuthData } from "../../../utils/Localstorage";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/slice";
+import { saveSessionData, getSessionData } from "./components/currentSession";
 import { TutorEndPoints } from '../../../api/endpoints/userEndPoints';
 import { saveStudentsDataToSession } from './components/studentsInSession';
+import { comment } from 'postcss';
+import api, { API_BASE_URLS } from '../../../api/axios_api_call';
 
 const menuItems = [
-  {
-    icon: LayoutDashboard,
-    label: 'Dashboard',
-    id: 'dashboard',
-    component: <DashboardMain />,
-  },
-  {
-    icon: ClipboardList,
-    label: 'Assessment',
-    id: 'assessment',
-    component: <Assessment />,
-  },
-  { icon: CheckSquare, label: 'Tasks', id: 'tasks', component: <TutorTask /> },
-  {
-    icon: MessageSquare,
-    label: 'Messages',
-    id: 'messages',
-    component: <Messaging />,
-  },
-  { icon: School, label: 'My Class', id: 'class' },
-  { icon: TrendingUp, label: 'Class Progress', id: 'progress' },
-  { icon: Users, label: 'My Students', id: 'members', component: <Members /> },
-  { icon: UserCircle, label: 'My Account', id: 'account' },
+  { icon: LayoutDashboard, label: "Dashboard", id: "dashboard", component: <DashboardMain /> },
+  { icon: ClipboardList, label: "Assessment", id: "assessment", component: <Assessment /> },
+  { icon: CheckSquare, label: "Tasks", id: "tasks", component: <TutorTask /> },
+  { icon: MessageSquare, label: "Messages", id: "messages", component: <Messaging /> },
+  { icon: School, label: "My Class", id: "class", component: <Class /> },
+  { icon: TrendingUp, label: "Class Progress", id: "progress" },
+  { icon: Users, label: "My Students", id: "members", component: <Members /> },
+  { icon: UserCircle, label: "My Account", id: "account", component: <MyAccount /> },
 ];
 
 export default function Dashboard() {
-  // const [activeSection, setActiveSection] = useState('dashboard');
-  const [activeSection, setActiveSection] = useState('tasks');
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [sessionCode, setSessionCode] = useState("");
   const [sessionData, setSessionData] = useState('');
-  const [sessionCode, setSessionCode] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const renderActiveSection = () => {
-    const activeItem = menuItems.find((item) => item.id === activeSection);
-    return activeItem ? (
-      activeItem.component
-    ) : (
-      <div>Select a section to view content</div>
-    );
-  };
 
   useEffect(() => {
     if (location.state) {
@@ -120,52 +100,69 @@ export default function Dashboard() {
   const handleLogout = () => {
     dispatch(logout());
     clearSavedAuthData();
-    navigate('/login/');
-    console.log('wadadasd');
+    navigate("/login/");
   };
 
-  const handleAccounts = () => {
-    navigate('/tutor/profile/');
-  };
+  const handleMyAccount = () =>{
+    const userData = getSavedAuthData()
+    const role = userData?.role
+    navigate(`/${role.toLowerCase()}/profile/`)
+  }
 
   return (
-    <div className="h-screen">
-      <Navbar
-        logout={handleLogout}
-        userProfile={handleAccounts}
-        sessionData={sessionData}
-      />
-      <div className="flex gap-8 h-fit">
-        <div className="w-64 space-y-2 mt-4">
-          {menuItems.map((item) => (
-            <div key={item.id} className="flex flex-col justify-between">
+    <div className="h-screen flex flex-col">
+      <Navbar logout={handleLogout} />
+
+      
+      <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden p-3 fixed top-4 left-4 z-50 bg-gray-800 text-white rounded-md">
+        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      <div className="flex flex-1">
+       
+        <div
+          className={`fixed md:relative top-0 left-0 h-full bg-gray-900 p-4 transform md:translate-x-0 ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:flex md:w-64 transition-transform duration-300 ease-in-out z-10 `}
+        >
+          <div className="w-full space-y-2">
+            {menuItems.map((item) => (
               <button
-                onClick={() => setActiveSection(item.id)}
+                key={item.id}
+                onClick={() => {
+                  {item.id === 'account' ?
+                    handleMyAccount()
+                    :
+                    setActiveSection(item.id);
+                  }
+                  setIsSidebarOpen(false);
+                }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                   activeSection === item.id
-                    ? 'bg-emerald-500 text-white'
-                    : 'hover:bg-teal-900/30 text-gray-300'
+                    ? "bg-emerald-500 text-white"
+                    : "hover:bg-teal-900/30 text-gray-300"
                 }`}
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
               </button>
-            </div>
-          ))}
+            ))}
 
-          <div className="border-t border-gray-700 pt-4 mt-2">
-            <div className="flex flex-col space-y-2 text-gray-300 px-4">
-              <p className="text-sm font-semibold">Session Code:</p>
-              <p className="text-lg font-bold text-white">{sessionCode}</p>
-
-              <h5 className="w-3/4 font-bold bg-slate-500 text-white px-2 py-2 rounded-lg mt-3 text-center">
-                Tutor Dashboard
-              </h5>
+            
+            <div className="border-t border-gray-700 pt-4 mt-2">
+              <div className="flex flex-col space-y-2 text-gray-300 px-4">
+                <p className="text-sm font-semibold">Session Code:</p>
+                <p className="text-lg font-bold text-white">{sessionCode || "N/A"}</p>
+                <h5 className="w-3/4 font-bold bg-slate-500 text-white px-2 py-2 rounded-lg mt-3 text-center">
+                  Tutor Dashboard
+                </h5>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex-1">{renderActiveSection()}</div>
+        
+        <div className="flex-1 p-4 md:p-3">{menuItems.find((item) => item.id === activeSection)?.component}</div>
       </div>
     </div>
   );

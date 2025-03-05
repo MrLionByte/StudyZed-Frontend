@@ -43,14 +43,14 @@ export default function Navbar() {
   return (
     <nav className="bg-teal-900/50 backdrop-blur-sm relative z-10">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center space-x-2 align-middle">
+        <div className="flex items-center justify-between md:h-16">
+          <Link to="/" className="flex items-center space-x-7 md:space-x-0 align-middle">
             <GraduationCap className="h-8 w-8 text-emerald-400" />
-            <img className="size-1/4 mt-2" src={Logo} alt="Logo" />
+            <img className="size-1/2 md:size-1/4 mt-2" src={Logo} alt="Logo" />
           </Link>
 
           <div className="flex items-center space-x-4">
-            {userRole === 'STUDENT' ? (
+            {/* {userRole === 'STUDENT' ? (
               <Link
                 to="/student/choose-session"
                 className="hover:text-emerald-400"
@@ -64,7 +64,7 @@ export default function Navbar() {
               >
                 Home
               </Link>
-            )}
+            )} */}
             {userRole === 'STUDENT' ? (
               <Link
                 to="/student/student-wallet/"
