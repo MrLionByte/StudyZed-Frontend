@@ -8,6 +8,13 @@ import { adminEndPoints } from '../../../../api/endpoints/adminEndPoint';
 const SessionPriceSetter = memo(() => {
   const [sessions, setSessions] = useState([]);
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
+  const [isEdit, setIsEdit] = useState(false);
+  const [editedPrices, setEditedPrices] = useState({});
+
+  const handleEditPrice = (sessionId, currentPrice) => {
+    setIsEdit(sessionId); 
+    setEditedPrices((prev) => ({ ...prev, [sessionId]: currentPrice })); // Keep track of price changes
+  };
 
   const getSessionPrices = async () => {
     try {
@@ -71,9 +78,30 @@ const SessionPriceSetter = memo(() => {
     );
   };
 
+  const handlePriceChange = (sessionId, newPrice) => {
+    setEditedPrices((prev) => ({ ...prev, [sessionId]: newPrice }));
+  };
+  
+  const handleSavePrice = async (sessionId) => {
+    try {
+      const url = API_BASE_URLS['Payment_Service'];
+      const responses = await api.patch(`price-setter/update-amount/${sessionId}/`,
+        { amount: editedPrices[sessionId] }
+       , { baseURL: url,}
+      );
+      console.log(responses);
+      setSessions(responses.data);
+      toast.success("Successfully updated price")
+      setFetchFromBackend(true)
+    } catch (err) {
+      console.error(err);
+      
+    }
+    setIsEdit(null); 
+  };
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      joigyyukf
       <div className="grid auto-rows-min gap-5 md:grid-cols-3">
         {sessions && Array.isArray(sessions) && sessions.length > 0 ? (
           <>
@@ -85,10 +113,35 @@ const SessionPriceSetter = memo(() => {
                 <p className="font-bold">
                   {session.duration} month{session.duration > 1 ? 's' : ''}
                 </p>
-                <p className="text-sm text-gray-400">
-                  Price : {session.amount}
-                </p>
-                {/* <p className="text-sm text-gray-400">{student.email}</p> */}
+                {isEdit === session.id ? (
+                    <input
+                      type="number"
+                      value={editedPrices[session.id] || session.amount}
+                      onChange={(e) => handlePriceChange(session.id, e.target.value)}
+                      className="border p-1 text-center"
+                    />
+                  ) : (
+                    <p className="text-sm text-gray-400">
+                      Price: {session.amount}
+                    </p>
+                  )}
+                 
+                 {isEdit === session.id ? (
+                <button
+                  className="p-2 mt-10 border rounded-md bg-teal-400 text-black"
+                  onClick={() => handleSavePrice(session.id)}
+                >
+                  SAVE
+                </button>
+              ) : (
+                <button
+                  className="p-2 mt-10 border rounded-md hover:bg-teal-400 hover:text-black"
+                  onClick={() => handleEditPrice(session.id, session.amount)}
+                >
+                  EDIT PRICE
+                </button>
+              )}
+
               </div>
             ))}
             {isOverlayActive && <div className="overlay active"></div>}

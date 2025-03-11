@@ -112,6 +112,11 @@ api.interceptors.response.use(
                     localStorage.removeItem("authState")
                     window.location.href = "/login";
                 }
+                if (refreshError.status === 401 && refreshError.response.statusText === 'Unauthorized'){
+                    clearSavedAuthData();
+                    localStorage.removeItem("authState")
+                    window.location.href = "/login";
+                }
                 return Promise.reject(refreshError);
             }
         }

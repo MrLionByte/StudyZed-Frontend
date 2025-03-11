@@ -11,7 +11,7 @@ import {
   GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
+  ChartLine,
   SquareTerminal,
 } from 'lucide-react';
 
@@ -97,25 +97,25 @@ const data = {
       ],
     },
     {
-      title: 'Settings',
+      title: 'Growth Data',
       url: '#',
-      icon: Settings2,
+      icon: ChartLine,
       items: [
         {
-          title: 'General',
+          title: 'Sessions',
+          url: '/admin/session-growth-data/',
+        },
+        {
+          title: 'Assessments',
+          url: '/admin/assessment-growth-data/',
+        },
+        {
+          title: 'Tasks',
           url: '#',
         },
         {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
+          title: 'Revenue',
+          url: '/admin/company-growth-data/',
         },
       ],
     },

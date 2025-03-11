@@ -105,7 +105,7 @@ const OneToOneCall = ({ currentCall, onEndCall, userToken }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-50 w-full h-full flex flex-col">
+    <div className="fixed inset-0 bg-black z-50 w-96 h-[630px] overflow-y-auto flex flex-col">
       <div className="bg-gray-900 p-1 flex justify-between items-center">
         <div className="text-white font-medium">Session with {currentCall?.student}</div>
         <button className="text-white" onClick={endCall}>End</button>

@@ -10,6 +10,7 @@ import {
   School,
   Menu,
   X,
+  Library,
 } from 'lucide-react';
 import Navbar from '../SessionChoice/components/navbar';
 import DashboardMain from './students/Main/dashboard';
@@ -17,12 +18,16 @@ import Assessment from './students/Assessment/assessment';
 import StudentTask from './students/Task/task';
 import Messages from './students/Messages/message.jsx';
 import MyClass from './students/MyClass/myclass.jsx';
+import StudyMaterial from './students/StudyMaterial/studyMaterial.jsx';
 import BatchMembers from './students/BatchMembers/batchMembers.jsx';
+import MyProgress from './students/MyProgress/myProgress.jsx';
 import { clearSavedAuthData, getSavedAuthData } from '../../../utils/Localstorage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slice';
 import { saveSessionData, getSessionData } from './components/currentSession';
+import { saveStudentsDataToSession } from './components/studentsInSession.js';
 import { useLocation, useNavigate } from 'react-router-dom';
+import api, { API_BASE_URLS } from '../../../api/axios_api_call.js';
 
 const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', id: 'dashboard', component: <DashboardMain /> },
@@ -30,7 +35,8 @@ const menuItems = [
   { icon: CheckSquare, label: 'Tasks', id: 'tasks', component: <StudentTask /> },
   { icon: MessageSquare, label: 'Messages', id: 'messages', component: <Messages /> },
   { icon: School, label: 'My Class', id: 'class', component: <MyClass /> },
-  { icon: TrendingUp, label: 'My Progress', id: 'progress' },
+  { icon: Library, label: 'Study Materials', id: 'materials', component: <StudyMaterial/> },
+  { icon: TrendingUp, label: 'My Progress', id: 'progress', component: <MyProgress /> },
   { icon: Users, label: 'Batch Members', id: 'members', component: <BatchMembers/> },
   { icon: UserCircle, label: 'My Account', id: 'account' },
 ];
@@ -40,10 +46,36 @@ export default function Dashboard() {
   const [sessionData, setSessionData] = useState('');
   const [sessionCode, setSessionCode] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [fetchFromBackend, setFetchFromBackend] = useState(true)
 
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+
+  const getAllStudentsInSession = async () => {
+    try {
+      const session = getSessionData();
+      const url = API_BASE_URLS['Session_Service'];
+      const response = await api.get('session-student/batch-mates/', {
+        baseURL: url,
+        params: {
+          session_code:
+            session?.sessions?.session_code ||
+            location.state.sessions.session_code,
+        },
+      });
+      console.log(response);
+      const studentCodes = response.data;
+      const studentDetails = await api.post(
+        'class-app/all-batch-mates-details/',
+        studentCodes,
+      );
+      console.log(studentDetails.data);
+      saveStudentsDataToSession(studentDetails.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     if (location.state) {
@@ -57,6 +89,13 @@ export default function Dashboard() {
       setSessionCode(session);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    if (fetchFromBackend) {
+      getAllStudentsInSession();
+      setFetchFromBackend(false);
+    }
+  },[fetchFromBackend]);
 
   const handleLogout = () => {
     dispatch(logout());

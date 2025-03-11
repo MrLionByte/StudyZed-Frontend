@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState,forwardRef, useImperativeHandle,useRef } from 'react';
 import { Button, Drawer, message, Empty, List, Badge, Spin } from 'antd';
 import { Bell, RefreshCcw, CheckIcon } from 'lucide-react';
 import { getToken, messaging, onMessage } from '../../../../utils/firebase_messaging';
@@ -6,22 +6,20 @@ import { getSavedAuthData } from '../../../../utils/Localstorage';
 import axios from 'axios';
 import { API_BASE_URLS } from '../../../../api/axios_api_call';
 import {vapidKey} from "../../../../utils/firebase_messaging";
+import { RadiusUpleftOutlined } from '@ant-design/icons';
 
-const AppNotification = () => {
+const AppNotification = forwardRef((_, ref) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [notificationPermission, setNotificationPermission] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [error, setError] = useState(null);
   const user = getSavedAuthData();
-  
 
   const requestNotificationPermission = async (user_code) => {
     try {
       setLoading(true);
       const permission = await Notification.requestPermission();
-      setNotificationPermission(permission === "granted");
       
       if (permission === "granted") {
         const token = await getToken(messaging, { 
@@ -33,14 +31,12 @@ const AppNotification = () => {
             user_code: user_code,
             token,
           });
-          console.log("FCM Token sent to backend:", token);
         }
       } else {
         console.log("Permission denied for notifications");
       }
     } catch (error) {
-      console.error("Error getting FCM token:", error);
-      message.error('Failed to enable notifications');
+
       setError(error.message);
     } finally {
       setLoading(false);
@@ -61,6 +57,7 @@ const AppNotification = () => {
         )
       );
       setUnreadCount(prev => Math.max(0, prev - 1));
+      
     } catch (error) {
       console.error("Error marking notification as read:", error);
       message.error('Failed to mark notification as read');
@@ -73,42 +70,42 @@ const AppNotification = () => {
       setLoading(true);
       const url = API_BASE_URLS["Notification_Service"];
       const response = await axios.get(`${url}notification/list/${user.user_code}/`);
-      console.log(response);
+      console.log("Rfresh :",response);
       
       setNotifications(response.data);
       setUnreadCount(response.data.filter(notif => !notif.read).length);
     } catch (error) {
-      console.error("Error fetching notifications:", error);
-      message.error('Failed to fetch notifications');
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (open) {
-      refreshNotifications();
-      requestNotificationPermission(user.user_code);
-    }
-  }, [open]);
+  useImperativeHandle(ref, () => ({
+    refreshNotifications,
+    requestNotificationPermission,
+  }));
 
   useEffect(() => {
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('[Foreground Message]', payload);
-      
+      console.log("Rfresh xx :",payload);
       const newNotification = {
         id: Date.now(),
         title: payload.notification?.title || 'New Notification',
         body: payload.notification?.body || 'Click to view details',
         timestamp: new Date().toISOString(),
+        due_date: payload?.data?.due_time || '',
+        type: payload.data?.type || '',
         read: false,
         data: payload.data
       };
       
       setNotifications(prev => [newNotification, ...prev]);
       setUnreadCount(prev => prev + 1);
-      
+      if (newNotification?.type == "alert"){
+        message.warning(newNotification.body)
+      }
+      console.log("Rfresh xx :",newNotification);
       if (document.hidden) {
       
         message.info({
@@ -161,14 +158,20 @@ const AppNotification = () => {
                 <List.Item
                   className="hover:bg-gray-50 p-4 rounded-lg transition"
                   extra={
-                    !notif.read && (
+                    <div className="flex items-center gap-2">
+                    {notif.type === "alert" && (
+                      <RadiusUpleftOutlined style={{ fontSize: "18px", color: "red" }} />
+                    )}
+
+                    {!notif.read && (
                       <Button
                         className="p-1 rounded-lg bg-gray-300 hover:bg-emerald-500 transition"
                         onClick={() => handleMarkAsRead(notif.id)}
                       >
                         <CheckIcon className="w-4 h-4 text-gray-700 hover:text-white hover:bg-emerald-500" />
                       </Button>
-                    )
+                    )}
+                    </div>
                   }
                 >
                   <List.Item.Meta
@@ -192,6 +195,6 @@ const AppNotification = () => {
       </Drawer>
     </>
   );
-};
+});
 
 export default AppNotification;

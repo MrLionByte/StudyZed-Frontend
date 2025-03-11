@@ -38,24 +38,7 @@ const ActiveSessions = memo(() => {
                 key={session.id}
                 className={`aspect-video rounded-xl flex flex-col items-center p-4 ${'bg-muted/50'}`}
               >
-                {session.profile ? (
-                  <img
-                    src={
-                      session.profile
-                        ? session.profile.profile_picture.replace(
-                            'image/upload/',
-                            '',
-                          )
-                        : ''
-                    }
-                    alt="Session pic loading"
-                    className="w-24 h-24 rounded-full object-cover mb-2 text-center"
-                  />
-                ) : (
-                  <p className="w-24 h-24 rounded-full object-cover text-center text-red-400">
-                    Session pic Unavailable
-                  </p>
-                )}
+                
 
                 <p className="font-bold">{session.session_code}</p>
                 <p className="text-sm text-gray-400">

@@ -16,7 +16,13 @@ export default function TutorStates() {
       <Route path={'payment-failed/'} element={<PaymentFailed />} />
       <Route path={'payment-cancel/'} element={<PaymentCancelled />} />
 
-      <Route path={'enter-session/'} element={<Dashboard />} />
+      <Route path={'enter-session/'} element={
+        
+        
+          <Dashboard />
+   
+        
+      } />
 
       <Route path="profile/" element={<MyProfile />} />
 

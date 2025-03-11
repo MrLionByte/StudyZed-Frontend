@@ -1,27 +1,30 @@
-import * as React from "react"
-
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-
-const tags = Array.from({ length: 10 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
+import React from 'react';
+import { CheckCircle, Clock, Award, XCircle, TrendingUp,User } from 'lucide-react';
+import { getStudentByCode } from '../../components/studentsInSession';
 
 export default function BatchMembers() {
-  return (
-<div className="">
-  <ScrollArea className="max-h-[600px] w-full rounded-md border overflow-y-auto">
-    <div className="p-4">
-      <h4 className="mb-4 text-sm font-medium leading-none">Tags</h4>
-      {tags.map((tag) => (
-        <div key={tag}>
-          <div className="text-sm">{tag}</div>
-          <Separator className="my-2" />
-        </div>
-      ))}
-    </div>
-  </ScrollArea>
-</div>
 
+  const students = getStudentByCode();
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-black p-4">
+      {students.map((student, index)=>
+      <div key={student.user_code}
+        className="bg-white p-4 rounded-lg shadow-md">
+        <div className="flex items-center gap-3">
+          {student?.profile?.profile_picture ? 
+            <img src={student?.profile?.profile_picture.slice(13)} 
+            className='rounded-full h-10 w-10' alt="" />
+          :
+          <User className="h-10 w-10 text-green-500" />
+          }
+          <div>
+            <p className="text-sm text-gray-600">{student.username}</p>
+            <p className="text-2xl font-bold"></p>
+          </div>
+        </div>
+      </div>
+      )}
+    </div>
   )
 }

@@ -6,6 +6,10 @@ import StudentManagement from '../../pages/admin/interface/userManagement/studen
 import SessionApproval from '../../pages/admin/interface/sessionManagement/approval/tutorSession.jsx';
 import ActiveSessions from '../../pages/admin/interface/sessionManagement/activeSessions/activeSession.jsx';
 import PriceSetter from '../../pages/admin/interface/priceSetter/pricesetter.jsx';
+import AssessmentsData from '../../pages/admin/interface/growthData/assessmentsData.jsx'
+import SessionData from '../../pages/admin/interface/growthData/sessionsData.jsx'
+import CompanyRevenue from '../../pages/admin/interface/growthData/companyRevenue.jsx'
+
 
 import NotFound from '../../components/Errors/NotFound.jsx';
 
@@ -23,6 +27,10 @@ export default function TutorRoutes() {
         <Route path="active-session/" element={<ActiveSessions />} />
 
         <Route path="price-setter/" element={<PriceSetter />} />
+
+        <Route path="assessment-growth-data/" element={<AssessmentsData />} />
+        <Route path="session-growth-data/" element={<SessionData />} />
+        <Route path="company-growth-data/" element={<CompanyRevenue />} />
 
         <Route path="/*" element={<NotFound />} />
       </Route>

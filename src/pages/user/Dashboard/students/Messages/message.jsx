@@ -8,6 +8,8 @@ import { getSavedAuthData } from '../../../../../utils/Localstorage';
 import { getSessionData } from '../../components/currentSession';
 import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
 import { studentEndPoints } from '../../../../../api/endpoints/userEndPoints';
+import ChatSkeleton from '../../components/chatSkelton';
+
 
 export default function StudentMessaging() {
   const [socket, setSocket] = useState(null);
@@ -26,7 +28,7 @@ export default function StudentMessaging() {
   const lastMessageRef = useRef(null);
 
   async function fetchStudentsData() {
-    setLoading(true);
+    
     const session_data = getSessionData();
     try {
       console.log('session_code :', session_data);
@@ -44,19 +46,22 @@ export default function StudentMessaging() {
       setTutor(response.data);
     } catch (e) {
       setError(e);
-      setLoading(false);
       console.log('Error :', e);
     }
   }
 
   useEffect(() => {
     if (fetchFromBackend) {
-      fetchStudentsData().then(() => setFetchFromBackend(false));
-      // setFetchFromBackend(false);
+      setLoading(true);
+      setTimeout(() => {
+        fetchStudentsData().then(() => setFetchFromBackend(false));
+        setLoading(false)  
+      }, 2000);
     }
   }, [fetchFromBackend]);
 
   useEffect(() => {
+    let retryCount = 0
     if (!tutor) return;
     const user_data = getSavedAuthData();
     const session_data = getSessionData();
@@ -95,26 +100,10 @@ export default function StudentMessaging() {
 
         if (data.type === 'chat_message' && data.message) {
           console.log('Received chat message:', data);
-
-          if (!messages.includes(data)) {
-            setMessages((prev) => [...prev, data]);
-          }
-          return;
-        }
-
-        if (data && data.message && data.sender) {
-          console.log('Received chat message sender:', data, data.timestamp);
-          const exists = messages.some(
-            (message) => message.timestamp === data.timestamp,
-          );
-          console.log(exists);
-
-          if (exists) {
-            return;
-          } else {
-            setMessages((prev) => [...prev, data]);
-          }
-
+          setMessages((prev) => {
+            const exists = prev.some((msg) => msg.timestamp === data.timestamp);
+            return exists ? prev : [...prev, data];
+          });
           return;
         }
 
@@ -193,7 +182,7 @@ export default function StudentMessaging() {
   return (
     <div className="flex w-full justify-center mt-5 items-center bg-transparent">
     <div className="flex flex-col h-[500px] w-full sm:w-[700px] max-w-5xl mx-auto bg-[#e7ebf0] rounded-lg shadow-md overflow-hidden">
-      {/* Header */}
+      
       <div className="flex items-center p-3 bg-[#5682a3] text-white">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
@@ -220,9 +209,14 @@ export default function StudentMessaging() {
         </div>
       </div>
       
-      {/* Message area */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-2 text-black opacity-75">
+      
+      <ScrollArea className="flex-1 p-4 bg-gray-400" >
+        <div className="space-y-2 text-black opacity-75 ">
+          {loading ? 
+          
+          <ChatSkeleton />
+          :
+          <>
           {messages.map((message, index) => (
             <div
               key={index}
@@ -249,12 +243,14 @@ export default function StudentMessaging() {
               </div>
             </div>
           ))}
+          </>
+          }
           <div ref={lastMessageRef} className="h-0" />
         </div>
       </ScrollArea>
       
-      {/* Input area */}
-      <div className="p-3 bg-[#f5f5f5] border-t">
+      
+      <div className="p-3 bg-[#436f91] border-t">
         <div className="flex items-center space-x-2">
           {/* <Button variant="ghost" size="icon" className="text-gray-500">
             <Paperclip className="h-5 w-5" />

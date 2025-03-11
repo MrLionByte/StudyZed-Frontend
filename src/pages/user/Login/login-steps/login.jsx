@@ -284,11 +284,12 @@ export default function TutorStudentlogin({ passwordForgot }) {
 
       <button
         type="submit"
+        disabled={loading}
         onClick={handleSubmit}
         className="w-full py-3 font-bold
                  bg-emerald-400 text-black rounded-lg hover:bg-emerald-300 transition-colors mb-4"
       >
-        Log in
+         {loading ? "Logging in..." : "Log in"}
       </button>
 
       <p className="text-sm text-center text-gray-300 mb-4">

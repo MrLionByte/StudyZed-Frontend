@@ -253,7 +253,7 @@ export default function TutorTask() {
                   onClick={(e) => submitEditTask(e, selectedTask.id)}
                   className="rounded bg-emerald-500 hover:bg-emerald-700 transition-colors"
                 >
-               {/* Content Area */}   <SquareCheck className="w-5 h-5" />
+                <SquareCheck className="w-5 h-5" />
                 </button>
               )}
               <button

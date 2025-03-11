@@ -255,9 +255,12 @@ export default function Messaging() {
               }}
             >
               <div className="w-12 h-12 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
+              {getStudentProfile(student.student_code) ? (
                 <img className='rounded-full' 
                   src={getStudentProfile(student.student_code)} alt={student.student_code.charAt(0)} />
-                
+              ):
+              <p>{student.student_code.charAt(0)}</p>
+              }
               </div>
               <div className="flex-1">
                 <div className="flex justify-between">
@@ -279,6 +282,7 @@ export default function Messaging() {
               </div>
             </div>
           ))}
+          
         </ScrollArea>
       </div>
 
@@ -302,7 +306,8 @@ export default function Messaging() {
               <div className="ml-3 flex-1">
                 <h2 className="font-semibold">{getStudentNameByCode(selectedUser.student_code)}</h2>
                 <p className="text-xs opacity-80">
-                  {connected ? 'online' : 'last seen recently'}
+                  {connected ? '' : 'last seen recently'}
+                  {/* {connected ? 'online' : 'last seen recently'} */}
                 </p>
               </div>
               <Button variant="ghost" size="icon" className="text-white hover:bg-[#4a729a]">
@@ -378,3 +383,165 @@ export default function Messaging() {
   </div>
   );
 }
+
+
+
+// return (
+//   <div className="flex justify-center items-center h-full w-full bg-transparent">
+//   <div className="flex h-[600px] w-full max-w-5xl mx-auto bg-transparent rounded-lg shadow-md overflow-hidden">
+   
+//     <div className={`${sidebarOpen ? 'flex' : 'hidden'} md:flex w-full md:w-80 flex-col border-r bg-white`}>
+//       <div className="p-4 bg-[#5682a3] text-white flex items-center justify-between">
+//         <h2 className="font-bold">Messages</h2>
+//         <Button variant="ghost" size="icon" className="text-white hover:bg-[#4a729a]">
+//           <Menu className="h-5 w-5" />
+//         </Button>
+//       </div>
+//       <div className="p-3 border-b">
+//         <div className="relative">
+//           <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+//           <Input
+//             placeholder="Search"
+//             value={searchTerm}
+//             onChange={(e) => setSearchTerm(e.target.value)}
+//             className="pl-9 bg-gray-100 border-none text-gray-700"
+//           />
+//         </div>
+//       </div>
+//       <ScrollArea className="flex-1">
+//         {filteredStudents.map((student) => (
+//           <div
+//             key={student.id}
+//             className={`p-3 flex items-center space-x-3 cursor-pointer 
+//               hover:bg-gray-100 border-b text-gray-700 ${
+//               selectedUser?.id === student.id ? 'bg-blue-50' : ''
+//             }`}
+//             onClick={() => {
+//               handleSelectedStudent(student)
+//             }}
+//           >
+//             <div className="w-12 h-12 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
+//               <img className='rounded-full' 
+//                 src={getStudentProfile(student.student_code)} alt={student.student_code.charAt(0)} />
+              
+//             </div>
+//             <div className="flex-1">
+//               <div className="flex justify-between">
+//                 <h3 className="font-medium">{getStudentNameByCode(student.student_code)}</h3>
+//                 {/* <span className="text-xs text-gray-400">
+//                   {lastMsgTime}
+//                 </span> */}
+//               </div>
+//               <div className="flex justify-between mt-1">
+//                 <p className="text-sm text-gray-500 truncate">
+//                   {connected ? 'Click to start chatting' : 'Offline'}
+//                 </p>
+//                 <div className="flex items-center">
+//                   <span className="w-5 h-5 rounded-full bg-[#5682a3] text-white text-xs flex items-center justify-center">
+                    
+//                   </span>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         ))}
+        
+//       </ScrollArea>
+//     </div>
+
+
+//     <div className={`${!sidebarOpen ? 'flex' : 'hidden'} md:flex flex-col flex-1 bg-[#e7ebf0]`}>
+//       {selectedUser ? (
+//         <>
+//           <div className="flex items-center p-3 bg-[#5682a3] text-white">
+//             <Button 
+//               variant="ghost" 
+//               size="icon" 
+//               className="text-white hover:bg-[#4a729a] md:hidden mr-1"
+//               onClick={goBackToContacts}
+//             >
+//               <ChevronLeft className="h-5 w-5" />
+//             </Button>
+//             <div className="w-10 h-10 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
+//               <img className='rounded-full'
+//                 src={getStudentProfile(selectedUser.student_code)} alt={selectedUser.student_code.charAt(0)} />
+//             </div>
+//             <div className="ml-3 flex-1">
+//               <h2 className="font-semibold">{getStudentNameByCode(selectedUser.student_code)}</h2>
+//               <p className="text-xs opacity-80">
+//                 {connected ? '' : 'last seen recently'}
+//                 {/* {connected ? 'online' : 'last seen recently'} */}
+//               </p>
+//             </div>
+//             <Button variant="ghost" size="icon" className="text-white hover:bg-[#4a729a]">
+//               <MoreVertical className="h-5 w-5" />
+//             </Button>
+//           </div>
+
+//           <ScrollArea className="flex-1 p-4">
+//             <div className="space-y-2 text-black opacity-75">
+//               {messages.map((message, index) => (
+//                 <div
+//                   key={index}
+//                   className={`flex ${message.sender === tutor.user_code ? 'justify-end' : 'justify-start'}`}
+//                 >
+//                   <div
+//                     className={`max-w-[75%] rounded-lg p-3 ${
+//                       message.sender === tutor.user_code
+//                         ? 'bg-[#effdde]' 
+//                         : 'bg-white'
+//                     }`}
+//                   >
+//                     <div className="flex flex-col">
+//                       <p className="text-[15px]">{message.content || message.message}</p>
+//                       <p className="flex justify-end text-[11px] text-gray-500 mt-1">
+//                         {extractTime(message.timestamp)}
+//                         {message.sender === tutor.user_code && (
+//                           <span className="ml-1 text-[#5fd467]">✓✓</span>
+//                         )}
+//                       </p>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//               <div ref={lastMessageRef} className="h-0" />
+//             </div>
+//           </ScrollArea>
+
+//           <div className="p-3 bg-[#082c6a] border-t">
+//             <div className="flex items-center space-x-2">
+//               {/* <Button variant="ghost" size="icon" className="text-gray-500">
+//                 <Paperclip className="h-5 w-5" /> 
+//               </Button> */}
+//               <Input
+//                 value={input}
+//                 onChange={(e) => setInput(e.target.value)}
+//                 onKeyPress={handleKeyPress}
+//                 placeholder="Message"
+//                 className="rounded-full flex-1 border-none text-black bg-white"
+//               />
+//               <Button 
+//                 onClick={sendMessage} 
+//                 size="icon"
+//                 disabled={!connected || !input.trim()} 
+//                 className="bg-[#9daebc] text-white hover:bg-[#4a729a] rounded-full h-10 w-10"
+//               >
+//                 <Send className="h-4 w-4" />
+//               </Button>
+//             </div>
+//             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+//           </div>
+//         </>
+//       ) : (
+//         <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+//           <div className="w-16 h-16 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] mb-4">
+//             <Send className="h-6 w-6" />
+//           </div>
+//           <p className="text-lg font-medium">Select a chat to start messaging</p>
+//           <p className="text-sm mt-1">Choose from your existing conversations</p>
+//         </div>
+//       )}
+//     </div>
+//   </div>
+// </div>
+// );

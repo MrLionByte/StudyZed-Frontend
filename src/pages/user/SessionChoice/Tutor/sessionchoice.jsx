@@ -33,6 +33,8 @@ const TutorSessionPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [copiedId, setCopiedId] = useState(null);
   const [isPaid, setIsPaid] = useState(true);
+  const [nextPage, setNextPage] = useState(null);
+  const [prevPage, setPrevPage] = useState(null);
 
   const itemsPerPage = 8;
 
@@ -100,23 +102,29 @@ const TutorSessionPage = () => {
       });
   };
 
-  async function fetchSessionsData() {
+  async function fetchSessionsData(cursor=null) {
     const tutor_data = getSavedAuthData();
     setTutorCode(tutor_data?.user_code);
+    const queryData = { tutor_code: tutor_data?.user_code };
 
     setLoading(true);
+    const decodedCursor = decodeURIComponent(cursor);
+    if (cursor){
+      queryData.cursor = decodedCursor;
+    }
 
     console.log(tutor_data?.user_code);
-    const qury_data = { tutor_code: tutor_data?.user_code };
+    
     try {
       const url = API_BASE_URLS['Session_Service'];
       const response = await api.get(TutorEndPoints.TutorSessions, {
         baseURL: url,
-        params: qury_data,
+        params: queryData,
       });
 
       setSessions(response.data.results);
-
+      setNextPage(response.data.next); 
+      setPrevPage(response.data.previous);
       console.log('RESPONSE BRUT', response.data);
       console.log('RESPONSE BRUT', response);
     } catch (e) {
@@ -141,6 +149,7 @@ const TutorSessionPage = () => {
       <Navbar logout={handleLogout} userProfile={handleUserRoundIcon} />
 
       <div className="grid md:grid-cols-4 gap-4 p-4">
+
         {sessions?.length > 0 ? (
           sessions.map((session) => (
             <div
@@ -253,10 +262,15 @@ const TutorSessionPage = () => {
       </div>
 
       <div className="flex items-center justify-center">
-        <button className="default_button p-3" onClick={openModal}>
+        <button className="default_button p-3 b" onClick={openModal}>
           CREATE NEW SESSION
         </button>
+      
       </div>
+
+      <div className="flex justify-center mt-4 bg-red-400">
+        
+</div>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30">

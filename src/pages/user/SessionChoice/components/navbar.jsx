@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { GraduationCap, Menu, UserCircle, LogOut, Bell } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../../../assets/studyzed_main.png';
@@ -10,10 +10,10 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../../../redux/slice';
 import Notification from '../../Dashboard/components/notification';
 
-
 export default function Navbar() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [userRole, setUserRole] = useState();
+  const notificationRef = useRef();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,6 +40,17 @@ export default function Navbar() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!userRole) {
+      setUserRole(userData?.role);
+    }
+    
+    if (notificationRef.current) {
+      notificationRef.current.refreshNotifications();
+      notificationRef.current.requestNotificationPermission(userData.user_code);
+    }
+  }, []);
+
   return (
     <nav className="bg-teal-900/50 backdrop-blur-sm relative z-10">
       <div className="container mx-auto px-4">
@@ -48,7 +59,7 @@ export default function Navbar() {
             <GraduationCap className="h-8 w-8 text-emerald-400" />
             <img className="size-1/2 md:size-1/4 mt-2" src={Logo} alt="Logo" />
           </Link>
-
+          
           <div className="flex items-center space-x-4">
             {/* {userRole === 'STUDENT' ? (
               <Link
@@ -111,7 +122,7 @@ export default function Navbar() {
                 </button>
               </div>
             )}
-            <Notification />
+            <Notification ref={notificationRef} />
           </div>
            
               

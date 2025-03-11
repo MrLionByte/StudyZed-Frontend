@@ -10,6 +10,7 @@ import {
   School,
   Menu,
   X,
+  Library,
 } from "lucide-react";
 import Navbar from "../SessionChoice/components/navbar";
 import DashboardMain from "./tutor/Main/dashboardMain";
@@ -19,6 +20,8 @@ import Messaging from "./tutor/Messages/message";
 import TutorTask from "./tutor/Task/task";
 import Class from "./tutor/MyClass/class";
 import MyAccount from "./tutor/MyAccount/myaccount";
+import ClassProgress from "./tutor/ClassProgress/classProgress";
+import StudyMaterial from './tutor/StudyMaterial/studyMaterial';
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearSavedAuthData, getSavedAuthData } from "../../../utils/Localstorage";
 import { useDispatch } from "react-redux";
@@ -35,13 +38,14 @@ const menuItems = [
   { icon: CheckSquare, label: "Tasks", id: "tasks", component: <TutorTask /> },
   { icon: MessageSquare, label: "Messages", id: "messages", component: <Messaging /> },
   { icon: School, label: "My Class", id: "class", component: <Class /> },
-  { icon: TrendingUp, label: "Class Progress", id: "progress" },
+  { icon: Library, label: 'Study Materials', id: 'materials', component: <StudyMaterial/> },
+  { icon: TrendingUp, label: "Class Progress", id: "progress", component: <ClassProgress /> },
   { icon: Users, label: "My Students", id: "members", component: <Members /> },
   { icon: UserCircle, label: "My Account", id: "account", component: <MyAccount /> },
 ];
 
 export default function Dashboard() {
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeSection, setActiveSection] = useState("materials");
   const [sessionCode, setSessionCode] = useState("");
   const [sessionData, setSessionData] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -153,16 +157,16 @@ export default function Dashboard() {
               <div className="flex flex-col space-y-2 text-gray-300 px-4">
                 <p className="text-sm font-semibold">Session Code:</p>
                 <p className="text-lg font-bold text-white">{sessionCode || "N/A"}</p>
-                <h5 className="w-3/4 font-bold bg-slate-500 text-white px-2 py-2 rounded-lg mt-3 text-center">
+                {/* <h5 className="w-3/4 font-bold bg-slate-500 text-white px-2 py-2 rounded-lg mt-3 text-center">
                   Tutor Dashboard
-                </h5>
+                </h5> */}
               </div>
             </div>
           </div>
         </div>
 
         
-        <div className="flex-1 p-4 md:p-3">{menuItems.find((item) => item.id === activeSection)?.component}</div>
+        <div className="flex-1">{menuItems.find((item) => item.id === activeSection)?.component}</div>
       </div>
     </div>
   );
