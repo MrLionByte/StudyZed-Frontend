@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
-import { ChevronRight } from "lucide-react"
+import { ChevronRight } from 'lucide-react';
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from '@/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,11 +16,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import { NavLink } from "react-router-dom"
+} from '@/components/ui/sidebar';
+import { NavLink } from 'react-router-dom';
 
 export function NavMain({ items }) {
-
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -58,5 +57,5 @@ export function NavMain({ items }) {
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

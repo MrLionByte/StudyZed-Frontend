@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { studentEndPoints } from "../../../../../api/endpoints/userEndPoints";
-import api, { api_dictatory } from "../../../../../api/axios_api_call.js";
+import api, { API_BASE_URLS } from "../../../../../api/axios_api_call.js";
 import { getSessionData } from "../../components/currentSession.js";
 
 export const useAssessments = () => {
@@ -11,18 +11,20 @@ export const useAssessments = () => {
   const [error, setError] = useState("");
   const [isCreatingAssessment, setIsCreatingAssessment] = useState(false);
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
-  
+  const [selectedAssessment, setSelectedAssessment] = useState('');
+  const [attemptedAssessment, setAttemptedAssessment] = useState({});
+
   useEffect(() => {
       if (fetchFromBackend) {
           fetchAssessments().then(() => setFetchFromBackend(false));
       }
-  }, [fetchFromBackend]);
+  }, [fetchFromBackend,assessments,selectedAssessment]);
   
 
   const fetchAssessments = async () => {
     setLoading(true);
     try {
-      const url = api_dictatory["Session_Service"]
+      const url = API_BASE_URLS["Session_Service"]
       const session_data = getSessionData();
       const response = await api.get(studentEndPoints.GetStudentAssessments, {
         baseURL: url,
@@ -34,7 +36,7 @@ export const useAssessments = () => {
       console.log(response);
       
       setAssessments(response.data);
-      attendedAssessments();
+      await attendedAssessments();
     } catch (err) {
       setError("Failed to fetch assessments");
       toast.error("Error fetching assessments");
@@ -46,7 +48,7 @@ export const useAssessments = () => {
   const attendedAssessments = async () => {
     setLoading(true);
     try {
-      const url = api_dictatory["Session_Service"]
+      const url = API_BASE_URLS["Session_Service"]
       const response = await api.get(studentEndPoints.GetAttendedAssessments, {
         baseURL:url,
       });
@@ -63,9 +65,9 @@ export const useAssessments = () => {
     }
   };
 
-
-
-  return { assessments, loading, error,isCreatingAssessment, attemptedAssessments,
-    setIsCreatingAssessment,fetchAssessments,
+  return { assessments, loading, error,isCreatingAssessment, 
+    attemptedAssessments,selectedAssessment,attemptedAssessment,fetchFromBackend,
+    setSelectedAssessment,setAttemptedAssessment, setIsCreatingAssessment,
+    fetchAssessments, setFetchFromBackend
      };
 };

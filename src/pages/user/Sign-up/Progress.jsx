@@ -1,13 +1,12 @@
-import React,{ useEffect, useState } from "react";
-import "react-step-progress-bar/styles.css";
-import { ProgressBar, Step } from "react-step-progress-bar";
-import { Progress } from "@/components/ui/progress"
-    
+import React, { useEffect, useState } from 'react';
+import 'react-step-progress-bar/styles.css';
+import { ProgressBar, Step } from 'react-step-progress-bar';
+import { Progress } from '@/components/ui/progress';
 
-const StepProgressBar = ({progress}) => {
+const StepProgressBar = ({ progress }) => {
   const [value, setValue] = useState(0);
-  const [progress, setProgress] = useState(0)
-  
+  const [progress, setProgress] = useState(0);
+
   // useEffect (() => {
   //   if (progress === 1){
   //       setValue(1);
@@ -18,21 +17,18 @@ const StepProgressBar = ({progress}) => {
   //   } else {
   //     setValue(0);
   //   } }, [progress]);
-  
-    
-     
-    useEffect(() => {
-      const timer = setTimeout(() => setProgress(66), 500)
-      return () => clearTimeout(timer)
-    }, [])
 
+  useEffect(() => {
+    const timer = setTimeout(() => setProgress(66), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     // <ProgressBar
     //   percent={value}
     //   filledBackground="gray-300"
     //   unfilledBackground="#e5e7eb"
-      
+
     // >
     //   <Step transition="scale">
     //     {({ accomplished }) => (
@@ -42,7 +38,7 @@ const StepProgressBar = ({progress}) => {
     //             accomplished ? "bg-blue-500" : "bg-gray-300"
     //           }`}
     //         >
-             
+
     //         </div>
     //       </div>
     //     )}
@@ -55,7 +51,7 @@ const StepProgressBar = ({progress}) => {
     //             accomplished ? "bg-blue-500" : "bg-gray-300"
     //           }`}
     //         >
-            
+
     //         </div>
     //       </div>
     //     )}
@@ -68,14 +64,14 @@ const StepProgressBar = ({progress}) => {
     //             accomplished ? "bg-blue-500" : "bg-gray-300"
     //           }`}
     //         >
-            
+
     //         </div>
     //       </div>
     //     )}
     //   </Step>
     // </ProgressBar>
- 
-  <Progress value={progress} className="w-[60%]" />
+
+    <Progress value={progress} className="w-[60%]" />
   );
 };
 

@@ -25,3 +25,4 @@ dist-ssr
 
 .env
 .prettierrc
+git_push.py

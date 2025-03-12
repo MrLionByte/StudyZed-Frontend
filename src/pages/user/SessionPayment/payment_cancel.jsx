@@ -1,13 +1,11 @@
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
 
 const PaymentCancelled = () => {
-
   const navigate = useNavigate();
 
-  const handleHomePage = () =>{
-    navigate("/tutor/choose-session/")
-  }
+  const handleHomePage = () => {
+    navigate('/tutor/choose-session/');
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950 px-4 md:px-6">
@@ -24,7 +22,8 @@ const PaymentCancelled = () => {
               Order #12345 | $99.99 | Visa ending in 1234
             </p> */}
             <p className="text-gray-500 dark:text-gray-400">
-              Payment has cancelled. You can continue with sessions and create session later.
+              Payment has cancelled. You can continue with sessions and create
+              session later.
             </p>
           </div>
           <a
@@ -41,24 +40,24 @@ const PaymentCancelled = () => {
 };
 
 const CancelledIcon = (props) => {
-    return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="15" y1="9" x2="9" y2="15" />
-        <line x1="9" y1="9" x2="15" y2="15" />
-      </svg>
-    );
-  };
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="15" y1="9" x2="9" y2="15" />
+      <line x1="9" y1="9" x2="15" y2="15" />
+    </svg>
+  );
+};
 
 export default PaymentCancelled;

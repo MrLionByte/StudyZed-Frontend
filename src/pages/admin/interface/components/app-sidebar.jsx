@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import Round_Logo from '../../../../assets/round_logo.png'
+import React from 'react';
+import Round_Logo from '../../../../assets/round_logo.png';
 import {
   AudioWaveform,
   BookOpen,
@@ -11,111 +11,111 @@ import {
   GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
+  ChartLine,
   SquareTerminal,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { NavMain } from "./nav-main.jsx";
-import { NavProjects } from "./nav-projects.jsx";
-import { NavUser } from "./nav-user.jsx";
-import { TeamSwitcher } from "./team-switcher.jsx";
+import { NavMain } from './nav-main.jsx';
+import { NavProjects } from './nav-projects.jsx';
+import { NavUser } from './nav-user.jsx';
+import { TeamSwitcher } from './team-switcher.jsx';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar';
 
 let admin = '';
-if (localStorage.getItem("adminAuthState")) {
-  admin = (JSON.parse(localStorage.getItem("adminAuthState"))).admin;
+if (localStorage.getItem('adminAuthState')) {
+  admin = JSON.parse(localStorage.getItem('adminAuthState')).admin;
 }
 
 const data = {
   user: {
-    name: admin?.username || "shadcn",
-    email: admin?.email || "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: admin?.username || 'shadcn',
+    email: admin?.email || 'm@example.com',
+    avatar: '/avatars/shadcn.jpg',
   },
   teams: [
     {
-      name: "StudyZed",
+      name: 'StudyZed',
       logo: GalleryVerticalEnd,
-      plan: "edu-tool",
-    }
+      plan: 'edu-tool',
+    },
   ],
   navMain: [
     {
-      title: "User Management",
-      url: "#",
+      title: 'User Management',
+      url: '#',
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "Tutor",
-          url: "/admin/tutor-management/",
+          title: 'Tutor',
+          url: '/admin/tutor-management/',
         },
         {
-          title: "Student",
-          url: "/admin/student-management/",
+          title: 'Student',
+          url: '/admin/student-management/',
         },
       ],
     },
     {
-      title: "Session",
-      url: "#",
+      title: 'Session',
+      url: '#',
       icon: Bot,
       items: [
         {
-          title: "Approval",
-          url: "/admin/session-approval/",
+          title: 'Approval',
+          url: '/admin/session-approval/',
         },
         {
-          title: "Active",
-          url: "/admin/active-session/",
+          title: 'Active',
+          url: '/admin/active-session/',
         },
         {
-          title: "Inactive",
-          url: "#",
+          title: 'Inactive',
+          url: '#',
         },
         {
-          title: "Blocked",
-          url: "#",
+          title: 'Blocked',
+          url: '#',
         },
       ],
     },
     {
-      title: "Session Price",
-      url: "#",
+      title: 'Session Price',
+      url: '#',
       icon: BookOpen,
       items: [
         {
-          title: "Set or Change Price",
-          url: "/admin/price-setter/",
-        }
+          title: 'Set or Change Price',
+          url: '/admin/price-setter/',
+        },
       ],
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
+      title: 'Growth Data',
+      url: '#',
+      icon: ChartLine,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: 'Sessions',
+          url: '/admin/session-growth-data/',
         },
         {
-          title: "Team",
-          url: "#",
+          title: 'Assessments',
+          url: '/admin/assessment-growth-data/',
         },
         {
-          title: "Billing",
-          url: "#",
+          title: 'Tasks',
+          url: '#',
         },
         {
-          title: "Limits",
-          url: "#",
+          title: 'Revenue',
+          url: '/admin/company-growth-data/',
         },
       ],
     },
@@ -140,13 +140,14 @@ const data = {
 };
 
 export function AppSidebar(props) {
-
   document.documentElement.classList.add('dark');
 
   return (
     <Sidebar
-    className='bg-white dark:bg-gray-900'
-     collapsible="icon" {...props}>
+      className="bg-white dark:bg-gray-900"
+      collapsible="icon"
+      {...props}
+    >
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>

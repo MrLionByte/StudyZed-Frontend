@@ -10,5 +10,17 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: "0.0.0.0", 
+    port: 5173, 
+    strictPort: true, 
+    cors: {
+      origin: ["https://7a15-202-164-149-48.ngrok-free.app"], 
+      credentials: true, 
+    },
+    allowedHosts: [
+      "7a15-202-164-149-48.ngrok-free.app" // Add the allowed Ngrok URL here
+    ],
+  }
 })
  

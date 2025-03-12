@@ -1,29 +1,18 @@
 import axios from "axios"
-import { ACCESS_TOKEN } from './helpers/constrands'
-import Cookies from 'js-cookie'
 import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Localstorage";
 
-export const api_dictatory = {
-    "Usermanagement_Service": "http://127.0.0.1:8005/",
-    "Message_Service"       : "http://127.0.0.1:8006/",
-    "Payment_Service"       : "http://127.0.0.1:8008/",
-    "Session_Service"       : "http://127.0.0.1:8009/",
+export const API_BASE_URLS = {
+    Usermanagement_Service: import.meta.env.VITE_USERMANAGEMENT_SERVICE,
+    Message_Service: import.meta.env.VITE_MESSAGE_SERVICE,
+    Notification_Service: import.meta.env.VITE_NOTIFICATION_SERVICE,
+    Payment_Service: import.meta.env.VITE_PAYMENT_SERVICE,
+    Session_Service: import.meta.env.VITE_SESSION_SERVICE,
 };
 
-const key = "Usermanagement_Service";
-const baseURL = api_dictatory[key];
 
-const api = axios.create({
-    // baseURL: "http://127.0.0.1:8005/",
-    baseURL: baseURL,
-    timeout: 10000,
-    withCredentials: true,
-    headers: {
-        "Content-Type": "application/json",
-      }
-}); 
+const MAX_RETRY_ATTEMPTS = 3;
 
-const excludedUrls = {    
+const EXCLUDED_URLS = {    
     'auth-app/user-email/':{ method: 'POST' },
     'auth-app/verify-otp/':{ method: 'POST' },
     'auth-app/resend-otp/':{ method: 'POST' },
@@ -40,78 +29,100 @@ const excludedUrls = {
     'admin-app/login-strict/':{ method: 'POST' },
 };
 
+const key = "Usermanagement_Service";
+const baseURL = API_BASE_URLS[key];
+
+const api = axios.create({
+    baseURL: baseURL,
+    timeout: 10000,
+    withCredentials: true,
+    headers: {
+        "Content-Type": "application/json",
+      }
+}); 
+
 
 api.interceptors.request.use( 
     (config) => {
-        console.log("cofig :",config);
+    
+        if (!config?.url) return config;
+
+        const exclusion = Object.keys(EXCLUDED_URLS).find(url => config?.url?.includes(url));
         
-        const exclusion = Object.keys(excludedUrls).find(url => config?.url?.includes(url));
-        
-        if (exclusion && excludedUrls[exclusion].method === config.method.toUpperCase()) {
-            console.log("EXCL");
-            
+        if (exclusion && EXCLUDED_URLS[exclusion].method === config.method.toUpperCase()) {
             return config;
         }
 
-        const authData = JSON.parse(localStorage.getItem("authData"));      
-        const token = (authData ? authData["accessToken"] : null ) 
+        const authData = getSavedAuthData();
+        const token = authData ?.accessToken;
         
         if (token){
             config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
 
 api.interceptors.response.use(
     (response) => response,
     async (error)=> {
+        console.log("API :",error);
+        
         const originalRequest = error.config;
-        console.log("REFRESH ERROR :",error);
+        const status = error.response?.status || error.status;
+        console.log("API status :",status);
+        originalRequest.retryCount = originalRequest.retryCount || 0;
 
-
-        if (error.response || error.status === 403 && 
-            (error.status == 403 || error.status == 401 || error.response.status === 401 || error.response.status === 403) &&
+        if (status === 401 || status === 403 && 
+            originalRequest.retryCount < MAX_RETRY_ATTEMPTS &&
             !originalRequest._retry){
 
+            originalRequest.retryCount += 1;
             originalRequest._retry = true;
-                console.log("RESEND REFRESH WORKING");
+
             try { 
                 const authData = getSavedAuthData();
-                const refresh_token = authData.refreshToken || null;
-                console.log("Auth Data  :", authData, refresh_token);
-
+                const refresh_token = authData?.refreshToken;
+              
                 if (!refresh_token){
                     throw new Error("No refresh token available");
                 }
 
                 const refreshResponse = await axios.post(
-                    'http://127.0.0.1:8005/auth-app/user/refresh/',
+                    `${API_BASE_URLS.Usermanagement_Service}auth-app/user/refresh/`,
                     {"refresh": refresh_token}
                 );
-                console.log("refreshResponse CAme:", refreshResponse);
                 
-                authData.accessToken = refreshResponse.data.access;
-                savedAuthData(authData);
+                const newAuthData = {
+                    ...authData,
+                    accessToken: refreshResponse.data.access
+                }
 
-                originalRequest.headers.Authorization = `Bearer ${authData.accessToken}`;
+                savedAuthData(newAuthData);
+                originalRequest.headers.Authorization = `Bearer ${newAuthData.accessToken}`;
                 
                 return api(originalRequest);
+
             } catch (refreshError) {
                 console.error("Token refresh failed:", refreshError);
-                clearSavedAuthData();
-                window.location.href = "/login";
+                if (originalRequest.retryCount >= MAX_RETRY_ATTEMPTS) {
+                    clearSavedAuthData();
+                    localStorage.removeItem("authState")
+                    window.location.href = "/login";
+                }
+                if (refreshError.status === 401 && refreshError.response.statusText === 'Unauthorized'){
+                    clearSavedAuthData();
+                    localStorage.removeItem("authState")
+                    window.location.href = "/login";
+                }
                 return Promise.reject(refreshError);
             }
         }
         return Promise.reject(error);
     }   
 );
-
 
 
 export default api;

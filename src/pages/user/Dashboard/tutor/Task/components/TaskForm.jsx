@@ -5,59 +5,71 @@ const TaskForm = ({ selectedDate, onSubmit, onCancel }) => {
   const [description, setDescription] = useState('');
   const [dueTime, setDueTime] = useState('');
   const [formError, setFormError] = useState({
-    titleError:'',
-    descriptionError:'',
+    titleError: '',
+    descriptionError: '',
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let dateAndTime ;
-    let isValid = true
+    let dateAndTime;
+    let isValid = true;
 
     setFormError({
-      titleError: "",
-      descriptionError: "",
+      titleError: '',
+      descriptionError: '',
     });
 
-    if (title.trim() === "") {
+    if (title.trim() === '') {
       setFormError((prev) => ({
         ...prev,
-        titleError: "Add Title before submitting",
+        titleError: 'Add Title before submitting',
       }));
-      isValid = false
+      isValid = false;
     }
-    if (description.trim() === ""){
-      setFormError((prev)=> ({
+
+    if (description.trim() === '') {
+      setFormError((prev) => ({
         ...prev,
-        descriptionError: "Add description before submitting"
-      }))
-      isValid = false
+        descriptionError: 'Add description before submitting',
+      }));
+      isValid = false;
     }
-    console.log(selectedDate, typeof selectedDate);
 
-    if (isValid){
+    if (isValid) {
       const isoString = selectedDate.toISOString();
-      dateAndTime = `${isoString.split("T")[0]}T23:59:00.000Z`; 
+      const datePart = isoString.split('T')[0];
 
-      if (dueTime){
-          const datePart = selectedDate.toISOString().split("T")[0]
-          dateAndTime = `${datePart}T${dueTime}:00.000Z`;
+      const dateObject = new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000);
+      const nextDate = dateObject.toISOString().split('T')[0];
+      dateAndTime = `${nextDate}T23:59:00.000Z`;
+
+      if (dueTime) {
+        if (dueTime >= '12:00') {
+          dateAndTime = `${nextDate}T${dueTime}:00.000Z`;
+        } else {
+          dateAndTime = `${nextDate}T12:00:00.000Z`;
         }
+      }
+
+      console.log('DATE NO DUE:', dateAndTime);
 
       onSubmit({
-      date: selectedDate,
-      date_and_time: dateAndTime,
-      title,
-      description,
-      dueTime: dueTime || undefined
-    });
-    };
-  }
+        date: selectedDate,
+        date_and_time: dateAndTime,
+        title,
+        description,
+        dueTime: dueTime || undefined,
+      });
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-emerald-400">
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-emerald-400"
+        >
           Task Title
         </label>
         <input
@@ -73,7 +85,10 @@ const TaskForm = ({ selectedDate, onSubmit, onCancel }) => {
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-emerald-400">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-emerald-400"
+        >
           Description
         </label>
         <textarea
@@ -89,8 +104,11 @@ const TaskForm = ({ selectedDate, onSubmit, onCancel }) => {
       </div>
 
       <div>
-        <label htmlFor="dueTime" className="block text-sm font-medium text-emerald-400">
-          Due Time (optional : default 24:00) 
+        <label
+          htmlFor="dueTime"
+          className="block text-sm font-medium text-emerald-400"
+        >
+          Due Time (optional : default 24:00)
         </label>
         <input
           type="time"

@@ -1,24 +1,23 @@
-import { useLocation, Link } from "react-router-dom"
+import { useLocation, Link } from 'react-router-dom';
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-  } from "@/components/ui/breadcrumb"
-import React from "react";
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import React from 'react';
 
-export const DynamicBreadcrumb = ({routes}) => {
-
-  const location = useLocation()
-  const pathnames = location.pathname.split("/").filter(Boolean);
+export const DynamicBreadcrumb = ({ routes }) => {
+  const location = useLocation();
+  const pathnames = location.pathname.split('/').filter(Boolean);
 
   return (
     <Breadcrumb>
       <BreadcrumbList>
         {pathnames.map((_, index) => {
-          const url = `/${pathnames.slice(0, index + 1).join("/")}`;
+          const url = `/${pathnames.slice(0, index + 1).join('/')}`;
           const matchedRoute = routes.find((route) => route.path === url);
 
           if (!matchedRoute) return null;
@@ -42,7 +41,5 @@ export const DynamicBreadcrumb = ({routes}) => {
         })}
       </BreadcrumbList>
     </Breadcrumb>
-  )
+  );
 };
-
-  

@@ -1,14 +1,9 @@
-import { useState } from "react"
+import { useState } from 'react';
 
-
-export default function CartOfTutor(){
-
-    return (
-        <>
-        <div>
-        
-        </div>    
-        </>
-    )
-
-};
+export default function CartOfTutor() {
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}

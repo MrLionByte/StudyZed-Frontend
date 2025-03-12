@@ -1,8 +1,3 @@
-const Payment_Service = "http://127.0.0.1:8008"
-const Session_Task_Service = "http://127.0.0.1:8009"
-const User_Service = "http://127.0.0.1:8005"
-
-
 export const userCommonEndPoints = {
     'SignupEmail'        : 'auth-app/user-email/',
     'SignupOtp'          : 'auth-app/verify-otp/',
@@ -61,8 +56,13 @@ export const TutorEndPoints = {
   
     'CreateNewAssessment'    :'assessment-tutor/create-assessment/',
     'GetAllAssessments'      :'assessment-tutor/get-assessments/',
+    'GetStudentsAttendedAssessment': 'assessment-tutor/attended-students/',
+    'GetAttendedAssessment'  : 'assessment-tutor/attended-students/assessment/',
+    'UpdateAssessmentMark'   :'assessment-tutor/attended-students/assessment/update-mark/',
 
     'CreateNewTask'          : 'task-tutor/create-new-task/',
     'GetAllTasks'            : 'task-tutor/get-all-tasks/',
+    'EditTask'            : 'task-tutor/edit-task/',
+    
 }
 
