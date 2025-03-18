@@ -9,8 +9,7 @@ import store from './redux/store.js';
 import 'react-toastify/ReactToastify.css';
 
 function App() {
-
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   return (
     <GoogleOAuthProvider clientId={clientId}>

@@ -40,27 +40,22 @@ export default function CardWithForm({ cancelModal }) {
   const [grade, setGrade] = useState('A');
   const [selectedPayment, setSelectedPayment] = useState('stripe');
   const [walletBalance, setWalletBalance] = useState(0);
-
   const [errorFound, setErrorFound] = useState('');
-
   const [isAmount, setIsAmount] = useState(false);
   const [prices, setPrices] = useState([]);
 
   const handleDurationChange = (e) => {
-    const selectedDuration = Number(e.target.value); // Convert string to number
-    console.log('SELECTED DURATION:', selectedDuration);
-
+    const selectedDuration = Number(e.target.value);
     setDuration(selectedDuration);
-
     const selectedPrice = prices.find(
       (item) => item.duration === selectedDuration,
     );
-    console.log('FOUND PRICE:', selectedPrice.amount);
+    
     setAmount(selectedPrice.amount);
     if (selectedPrice) {
-      setAmount(Number(selectedPrice.amount)); 
+      setAmount(Number(selectedPrice.amount));
     } else {
-      setAmount('0.00'); 
+      setAmount('0.00');
     }
   };
 
@@ -77,10 +72,9 @@ export default function CardWithForm({ cancelModal }) {
       const response = await api.get(TutorEndPoints.GetWalletDetails, {
         baseURL: url,
       });
-      console.log(response.data);
       setWalletBalance(response.data.results.balance);
     } catch (error) {
-      console.log('Wallet Error', error);
+      // toast.error("Wallet error, try again later")
     }
   };
 
@@ -98,7 +92,6 @@ export default function CardWithForm({ cancelModal }) {
   };
 
   const handleSubmit = async (e) => {
-    // For adding Cart
     e.preventDefault();
     if (sessionName.trim() === '' || amount === 0) {
       setErrorFound('Enter session name and Choose duration');
@@ -114,7 +107,6 @@ export default function CardWithForm({ cancelModal }) {
         tutor_code: teacher_data.user_code,
       };
 
-      console.log('Session Data:', sessionData);
       const url = API_BASE_URLS['Session_Service'];
 
       const response = await api.post(
@@ -124,7 +116,6 @@ export default function CardWithForm({ cancelModal }) {
           baseURL: url,
         },
       );
-      console.log('RESPONSE CREATE', response);
 
       if (response.data.status === 201) {
         const paymentData = {
@@ -137,7 +128,6 @@ export default function CardWithForm({ cancelModal }) {
         const url = API_BASE_URLS['Payment_Service'];
 
         if (selectedPayment === 'wallet') {
-          
           const delay = (ms) =>
             new Promise((resolve) => setTimeout(resolve, ms));
           await delay(2000);
@@ -152,8 +142,6 @@ export default function CardWithForm({ cancelModal }) {
           );
           console.log('WALLET :', payment_response);
         } else {
-          
-
           const payment_response = await api.post(
             TutorEndPoints.CreateSessionPayment,
             paymentData,
@@ -166,7 +154,6 @@ export default function CardWithForm({ cancelModal }) {
           }
         }
 
-        console.log(response.data.error);
         if (response.data.status === 400) {
           toast.warning('Session with same name already exist for you');
         }
@@ -177,7 +164,6 @@ export default function CardWithForm({ cancelModal }) {
         setErrorFound('Session name is already exist');
       }
     } catch (error) {
-      console.log('Error creating payment session:', error);
       alert('There was an error initiating payment.');
     }
   };
@@ -186,7 +172,7 @@ export default function CardWithForm({ cancelModal }) {
 
   const handleSeeAmounts = () => {
     fetchPaymentDetails();
-    setIsAmount(true);
+    setIsAmount(!isAmount);
   };
 
   const fetchPaymentDetails = async () => {
@@ -210,12 +196,12 @@ export default function CardWithForm({ cancelModal }) {
   }, []);
 
   return (
-    <>
+    <div className='flex flex-col justify-center items-center'>
       {isAmount && (
-        <div className="z-40">
-          <Carousel className="w-full max-w-sm">
+        <div className="z-40 flex">
+          <Carousel className="w-40 md:w-full max-w-sm">
             <div className="flex justify-center">
-              <X
+              <X onClick={() => setIsAmount(false)}
                 className="text-center cursor-pointer text-red-500 hover:size-7
           hover:text-red-300"
               />
@@ -415,6 +401,6 @@ export default function CardWithForm({ cancelModal }) {
         </CardFooter>
         <ToastContainer />
       </Card>
-    </>
+    </div>
   );
 }

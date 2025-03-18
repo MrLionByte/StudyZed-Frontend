@@ -19,7 +19,7 @@ const ActiveSessions = memo(() => {
     setSessions,
     setLoading,
     setError,
-    handleApproveSession,
+    handleSessionBlock,
     handleModal,
     handleApprove,
   } = useApproveSessionManagement();
@@ -38,8 +38,6 @@ const ActiveSessions = memo(() => {
                 key={session.id}
                 className={`aspect-video rounded-xl flex flex-col items-center p-4 ${'bg-muted/50'}`}
               >
-                
-
                 <p className="font-bold">{session.session_code}</p>
                 <p className="text-sm text-gray-400">
                   Session Name : {session.session_name}
@@ -83,7 +81,7 @@ const ActiveSessions = memo(() => {
           <SessionPaymentDetails
             SessionData={sessionPayment[0]}
             cancelModal={closeModal}
-            handleSessionApproval={handleApproveSession}
+            handleSessionBlock={handleSessionBlock}
           />
         </div>
       )}

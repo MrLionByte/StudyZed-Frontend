@@ -76,10 +76,6 @@ const data = {
           url: '/admin/active-session/',
         },
         {
-          title: 'Inactive',
-          url: '#',
-        },
-        {
           title: 'Blocked',
           url: '#',
         },
@@ -114,7 +110,22 @@ const data = {
           url: '#',
         },
         {
-          title: 'Revenue',
+          title: 'Maximum sessions',
+          url: '',
+        },
+        {
+          title: 'Video Meets',
+          url: '',
+        },
+      ],
+    },
+    {
+      title: 'Revenue',
+      url: '#',
+      icon: ChartLine,
+      items: [
+        {
+          title: 'total',
           url: '/admin/company-growth-data/',
         },
       ],

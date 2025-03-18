@@ -12,7 +12,7 @@ const SessionPriceSetter = memo(() => {
   const [editedPrices, setEditedPrices] = useState({});
 
   const handleEditPrice = (sessionId, currentPrice) => {
-    setIsEdit(sessionId); 
+    setIsEdit(sessionId);
     setEditedPrices((prev) => ({ ...prev, [sessionId]: currentPrice })); // Keep track of price changes
   };
 
@@ -81,23 +81,23 @@ const SessionPriceSetter = memo(() => {
   const handlePriceChange = (sessionId, newPrice) => {
     setEditedPrices((prev) => ({ ...prev, [sessionId]: newPrice }));
   };
-  
+
   const handleSavePrice = async (sessionId) => {
     try {
       const url = API_BASE_URLS['Payment_Service'];
-      const responses = await api.patch(`price-setter/update-amount/${sessionId}/`,
-        { amount: editedPrices[sessionId] }
-       , { baseURL: url,}
+      const responses = await api.patch(
+        `price-setter/update-amount/${sessionId}/`,
+        { amount: editedPrices[sessionId] },
+        { baseURL: url },
       );
       console.log(responses);
       setSessions(responses.data);
-      toast.success("Successfully updated price")
-      setFetchFromBackend(true)
+      toast.success('Successfully updated price');
+      setFetchFromBackend(true);
     } catch (err) {
       console.error(err);
-      
     }
-    setIsEdit(null); 
+    setIsEdit(null);
   };
 
   return (
@@ -114,34 +114,35 @@ const SessionPriceSetter = memo(() => {
                   {session.duration} month{session.duration > 1 ? 's' : ''}
                 </p>
                 {isEdit === session.id ? (
-                    <input
-                      type="number"
-                      value={editedPrices[session.id] || session.amount}
-                      onChange={(e) => handlePriceChange(session.id, e.target.value)}
-                      className="border p-1 text-center"
-                    />
-                  ) : (
-                    <p className="text-sm text-gray-400">
-                      Price: {session.amount}
-                    </p>
-                  )}
-                 
-                 {isEdit === session.id ? (
-                <button
-                  className="p-2 mt-10 border rounded-md bg-teal-400 text-black"
-                  onClick={() => handleSavePrice(session.id)}
-                >
-                  SAVE
-                </button>
-              ) : (
-                <button
-                  className="p-2 mt-10 border rounded-md hover:bg-teal-400 hover:text-black"
-                  onClick={() => handleEditPrice(session.id, session.amount)}
-                >
-                  EDIT PRICE
-                </button>
-              )}
+                  <input
+                    type="number"
+                    value={editedPrices[session.id] || session.amount}
+                    onChange={(e) =>
+                      handlePriceChange(session.id, e.target.value)
+                    }
+                    className="border p-1 text-center"
+                  />
+                ) : (
+                  <p className="text-sm text-gray-400">
+                    Price: {session.amount}
+                  </p>
+                )}
 
+                {isEdit === session.id ? (
+                  <button
+                    className="p-2 mt-10 border rounded-md bg-teal-400 text-black"
+                    onClick={() => handleSavePrice(session.id)}
+                  >
+                    SAVE
+                  </button>
+                ) : (
+                  <button
+                    className="p-2 mt-10 border rounded-md hover:bg-teal-400 hover:text-black"
+                    onClick={() => handleEditPrice(session.id, session.amount)}
+                  >
+                    EDIT PRICE
+                  </button>
+                )}
               </div>
             ))}
             {isOverlayActive && <div className="overlay active"></div>}

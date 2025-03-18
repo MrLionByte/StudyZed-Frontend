@@ -15,7 +15,7 @@ import { adminEndPoints } from './../../../../../../api/endpoints/adminEndPoint'
 export default function SessionPaymentDetails({
   SessionData,
   cancelModal,
-  handleSessionApproval,
+  handleSessionBlock,
 }) {
   return (
     <>
@@ -70,11 +70,11 @@ export default function SessionPaymentDetails({
 
         <div className="flex justify-between p-4">
           <Button
-            onClick={(e) => handleSessionApproval(e)}
+            onClick={(e) => handleSessionBlock(e)}
             className="hover:bg-red-600"
             variant="outline"
           >
-            Approve
+            Block Session
           </Button>
 
           <Button

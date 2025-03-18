@@ -15,8 +15,8 @@ import {
   Smile,
   User,
   ChevronsLeft,
-} from "lucide-react"
- 
+} from 'lucide-react';
+
 import {
   Command,
   CommandEmpty,
@@ -26,7 +26,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/components/ui/command"
+} from '@/components/ui/command';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,12 +34,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 
-
-import DatePickerWithRange from "./components/dateRangePicker.jsx";
+import DatePickerWithRange from './components/dateRangePicker.jsx';
 import { getStudentByCode } from '../../components/studentsInSession.js';
-
 
 export default function Assessment({ session_data }) {
   const {
@@ -57,33 +55,33 @@ export default function Assessment({ session_data }) {
     handleStudentAssessment,
   } = useAssessments();
 
-  const [searchValue,setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [selectedAssessment, setSelectedAssessment] = useState('');
-    const studentDetails = getStudentByCode();
+  const studentDetails = getStudentByCode();
 
   const closeModal = () => {
     setIsCreatingAssessment(false);
   };
 
   const handleAssessmentView = (assessment) => {
-    setSelectedAssessment(assessment);  
+    setSelectedAssessment(assessment);
     setShowModal(true);
   };
 
-  const handleStudentAttendedAssessment = async(student) => {
-    await handleStudentAssessment(student)
-    setShowStudentModal(true)
-  }
+  const handleStudentAttendedAssessment = async (student) => {
+    await handleStudentAssessment(student);
+    setShowStudentModal(true);
+  };
 
   const fetchFromBackend = () => {
     setFetchFromBackend(true);
   };
 
-  const handleSearch = (e) =>{
+  const handleSearch = (e) => {
     e.preventDefault();
-  }
+  };
 
   function getStudentNameByCode(studentCode) {
     const matchedStudent = studentDetails.find(
@@ -105,10 +103,11 @@ export default function Assessment({ session_data }) {
     <>
       <div className="container w-full mx-auto px-2 py-4 md:flex-row gap-8 h-full">
         <div className="space-y-8 w-full h-3/5">
-
-          <div className="bg-black/20 backdrop-blur-sm border 
-            border-teal-800/30 rounded-lg p-4">
-              {/* <button >
+          <div
+            className="student-card backdrop-blur-sm border 
+            border-teal-800/30 rounded-lg p-4"
+          >
+            {/* <button >
                 <ChevronsLeft />
               </button> */}
             <div className="flex justify-between items-center mb-4">
@@ -124,80 +123,87 @@ export default function Assessment({ session_data }) {
                 <span>Create Assessment</span>
               </button>
             </div>
-            <div className="h-64 overflow-y-scroll space-y-2">
-          
-                  {assessments?.map((assessment, index) => (
+            <div className="h-96 overflow-y-scroll space-y-2">
+              {assessments?.map((assessment, index) => (
                 <div
                   key={assessment.id}
                   className="flex items-center space-x-4 p-2 bg-gray-800/50 rounded-lg"
                 >
                   <span className="text-gray-400">{index + 1}</span>
-                  <div className='w-full flex justify-between'>
-                  <p className="text-white cursor-pointer" 
-                    onClick={() => handleAssessmentView(assessment, "DETAILS")}
+                  <div className="w-full flex justify-between">
+                    <p
+                      className="text-white cursor-pointer"
+                      onClick={() =>
+                        handleAssessmentView(assessment, 'DETAILS')
+                      }
                     >
-                    {assessment.assessment_title}
-                  </p>
-                  <p
-                    onClick={() => handleAttendedAssessmentView(assessment, "SUBMITTED")}
+                      {assessment.assessment_title}
+                    </p>
+                    <p
+                      onClick={() =>
+                        handleAttendedAssessmentView(assessment, 'SUBMITTED')
+                      }
                       className="cursor-pointer rounded-badge bg-emerald-500 p-2 h-7 w-7 transition-all delay-150 duration-300 ease-in-out hover:w-24 overflow-hidden flex items-center justify-start"
                     >
                       <span className="text-white text-sm font-semibold whitespace-nowrap opacity-0 hover:opacity-100 transition-opacity duration-300">
                         Submitted
                       </span>
                     </p>
-
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-       
-  <div className="grid grid-cols-1 h-44 mt-5 overflow-scroll">
-  <div className="grid grid-cols-1 bg-gray-900 backdrop-blur-sm border 
-    border-teal-800/30 rounded-lg p-3 ">
-  <h2 className="text-xl text-center p-1 underline underline-offset-4 font-bold text-teal-400">
-    STUDENTS ATTENDED ASSESSMENT
-    </h2>
-    {attendedStudents.length>0 ?
-    <div className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 ">
-      {attendedStudents.map((student, index) => (
-        <div
-          key={student.id}
-          className="flex items-center p-2 bg-gray-800/50 rounded-lg 
-           gap-3 cursor-pointer"
-           onClick={() => handleStudentAttendedAssessment(student)}
-        >
-          <img 
-            src={
-              getStudentProfile(student.student_code) ||
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ1iAWsH72RCWQeckHI1LVBeV5UpKzwPisN3pXH48_BsLZjU0JvQNownk2-RRiA2BJWyw&usqp=CAU'
-            }
-            className='rounded-full w-10 h-10' alt="" />
-          <div>
-          <p
-            className="text-white text-center"
+
+        <div className="grid grid-cols-1 h-80 t-5 overflow-scroll">
+          <div
+            className="grid grid-cols-1 student-card backdrop-blur-sm border 
+    border-teal-800/30 rounded-lg p-3 "
           >
-           {getStudentNameByCode(student.student_code)}
-          </p>
-          {student?.is_late_submission ? 
-            <p className='text-sm w-1/2 h-5 bg-yellow-700 rounded-full text-center'>Late</p>
-            :
-            <p className='w-1/2 h-5 bg-emerald-400 rounded-full'></p>
-          }
+            <h2 className="text-xl text-center p-1 underline underline-offset-4 font-bold text-teal-400">
+              STUDENTS ATTENDED ASSESSMENT
+            </h2>
+            {attendedStudents.length > 0 ? (
+              <div className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 ">
+                {attendedStudents.map((student, index) => (
+                  <div
+                    key={student.id}
+                    className="flex items-center p-2 bg-gray-800/50 rounded-lg 
+           gap-3 cursor-pointer"
+                    onClick={() => handleStudentAttendedAssessment(student)}
+                  >
+                    <img
+                      src={
+                        getStudentProfile(student.student_code) ||
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ1iAWsH72RCWQeckHI1LVBeV5UpKzwPisN3pXH48_BsLZjU0JvQNownk2-RRiA2BJWyw&usqp=CAU'
+                      }
+                      className="rounded-full w-10 h-10"
+                      alt=""
+                    />
+                    <div>
+                      <p className="text-white text-center">
+                        {getStudentNameByCode(student.student_code)}
+                      </p>
+                      {student?.is_late_submission ? (
+                        <p className="text-sm w-1/2 h-5 bg-yellow-700 rounded-full text-center">
+                          Late
+                        </p>
+                      ) : (
+                        <p className="w-1/2 h-5 bg-emerald-400 rounded-full"></p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <h4 className="text-red-400 text-center text-wrap mt-6">
+                No one Attended yet
+              </h4>
+            )}
           </div>
         </div>
-      ))}
-    </div>
-    :
-    <h4 className='text-red-400 text-center text-wrap mt-6'>No one Attended yet</h4>
-    }
-  </div>
-</div>
-
       </div>
-
 
       {isCreatingAssessment && (
         <CreateAssessment
@@ -206,19 +212,19 @@ export default function Assessment({ session_data }) {
         />
       )}
 
-   
       {showModal && (
         <AssessmentModal
           assessmentData={selectedAssessment}
           handleClose={() => setShowModal(false)}
-          onSave=''
+          onSave=""
         />
       )}
 
       {showStudentModal && (
-        <StudentAssessmentModal 
-        assessmentData={studentAttendedAssessment}
-        handleClose={() => setShowStudentModal(false)} />
+        <StudentAssessmentModal
+          assessmentData={studentAttendedAssessment}
+          handleClose={() => setShowStudentModal(false)}
+        />
       )}
     </>
   );

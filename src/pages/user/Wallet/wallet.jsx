@@ -126,130 +126,191 @@ const Wallet = () => {
   }, []);
 
   return (
-    <div className="max-h-fit">
+    <>
       <Navbar />
-      <div className="flex justify-center items-center mt-5">
-        {status === 'success' ? (
-          <div className="animate-bounce">
-            <CircleCheckIcon className="mx-auto h-20 w-20 text-green-500" />
-            <h2 className="bg-slate-500 text-green-300 font-bold rounded-full p-4">
-              Payment Successful
-            </h2>
-          </div>
-        ) : status === 'cancel' ? (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="min-h-[800px] flex flex-col justify-center items-center">
+        <div className="">
+          {status === 'success' ? (
             <div className="animate-bounce">
-              <CircleCrossIcon className="mx-auto h-20 w-20 text-red-500" />
-              <h2 className="text-red-300 font-bold bg-slate-500 rounded-full p-4">
-                Payment Cancelled
+              <CircleCheckIcon className="mx-auto h-20 w-20 text-green-500" />
+              <h2 className="bg-slate-500 text-green-300 font-bold rounded-full p-4">
+                Payment Successful
               </h2>
             </div>
-          </div>
-        ) : (
-          <div></div>
-        )}
+          ) : status === 'cancel' ? (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="animate-bounce">
+                <CircleCrossIcon className="mx-auto h-20 w-20 text-red-500" />
+                <h2 className="text-red-300 font-bold bg-slate-500 rounded-full p-4">
+                  Payment Cancelled
+                </h2>
+              </div>
+            </div>
+          ) : (
+            <div></div>
+          )}
 
-        {isAddMoney && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <AddMoneyModal
-              cancelModal={closeModal}
-              accountNumber={accountNumber}
-            />
-          </div>
-        )}
-        <div className="flex flex-col sm:flex-col lg:flex-row lg:space-x-4 lg:justify-between sm:space-y-4 lg:space-y-0">
-          <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Wallet Balance</CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col">
-                <div className="text-4xl font-bold flex justify-center items-center">
-                  {symbol}
-                  {balance}
-                </div>
-                <div className="flex justify-between mt-3">
-                  <div className="relative group">
-                    <Button
-                      data-tooltip-target="tooltip-default"
-                      onClick={handleAddMoney}
-                      variant="outline"
-                      size="sm"
-                    >
-                      {/* Withdraw */}
-                      <CirclePlus />
-                    </Button>
+          {isAddMoney && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <AddMoneyModal
+                cancelModal={closeModal}
+                accountNumber={accountNumber}
+              />
+            </div>
+          )}
+          <div className="flex flex-col sm:flex-col lg:flex-row lg:space-x-4 lg:justify-between sm:space-y-4 lg:space-y-0">
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Wallet Balance</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col">
+                  <div className="text-4xl font-bold flex justify-center items-center">
+                    {symbol}
+                    {balance}
+                  </div>
+                  <div className="flex justify-between mt-3">
+                    <div className="relative group">
+                      <Button
+                        data-tooltip-target="tooltip-default"
+                        onClick={handleAddMoney}
+                        variant="outline"
+                        size="sm"
+                      >
+                        {/* Withdraw */}
+                        <CirclePlus />
+                      </Button>
 
-                    <div
-                      className="absolute top-full left-1/2 transform
+                      <div
+                        className="absolute top-full left-1/2 transform
                                 -translate-x-1/2 mt-2 w-max px-2 py-1 
                                 text-sm text-white bg-gray-700 rounded
                                 shadow-lg opacity-0 group-hover:opacity-100"
-                    >
-                      Add Money
+                      >
+                        Add Money
+                      </div>
                     </div>
-                  </div>
-                  <div className="relative group">
-                    <Button
-                      data-tooltip-target="tooltip-default"
-                      variant="outline"
-                      size="sm"
-                    >
-                      
-                      <Landmark />
-                    </Button>
+                    <div className="relative group">
+                      <Button
+                        data-tooltip-target="tooltip-default"
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Landmark />
+                      </Button>
 
-                    <div
-                      className="absolute top-full left-1/2 transform
+                      <div
+                        className="absolute top-full left-1/2 transform
                                 -translate-x-1/2 mt-2 w-max px-2 py-1 
                                 text-sm text-white bg-gray-700 rounded
                                 shadow-lg opacity-0 group-hover:opacity-100"
-                    >
-                      Withdraw Money
+                      >
+                        Withdraw Money
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card className="gap-y-24">
+              {/* <Card className="gap-y-24">
+                <CardHeader>
+                  <CardTitle>Upcoming Bills</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+                          <LightbulbIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                        </div>
+                        <div>
+                          <div className="font-medium">Electricity Bill</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            Due May 25, 2023
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-gray-900 dark:text-gray-50">
+                        -$125.00
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+                          <PhoneIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                        </div>
+                        <div>
+                          <div className="font-medium">Phone Bill</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            Due June 1, 2023
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-gray-900 dark:text-gray-50">
+                        -$75.00
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Link
+                    href="#"
+                    className="text-sm font-medium text-blue-600 hover:underline"
+                    prefetch={false}
+                  >
+                    View all bills
+                  </Link>
+                </CardFooter>
+              </Card> */}
+            </div>
+
+            <Card className="mt-3 md:mt-0">
               <CardHeader>
-                <CardTitle>Upcoming Bills</CardTitle>
+                <CardTitle>Recent Transactions</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-                        <LightbulbIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                      </div>
-                      <div>
-                        <div className="font-medium">Electricity Bill</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          Due May 25, 2023
+                  {transactions &&
+                    transactions.slice(0, 5).map((transaction) => {
+                      return (
+                        <div
+                          key={transaction.id}
+                          className="flex items-center justify-between"
+                        >
+                          <div className="flex items-center gap-3">
+                            {transaction.transaction_type === 'CREDIT' ? (
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
+                                <Plus className="h-3 w-3 text-gray-500 dark:text-gray-400" />
+                              </div>
+                            ) : (
+                              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-100 dark:bg-red-800">
+                                <Minus className="h-3 w-3 text-gray-500 dark:text-gray-400" />
+                              </div>
+                            )}
+                            <div>
+                              <div className="font-medium">
+                                {transaction.transaction_type}
+                              </div>
+                              <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {transaction.transaction_date}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-gray-900 dark:text-gray-50">
+                            <p className="text-black">{currencyMode} </p>
+                            {transaction.transaction_type === 'CREDIT' ? (
+                              <p className="text-green-500">
+                                {transaction.amount}{' '}
+                              </p>
+                            ) : (
+                              <p className="text-red-500">
+                                {transaction.amount}{' '}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="text-gray-900 dark:text-gray-50">
-                      -$125.00
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-                        <PhoneIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-                      </div>
-                      <div>
-                        <div className="font-medium">Phone Bill</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          Due June 1, 2023
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-gray-900 dark:text-gray-50">
-                      -$75.00
-                    </div>
-                  </div>
+                      );
+                    })}
                 </div>
               </CardContent>
               <CardFooter>
@@ -258,75 +319,15 @@ const Wallet = () => {
                   className="text-sm font-medium text-blue-600 hover:underline"
                   prefetch={false}
                 >
-                  View all bills
+                  View all transactions
                 </Link>
               </CardFooter>
             </Card>
           </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Transactions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {transactions &&
-                  transactions.slice(0, 5).map((transaction) => {
-                    return (
-                      <div
-                        key={transaction.id}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-3">
-                          {transaction.transaction_type === 'CREDIT' ? (
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
-                              <Plus className="h-3 w-3 text-gray-500 dark:text-gray-400" />
-                            </div>
-                          ) : (
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-red-100 dark:bg-red-800">
-                              <Minus className="h-3 w-3 text-gray-500 dark:text-gray-400" />
-                            </div>
-                          )}
-                          <div>
-                            <div className="font-medium">
-                              {transaction.transaction_type}
-                            </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {transaction.transaction_date}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-gray-900 dark:text-gray-50">
-                          <p className="text-black">{currencyMode} </p>
-                          {transaction.transaction_type === 'CREDIT' ? (
-                            <p className="text-green-500">
-                              {transaction.amount}{' '}
-                            </p>
-                          ) : (
-                            <p className="text-red-500">
-                              {transaction.amount}{' '}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Link
-                href="#"
-                className="text-sm font-medium text-blue-600 hover:underline"
-                prefetch={false}
-              >
-                View all transactions
-              </Link>
-            </CardFooter>
-          </Card>
+          <ToastContainer />
         </div>
-        <ToastContainer />
       </div>
-    </div>
+    </>
   );
 };
 
@@ -361,7 +362,7 @@ function CircleCrossIcon(props) {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="red" 
+      stroke="red"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

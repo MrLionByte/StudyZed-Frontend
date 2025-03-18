@@ -15,6 +15,7 @@ import {
   GraduationCap,
   Clock,
   Users,
+  PlusCircleIcon,
   ChevronLeft,
   ChevronRight,
   Copy,
@@ -41,9 +42,6 @@ const TutorSessionPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleJoinSession = () => {
-    setIsJoinSession(true); //
-  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -51,20 +49,6 @@ const TutorSessionPage = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-  const handleUserRoundIcon = () => {
-    navigate('/tutor/profile/');
-  };
-
-  const cancelSessionJoin = () => {
-    setIsJoinSession(false);
-  };
-
-  const handleLogout = () => {
-    console.log('LOGOUTINGG');
-
-    dispatch(logout());
-    navigate('/login/');
   };
 
   const handleEnterSession = (e, tutor_code, session_code, is_approved) => {
@@ -102,19 +86,17 @@ const TutorSessionPage = () => {
       });
   };
 
-  async function fetchSessionsData(cursor=null) {
+  async function fetchSessionsData(cursor = null) {
     const tutor_data = getSavedAuthData();
     setTutorCode(tutor_data?.user_code);
     const queryData = { tutor_code: tutor_data?.user_code };
 
     setLoading(true);
     const decodedCursor = decodeURIComponent(cursor);
-    if (cursor){
+    if (cursor) {
       queryData.cursor = decodedCursor;
-    }
+    };
 
-    console.log(tutor_data?.user_code);
-    
     try {
       const url = API_BASE_URLS['Session_Service'];
       const response = await api.get(TutorEndPoints.TutorSessions, {
@@ -122,9 +104,9 @@ const TutorSessionPage = () => {
         params: queryData,
       });
 
-      setSessions(response.data.results);
-      setNextPage(response.data.next); 
-      setPrevPage(response.data.previous);
+      setSessions(response?.data?.results);
+      setNextPage(response?.data?.next);
+      setPrevPage(response?.data?.previous);
       console.log('RESPONSE BRUT', response.data);
       console.log('RESPONSE BRUT', response);
     } catch (e) {
@@ -146,16 +128,23 @@ const TutorSessionPage = () => {
 
   return (
     <div className="min-h-screen text-white">
-      <Navbar logout={handleLogout} userProfile={handleUserRoundIcon} />
+      <Navbar />
+      <div className="flex items-center justify-end mt-4">
+        <button className="hidden md:block p-3 border-2 rounded-2xl hover:bg-emerald-400 hover:text-black hover:border-black font-sans" onClick={openModal}>
+          CREATE NEW SESSION
+        </button>
+        <button className="md:hidden p-1 rounded-2xl hover:bg-emerald-400 hover:text-black hover:border-black font-sans" onClick={openModal}>
+          <PlusCircleIcon />
+        </button>
+      </div>
 
       <div className="grid md:grid-cols-4 gap-4 p-4">
-
         {sessions?.length > 0 ? (
           sessions.map((session) => (
             <div
               key={session.id}
               className="relative group rounded-xl border border-x-yellow-500
-        overflow-hidden h-[220px] hover:transform hover:scale-105 
+        overflow-hidden h-60 hover:transform hover:scale-105 
         transition-all duration-300"
             >
               {/* Card Background Image */}
@@ -172,11 +161,11 @@ const TutorSessionPage = () => {
                       {session.session_code}
                     </span>
                     <button
-                      onClick={() => handleCopyCode(session.id)}
+                      onClick={() => handleCopyCode(session.session_code)}
                       className="p-1 hover:bg-white/10 rounded-md transition-colors"
                       title="Copy session code"
                     >
-                      {copiedId === session.id ? (
+                      {copiedId === session.session_code ? (
                         <Check className="w-4 h-4 text-emerald-400" />
                       ) : (
                         <Copy className="w-4 h-4 text-gray-400" />
@@ -194,12 +183,12 @@ const TutorSessionPage = () => {
 
                 <div className="space-y-3 mt-auto">
                   <div className="flex items-center text-gray-300">
-                    <GraduationCap className="w-5 h-5 mr-2 text-emerald-400" />
-                    <span>{session.instructor}</span>
+                    <Clock className="w-5 h-5 mr-2 text-emerald-400" />
+                    <span className='mr-1 text-rose-400 font-bold'>{session.days_left} </span><span>Days Left</span>
                   </div>
                   <div className="flex items-center text-gray-300">
                     <Users className="w-5 h-5 mr-2 text-emerald-400" />
-                    <span>{session.students} Students</span>
+                    <span>{session.student_count} Students</span>
                   </div>
 
                   <button
@@ -220,57 +209,13 @@ const TutorSessionPage = () => {
             </div>
           ))
         ) : (
-          // (
-          //     sessions.map((session, index) => (
-          //       <div
-          //         key={index}
-          //         className="border border-teal-500 p-6 rounded-md bg-black/80 shadow-md cursor-pointer"
-          //       >
-          //         <span className="text-emerald-400 text-sm font-medium">
-          //            {session.session_code}
-          //            </span>
-          //            <button
-          //               onClick={() => handleCopyCode(session.session_code)}
-          //               className="p-1 hover:bg-white/10 rounded-md transition-colors"
-          //               title="Copy session code"
-          //           >
-          //               {copiedId === session.session_code ? (
-          //                   <Check className="w-4 h-4 text-emerald-400" />
-          //               ) : (
-          //                   <Copy className="w-4 h-4 text-gray-400" />
-          //               )}
-          //           </button>
-          //         <p className="text-xl font-semibold mt-4">Session Name:</p>
-          //         <p className="text-lg">{session.session_name || "Unnamed"}</p>
-          //         {session.is_paid ?
-          //           <button onClick={(e)=>handleEnterSession(e,session.tutor_code, session.session_code, session.is_active)}
-          //           className='bg-blue-800 text-center rounded p-2 hover:bg-green-700'>
-          //             Pay for Session
-          //           </button>
-          //           :
-          //           <button onClick={(e)=>handleEnterSession(e,session.tutor_code, session.session_code, session.is_active)}
-          //           className='bg-blue-800 text-center rounded p-2 hover:bg-green-700'>
-          //             Enter Session
-          //           </button>
-          //           }
-
-          //       </div>
-          //     ))
-          //   )
           <p className="text-white text-lg">No sessions available</p>
         )}
       </div>
 
-      <div className="flex items-center justify-center">
-        <button className="default_button p-3 b" onClick={openModal}>
-          CREATE NEW SESSION
-        </button>
-      
-      </div>
 
-      <div className="flex justify-center mt-4 bg-red-400">
-        
-</div>
+
+      <div className="flex justify-center mt-4 bg-red-400"></div>
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30">

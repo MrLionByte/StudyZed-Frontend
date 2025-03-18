@@ -48,8 +48,11 @@ api.interceptors.request.use(
         if (!config?.url) return config;
 
         const exclusion = Object.keys(EXCLUDED_URLS).find(url => config?.url?.includes(url));
+        console.log("XX :", exclusion);
         
         if (exclusion && EXCLUDED_URLS[exclusion].method === config.method.toUpperCase()) {
+            console.log(config);
+            
             return config;
         }
 

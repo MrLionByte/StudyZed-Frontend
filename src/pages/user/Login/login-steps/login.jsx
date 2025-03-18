@@ -6,10 +6,7 @@ import { savedAuthData } from '../../../../utils/Localstorage.js';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../../redux/slice.js';
 import { toast, ToastContainer } from 'react-toastify';
-import LoginPic from '../../../../assets/loginpic.png';
 import LogoSvg from '../../../../assets/test.svg';
-import { useSelector } from 'react-redux';
-import { Github, Twitter } from 'lucide-react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 export default function TutorStudentlogin({ passwordForgot }) {
@@ -37,6 +34,7 @@ export default function TutorStudentlogin({ passwordForgot }) {
   const getErrorMessages = (authStatus) => {
     switch (authStatus) {
       case 'user-notexsist':
+      case 'validation-failed':
         return { email: 'This email is not registered.' };
       case 'password-failed':
         return {
@@ -63,8 +61,6 @@ export default function TutorStudentlogin({ passwordForgot }) {
 
     try {
       const response = await api.post('auth-app/login/', { email, password });
-
-      console.log('TOAST :', response);
       const { access_token, refresh_token, user, role, user_code } =
         response.data;
       const authState = {
@@ -89,11 +85,18 @@ export default function TutorStudentlogin({ passwordForgot }) {
         navigate(redirectPath);
       }, 2500);
     } catch (error) {
-      const authStatus =
-        error.response?.data?.errors['auth-status']?.[0] || 'unknown';
-
-      const errorMessage = getErrorMessages(authStatus);
-      setErrorMessages(errorMessage);
+      if (error.status === 429) {
+        toast.error(
+          'You are blocked temporarily due to too many invalid attempts, try again later',
+        );
+      } else {
+        const authStatus =
+          error.response?.data?.errors['auth-status']?.[0] ||
+          error.response?.data['auth-status'] ||
+          'unknown';
+        const errorMessage = getErrorMessages(authStatus);
+        setErrorMessages(errorMessage);
+      }
     } finally {
       setLoading(false);
     }
@@ -105,11 +108,8 @@ export default function TutorStudentlogin({ passwordForgot }) {
       return;
     }
     const token = response.credential;
-    console.log('Google auth response ', response);
     const decoded = jwtDecode(token);
-    console.log('GASW :', decoded);
     let user_name = decoded.name.replace(/\s/g, '_');
-    console.log(user_name);
 
     if (!role) {
       setGetUserRole(true);
@@ -131,7 +131,6 @@ export default function TutorStudentlogin({ passwordForgot }) {
         '/auth-app/login/google-account/',
         user_data,
       );
-      console.log(response);
       if (response.data['auth-status'] === 'success') {
         const { access_token, refresh_token, user, role, user_code } =
           response.data;
@@ -149,7 +148,6 @@ export default function TutorStudentlogin({ passwordForgot }) {
         dispatch(setUser({ user, role }));
 
         const role_location = role.toLowerCase();
-        console.log('4 4 4 4 4 4 4 4', role_location);
         navigate(`/${role_location}/choose-session/`);
       } else if (response.data['auth-status'] === 'created') {
         const { access_token, refresh_token, user, role, user_code } =
@@ -172,19 +170,15 @@ export default function TutorStudentlogin({ passwordForgot }) {
         }, 1000);
 
         const role_location = role.toLowerCase();
-        console.log('4 4 4 4 4 4 4 4', role_location);
         navigate(`/${role_location}/choose-session/`);
       } else if (response.data['auth-status'] === 'blocked') {
-        console.log('Z Z Z BLOCK');
+        toast.error('Your account is blocked. Contact the admin.');
       } else {
-        console.log('Z Z Z Some error occurred try again.');
+        toast.error('Some error occurred try after some time.');
       }
     } catch (error) {
-      console.log('ERROR ', error);
+      setErrorMessages('Error occurred, try again later');
     }
-  };
-  const errorMessage = (error) => {
-    console.log(error);
   };
 
   const handleForgotPassword = (e) => {
@@ -212,86 +206,86 @@ export default function TutorStudentlogin({ passwordForgot }) {
       <p className="text-sm text-gray-300 mb-6">
         Welcome back to StudyZed! Let's create future
       </p>
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-4 mb-6">
+          <div>
+            <label className="text-sm text-gray-300">Username / Email</label>
 
-      <div className="space-y-4 mb-6">
-        <div>
-          <label className="text-sm text-gray-300">Username / Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              className="w-full p-2 bg-gray-700/30 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            />
 
-          <input
-            type="email"
-            id="email"
-            name="email"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            className="w-full p-2 bg-gray-700/30 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-          />
-
-          {errorMessages.email && (
-            <p className="text-red-600 font-medium text-center">
-              {errorMessages.email}
-            </p>
-          )}
-        </div>
-        <div className="relative">
-          <div className="flex justify-between">
-            <label className="text-sm text-gray-300">Password</label>
-            <a
-              href="#"
-              onClick={handleForgotPassword}
-              className="text-sm text-blue-500 hover:underline"
-            >
-              Forgot Password?
-            </a>
+            {errorMessages.email && (
+              <p className="text-red-600 font-medium text-center bg-red-200 bg-opacity-25">
+                {errorMessages.email}
+              </p>
+            )}
           </div>
           <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              name="password"
-              required
-              value={password}
-              autoComplete="off"
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 bg-gray-700/30 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400 pr-10"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute top-1/2 right-2 -translate-y-1/2 flex items-center text-gray-700"
-              aria-label="Toggle password visibility"
-            >
-              {showPassword ? (
-                <Eye className="size-4" />
-              ) : (
-                <EyeClosed className="size-4" />
-              )}
-            </button>
+            <div className="flex justify-between">
+              <label className="text-sm text-gray-300">Password</label>
+              <a
+                href="#"
+                onClick={handleForgotPassword}
+                className="text-sm text-blue-500 hover:underline"
+              >
+                Forgot Password?
+              </a>
+            </div>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                required
+                value={password}
+                autoComplete="off"
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 bg-gray-700/30 rounded-lg mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-400 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute top-1/2 right-2 -translate-y-1/2 flex items-center text-gray-200"
+                aria-label="Toggle password visibility"
+              >
+                {showPassword ? (
+                  <Eye className="size-4" />
+                ) : (
+                  <EyeClosed className="size-4" />
+                )}
+              </button>
+            </div>
+            {errorMessages.password && (
+              <p className="text-red-600 font-medium text-center text-sm bg-red-200 bg-opacity-25">
+                {errorMessages.password}
+              </p>
+            )}
           </div>
-          {errorMessages.password && (
-            <p className="text-red-600 font-medium text-center text-sm">
-              {errorMessages.password}
-            </p>
-          )}
         </div>
-      </div>
 
-      {errorMessages.general && (
-        <p className="text-red-600 font-light text-center">
-          {errorMessages.general}
-        </p>
-      )}
+        {errorMessages.general && (
+          <p className="bg-red-400 bg-opacity-25 rounded-lg font-light text-center text-error">
+            {errorMessages.general}
+          </p>
+        )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        onClick={handleSubmit}
-        className="w-full py-3 font-bold
+        <button
+          type="submit"
+          disabled={loading}
+          onClick={handleSubmit}
+          className="w-full py-3 font-bold
                  bg-emerald-400 text-black rounded-lg hover:bg-emerald-300 transition-colors mb-4"
-      >
-         {loading ? "Logging in..." : "Log in"}
-      </button>
-
+        >
+          {loading ? 'Logging in...' : 'Log in'}
+        </button>
+      </form>
       <p className="text-sm text-center text-gray-300 mb-4">
         Are you new in StudyZen?{' '}
         <Link
@@ -304,14 +298,8 @@ export default function TutorStudentlogin({ passwordForgot }) {
 
       <div className="flex items-center gap-4 justify-center">
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-          <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+          <GoogleLogin onSuccess={responseMessage} onError={errorMessages || ''} />
         </GoogleOAuthProvider>
-        {/* <button className="p-2 rounded-full bg-gray-700/30 hover:bg-gray-700/50">
-                <Github className="w-5 h-5" />
-              </button>
-              <button className="p-2 rounded-full bg-gray-700/30 hover:bg-gray-700/50">
-                <Twitter className="w-5 h-5" />
-              </button> */}
       </div>
       <ToastContainer position="top-center" autoClose="1000" />
     </div>

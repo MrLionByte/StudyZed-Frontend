@@ -39,7 +39,7 @@ export const useApproveSessionManagement = () => {
         }
     } ,[fetchFromBackend]);
 
-    const handleApproveSession = async (e) => {
+    const handleSessionBlock = async (e) => {
         e.preventDefault();
         e.target.disabled = true;
         try {
@@ -47,7 +47,7 @@ export const useApproveSessionManagement = () => {
             const Pkey = sessionPayment.session_key;
             
             const url = API_BASE_URLS["Session_Service"];
-            const response = await api.patch(adminEndPoints.GiveApprovelForSession+`${Pkey}/`,
+            const response = await api.patch(adminEndPoints.BlockedSessions+`${Pkey}/`,
               Pkey,{
                 baseURL: url,
             });
@@ -85,7 +85,7 @@ export const useApproveSessionManagement = () => {
         
 
     const handleApprove = async (e, session_code, tutor_code) => {
-        handleApproveSession(sessionDetails.session_code, sessionDetails.tutor_code);
+        handleSessionBlock(sessionDetails.session_code, sessionDetails.tutor_code);
         setIsModalOpen(false);
         toast.success('Session approved!');
       };  
@@ -103,7 +103,7 @@ export const useApproveSessionManagement = () => {
         setSessions,
         setLoading,
         setError,
-        handleApproveSession,
+        handleSessionBlock,
         handleModal,
     }
     

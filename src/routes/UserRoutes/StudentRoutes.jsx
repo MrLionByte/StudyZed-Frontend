@@ -9,11 +9,7 @@ export default function TutorRoutes() {
   return (
     <Routes>
       <Route path="choose-session/" element={<SessionChoice />} />
-      <Route path="enter-session/" element={
-       
-        <Dashboard />
-        
-      } />
+      <Route path="enter-session/" element={<Dashboard />} />
 
       <Route path="profile/" element={<MyProfile />} />
       <Route path="student-wallet/" element={<Wallet />} />

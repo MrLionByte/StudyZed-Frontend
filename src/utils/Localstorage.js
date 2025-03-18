@@ -2,8 +2,6 @@ const LOCAL_STORAGE_KEY = 'authData';
 
 export const savedAuthData = (authData) => {
     localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify(authData));
-    console.log(localStorage.getItem("SAVED LOCAL :",LOCAL_STORAGE_KEY));
-    console.log(localStorage.getItem('authData'));
 };
 
 export const getSavedAuthData = () => {

@@ -8,9 +8,10 @@ export const adminEndPoints = {
     'SeeSessionsToApprove'            : `session-admin/see-session-to-approve/`,
     'GiveApprovelForSession'          : `session-admin/approve-session/`,
     'ActiveSessions'                  : `session-admin/see-session-active/`,
-    'InactiveSessions'                : 'session-admin/block-user/',
-    'BlockedSessions'                 : 'session-admin/block-user/',
-
+    'BlockedSessions'                : 'session-admin/block-session/',
+    'InactiveSessions'               : 'session-admin/see-session-inactive/',
+    'SeeBlockedSessions'                : 'session-admin/see-blocked-session/',
+    
     
     "SeeSessionPayment"               : `payment-admin/session-payment-details/`,
 

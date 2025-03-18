@@ -22,15 +22,14 @@ export default function Assessment({ session_data }) {
     setSelectedAssessment,
     setAttemptedAssessment,
     setIsCreatingAssessment,
-    
-    } = useAssessments();
+  } = useAssessments();
 
-    const isAfterToday = (dateString) => {
-      if (!dateString) return false;
-      const today = new Date().toISOString().split('T')[0];
-      const givenDate = dateString.slice(0,10) 
-      return givenDate > today;
-    };
+  const isAfterToday = (dateString) => {
+    if (!dateString) return false;
+    const today = new Date().toISOString().split('T')[0];
+    const givenDate = dateString.slice(0, 10);
+    return givenDate > today;
+  };
 
   const [showAssessment, setShowAssessment] = useState(false);
   const [showAttemptedAssessment, setShowAttemptedAssessment] = useState(false);
@@ -40,50 +39,38 @@ export default function Assessment({ session_data }) {
   };
 
   const handleAssessmentView = (assessment) => {
-    const check = isAfterToday(assessment.start_time)
-    if (check){
-      return
+    const check = isAfterToday(assessment.start_time);
+    if (check) {
+      return;
     }
     setSelectedAssessment(assessment);
     setShowAssessment(true);
   };
 
-  const handleAttemptedAssessmentView = (attemptedAssessment,assessment) => {
-    const matchingAssessment = attemptedAssessment.find(item => item.assessment === assessment.id);
-    const check = isAfterToday(assessment.start_time)
-    if (check){
-      return
+  const handleAttemptedAssessmentView = (attemptedAssessment, assessment) => {
+    const matchingAssessment = attemptedAssessment.find(
+      (item) => item.assessment === assessment.id,
+    );
+    const check = isAfterToday(assessment.start_time);
+    if (check) {
+      return;
     }
     setAttemptedAssessment({
-      'Attempted':matchingAssessment,
-      'Assessment':assessment});
+      Attempted: matchingAssessment,
+      Assessment: assessment,
+    });
     setShowAttemptedAssessment(true);
-  }
+  };
 
-  const today = new Date().toISOString().slice(0,10)
-  
-
+  const today = new Date().toISOString().slice(0, 10);
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+      <div className="container mx-auto py-4 flex flex-col md:flex-row gap-8">
         <div className="flex-1 space-y-8">
-          {/* <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 h-1/2">
-            <div className="bg-black/20 backdrop-blur-sm border border-teal-800/30 rounded-lg p-6">
-              <h3 className="text-blue-500 font-bold mb-2">
-                LIVE ASSESSMENT
-              </h3>
-            </div>
-            <div className="bg-black/20 backdrop-blur-sm border border-teal-800/30 rounded-lg p-6">
-              <h3 className="text-rose-500 font-bold mb-2">
-                LATE TO ATTEND ASSESSMENT
-              </h3>
-
-            </div>
-          </div> */}
-
-          <div className="bg-black/20 backdrop-blur-sm border 
-            border-teal-800/30 rounded-lg p-6 h-fit">
+          <div
+            className="student-card backdrop-blur-sm rounded-lg p-6 h-[800px]"
+          >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-teal-400">
                 REVIEW ASSESSMENT
@@ -104,15 +91,19 @@ export default function Assessment({ session_data }) {
                 return (
                   <div
                     key={assessment.id}
-                    onClick={ 
+                    onClick={
                       !isAttempted
                         ? () => handleAssessmentView(assessment)
-                        : () => handleAttemptedAssessmentView(attemptedAssessments, assessment)
+                        : () =>
+                            handleAttemptedAssessmentView(
+                              attemptedAssessments,
+                              assessment,
+                            )
                     }
                     className={`flex items-center space-x-4 p-3 rounded-lg  
                       ${isAttempted ? 'bg-green-600/50' : 'bg-gray-800/50 cursor-pointer'}`}
                   >
-                    <span className="text-gray-400">{index + 1}</span>
+                    <span className={` ${isAttempted ? 'text-gray-200': 'text-gray-400'}`}>{index + 1}</span>
                     <span className="text-white">
                       {assessment.assessment_title}
                     </span>
@@ -126,21 +117,26 @@ export default function Assessment({ session_data }) {
                         Late Submission
                       </span>
                     )}
-                    {assessment.end_time.slice(0,10) === today && (
-                      <span className="ml-auto text-sm text-teal-200 bg-emerald-900 
-                        px-2 py-1 rounded">
+                    {assessment.end_time.slice(0, 10) === today && (
+                      <span
+                        className="ml-auto text-sm text-teal-200 bg-emerald-900 
+                        px-2 py-1 rounded"
+                      >
                         Live Today
                       </span>
                     )}
-                    {assessment.end_time.slice(0,10) > today && (
-                      <span className="ml-auto text-sm text-indigo-300 font-semibold 
-                        px-2 py-1 rounded">
-                        Will active on : {assessment.start_time.slice(0,10)}
+                    {assessment.end_time.slice(0, 10) > today && (
+                      <span
+                        className="ml-auto text-sm text-indigo-300 font-semibold 
+                        px-2 py-1 rounded"
+                      >
+                        Will active on : {assessment.start_time.slice(0, 10)}
                       </span>
                     )}
                   </div>
                 );
               })}
+              
             </div>
           </div>
         </div>

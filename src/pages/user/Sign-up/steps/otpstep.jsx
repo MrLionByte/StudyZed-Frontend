@@ -52,7 +52,6 @@ export default function OtpStep({ onNext, onBack }) {
     try {
       const email = localStorage.getItem('Temp_email');
       const response = await api.post('auth-app/verify-otp/', { email, otp });
-      console.log('RESPONSE :', response);
 
       if (
         response.data['auth-status'] === 'success' &&
@@ -64,7 +63,6 @@ export default function OtpStep({ onNext, onBack }) {
         toast.error('Failed to verify OTP.', response.data['message']);
       }
     } catch (error) {
-      console.log('ERROR :', error);
       if (error.status == 400) {
         toast.error('Failed to verify OTP.OTP incorrect.');
       } else {
@@ -80,7 +78,6 @@ export default function OtpStep({ onNext, onBack }) {
     try {
       const email = localStorage.getItem('Temp_email');
       const response = await api.post('auth-app/resend-otp/', { otp, email });
-      console.log('RESPONSE :', response);
 
       if (
         response.data['auth-status'] === 'resend' &&

@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import api from '../../../../api/axios_api_call';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { Github, Twitter } from 'lucide-react';
+import { Twitter } from 'lucide-react';
 import GoogleApp from '../../../../components/GoogleAuth/GoogleAuth';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { setUser } from '../../../../redux/slice';
 import { savedAuthData } from '../../../../utils/Localstorage';
@@ -32,6 +30,7 @@ export default function EmailStep({ onNext }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (submitting) {
       toast.info('Please wait, your initial request has been loading');
       return;
@@ -46,9 +45,6 @@ export default function EmailStep({ onNext }) {
       try {
         setSubmitting(true);
         const response = await api.post('auth-app/user-email/', { email });
-        console.log('RESPONSE :', response);
-        console.log('RESPONSE :', response['auth-status']);
-        console.log('Browser cookies:', document.cookie);
         localStorage.setItem('Temp_email', email);
         setSubmitting(false);
         if (
@@ -63,7 +59,6 @@ export default function EmailStep({ onNext }) {
         }
       } catch (error) {
         setSubmitting(false);
-        console.log('ERROR :', error);
         if (error.status == 400) {
           setSubmitting(false);
           toast.error(
@@ -71,7 +66,6 @@ export default function EmailStep({ onNext }) {
           );
         } else {
           setSubmitting(false);
-          console.log('Email :', error);
           toast.error('Error occurred, try again later');
         }
         throw error;
@@ -93,11 +87,8 @@ export default function EmailStep({ onNext }) {
       return;
     }
     const token = response.credential;
-    console.log('Google auth response ', response);
     const decoded = jwtDecode(token);
-    console.log('GASW :', decoded);
     let user_name = decoded.name.replace(/\s/g, '_');
-    console.log(user_name);
 
     if (!role) {
       setGetUserRole(true);
@@ -119,7 +110,6 @@ export default function EmailStep({ onNext }) {
         '/auth-app/login/google-account/',
         user_data,
       );
-      console.log(response);
       if (response.data['auth-status'] === 'success') {
         const { access_token, refresh_token, user, role, user_code } =
           response.data;
@@ -137,7 +127,6 @@ export default function EmailStep({ onNext }) {
         dispatch(setUser({ user, role }));
 
         const role_location = role.toLowerCase();
-        console.log('4 4 4 4 4 4 4 4', role_location);
         navigate(`/${role_location}/choose-session/`);
       } else if (response.data['auth-status'] === 'created') {
         const { access_token, refresh_token, user, role, user_code } =
@@ -160,12 +149,11 @@ export default function EmailStep({ onNext }) {
         }, 1000);
 
         const role_location = role.toLowerCase();
-        console.log('4 4 4 4 4 4 4 4', role_location);
         navigate(`/${role_location}/choose-session/`);
       } else if (response.data['auth-status'] === 'blocked') {
-        console.log('Z Z Z BLOCK');
+        toast.error('You are blocked due to inappropriate activities.Contact the costumer care');
       } else {
-        console.log('Z Z Z Some error occurred try again.');
+        toast.error('Faced some error. try again later.')
       }
     } catch (error) {
       console.log('ERROR ', error);
@@ -180,7 +168,7 @@ export default function EmailStep({ onNext }) {
       <p className="text-sm text-gray-300 mb-6 mt-3">
         Welcome to StudyZed! Let's begin your journey
       </p>
-      <form action="">
+      <form action={handleSubmit}>
         <div className="space-y-4 mb-6">
           <div>
             <label className="text-sm text-gray-300">Email</label>
@@ -201,7 +189,7 @@ export default function EmailStep({ onNext }) {
         </div>
 
         <button
-          type="button"
+          type="submit"
           onClick={handleSubmit}
           className="w-full py-3 font-bold bg-emerald-400 text-black rounded-lg hover:bg-emerald-300 transition-colors mb-4"
         >
@@ -224,10 +212,6 @@ export default function EmailStep({ onNext }) {
         </div>
         <div className="flex flex-col items-center gap-4 justify-center">
           <GoogleApp clientId={GOOGLE_CLIENT_ID} />
-
-          <button className="p-2 rounded-full bg-gray-700/30 hover:bg-gray-700/50">
-            <Twitter className="w-5 h-5" />
-          </button>
         </div>
       </form>
 

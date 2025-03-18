@@ -17,8 +17,6 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const navigate = useNavigate();
-
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -88,6 +86,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      toast.error(validationErrors)
       return;
     }
 
@@ -96,10 +95,8 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
     try {
       const email = localStorage.getItem('Temp_email');
       formData.email = email;
-      console.log('formData :', formData);
 
       const response = await api.post('auth-app/user-details/', formData);
-      console.log('RESPONSE:', response);
       if (
         response.data['auth-status'] === 'success' &&
         response.status === 201
@@ -118,11 +115,9 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
         localStorage.removeItem('Temp_email');
         localStorage.removeItem('signup-step');
       } else {
-        console.log(response.data);
         toast.error(response.data['message']);
       }
     } catch (error) {
-      console.error('ERROR:', error);
       toast.error('Something went wrong. Please try again.', error);
     } finally {
       setIsSubmitting(false);

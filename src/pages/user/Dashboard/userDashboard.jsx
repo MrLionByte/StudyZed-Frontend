@@ -21,7 +21,10 @@ import MyClass from './students/MyClass/myclass.jsx';
 import StudyMaterial from './students/StudyMaterial/studyMaterial.jsx';
 import BatchMembers from './students/BatchMembers/batchMembers.jsx';
 import MyProgress from './students/MyProgress/myProgress.jsx';
-import { clearSavedAuthData, getSavedAuthData } from '../../../utils/Localstorage';
+import {
+  clearSavedAuthData,
+  getSavedAuthData,
+} from '../../../utils/Localstorage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../redux/slice';
 import { saveSessionData, getSessionData } from './components/currentSession';
@@ -30,14 +33,49 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import api, { API_BASE_URLS } from '../../../api/axios_api_call.js';
 
 const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', id: 'dashboard', component: <DashboardMain /> },
-  { icon: ClipboardList, label: 'Assessment', id: 'assessment', component: <Assessment /> },
-  { icon: CheckSquare, label: 'Tasks', id: 'tasks', component: <StudentTask /> },
-  { icon: MessageSquare, label: 'Messages', id: 'messages', component: <Messages /> },
+  {
+    icon: LayoutDashboard,
+    label: 'Dashboard',
+    id: 'dashboard',
+    component: <DashboardMain />,
+  },
+  {
+    icon: ClipboardList,
+    label: 'Assessment',
+    id: 'assessment',
+    component: <Assessment />,
+  },
+  {
+    icon: CheckSquare,
+    label: 'Tasks',
+    id: 'tasks',
+    component: <StudentTask />,
+  },
+  {
+    icon: MessageSquare,
+    label: 'Messages',
+    id: 'messages',
+    component: <Messages />,
+  },
   { icon: School, label: 'My Class', id: 'class', component: <MyClass /> },
-  { icon: Library, label: 'Study Materials', id: 'materials', component: <StudyMaterial/> },
-  { icon: TrendingUp, label: 'My Progress', id: 'progress', component: <MyProgress /> },
-  { icon: Users, label: 'Batch Members', id: 'members', component: <BatchMembers/> },
+  {
+    icon: Library,
+    label: 'Study Materials',
+    id: 'materials',
+    component: <StudyMaterial />,
+  },
+  {
+    icon: TrendingUp,
+    label: 'My Progress',
+    id: 'progress',
+    component: <MyProgress />,
+  },
+  {
+    icon: Users,
+    label: 'Batch Members',
+    id: 'members',
+    component: <BatchMembers />,
+  },
   { icon: UserCircle, label: 'My Account', id: 'account' },
 ];
 
@@ -46,7 +84,7 @@ export default function Dashboard() {
   const [sessionData, setSessionData] = useState('');
   const [sessionCode, setSessionCode] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [fetchFromBackend, setFetchFromBackend] = useState(true)
+  const [fetchFromBackend, setFetchFromBackend] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -95,7 +133,7 @@ export default function Dashboard() {
       getAllStudentsInSession();
       setFetchFromBackend(false);
     }
-  },[fetchFromBackend]);
+  }, [fetchFromBackend]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -111,14 +149,18 @@ export default function Dashboard() {
     <div className="h-screen flex flex-col">
       <Navbar logout={handleLogout} userProfile={handleAccounts} />
 
-      <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         className="md:hidden p-3 fixed top-2 left-4 z-50 bg-gray-800 
-          text-white rounded-md">
+          text-white rounded-md"
+      >
         {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       <div className="flex flex-1">
-        <div className={`fixed md:relative top-0 left-0 h-full bg-gray-900 p-4 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:flex md:w-64 transition-transform duration-300 ease-in-out z-10`}>
+        <div
+          className={`fixed md:relative top-0 left-0 h-full bg-[#051F1E] p-4 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:flex md:w-64 transition-transform duration-300 ease-in-out z-10`}
+        >
           <div className="w-full space-y-2 mt-11 md:mt-0">
             {menuItems.map((item) => (
               <button
@@ -141,7 +183,9 @@ export default function Dashboard() {
         </div>
 
         <div className="flex-1 p-4 md:p-3">
-          {menuItems.find((item) => item.id === activeSection)?.component || <div>Select a section to view content</div>}
+          {menuItems.find((item) => item.id === activeSection)?.component || (
+            <div>Select a section to view content</div>
+          )}
         </div>
       </div>
     </div>

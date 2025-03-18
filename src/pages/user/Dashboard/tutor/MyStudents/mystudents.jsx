@@ -15,21 +15,25 @@ export default function StudentsInSession() {
 
   const studentDetails = getStudentByCode();
 
-  function getStudentNameByCode(studentCode) {
+  function getStudentInfo(studentCode) {
     const matchedStudent = studentDetails.find(
-      (student) => student.user_code === studentCode,
+      student => student.user_code === studentCode
     );
-    return matchedStudent ? matchedStudent.username : studentCode;
+    console.log(studentCode);
+    
+    return {
+      username : matchedStudent ? matchedStudent.username : studentCode,
+      name : matchedStudent ? 
+        `${matchedStudent?.first_name || ''} ${matchedStudent?.last_name || ''}`.trim() : 
+        studentCode,
+      email:   matchedStudent ? matchedStudent.email : '',
+      phone:  matchedStudent ? matchedStudent.profile?.phone : '',
+      pic: matchedStudent ? 
+        matchedStudent.profile?.profile_picture?.slice(13) || '' : 
+        ''
+    };
   }
-
-  function getStudentProfile(studentCode) {
-    const matchedStudent = studentDetails.find(
-      (student) => student.user_code === studentCode,
-    );
-    return matchedStudent
-      ? matchedStudent.profile?.profile_picture?.slice(13)
-      : '';
-  }
+  
 
   useEffect(() => {
     if (fetchFromBackend) {
@@ -127,29 +131,38 @@ export default function StudentsInSession() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-0 md:p-3">
-      <div className="grid auto-rows-min gap-5 md:grid-cols-5 h-[550px] overflow-y-scroll">
-        {students && Array.isArray(students) && students.length > 0 ? (
+      <div className="grid auto-rows-min gap-5 md:grid-cols-4 h-[550px] overflow-y-scroll">
+      {students && Array.isArray(students) && students.length > 0 ? (
           <>
-            {students.map((student, index) => (
+            {students.map((student, index) => {
+              const studentInfo = getStudentInfo(student.student_code);
+              return (
               <div
                 key={student.id}
                 className={`aspect-video rounded-xl flex flex-col items-center p-4 
-                bg-muted/50 text-black`}
+                student-card text`}
               >
-                <h4 className='text-balance space-x-2'>
-                  <span className='text-white font-medium-'>{index+1}:</span>
-                  <span className=" font-semibold">{getStudentNameByCode(student.student_code)}</span>
+                <h4 className="space-x-2 font-semibold">
+                  {studentInfo.username} {/* Username */}
                 </h4>
-
-                <p className="font-bold">{student.username}</p>
-                <p className="text-sm">Applied on : {student.joined_on}</p>
-                <img className='rounded-full size-12'
-                  src={getStudentProfile(student.student_code) || ''} alt="" />
-                {/* <p className="text-sm flex justify-center items-center gap-3 p-2">
-                  Student details
-                  <LucideSquareArrowRight className="hover:text-blue-900 cursor-pointer" />
-                </p> */}
-
+                <p className="txt-sm text-emerald-100">Name : <span className="text-md text-emerald-400">{studentInfo.name}</span></p>
+                <p className="text-sm text-emerald-100">Email : <span className="text-md text-emerald-400">{studentInfo.email}</span></p>
+                {/* <p className="text-sm text-emerald-100">Phone : <span className="text-md text-emerald-400">{studentInfo.phone || 'not available'}</span></p> */}
+                
+                <div className="w-14 h-14 mt-2 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
+                {studentInfo.pic ? 
+                  <img
+                    className="rounded-full"
+                    src={studentInfo.pic}
+                    alt={student.student_code.charAt(0)}
+                  />
+                  :
+                  <h5>
+                    {student.student_code.charAt(0)}
+                  </h5>
+                }
+                </div>
+                <p className="text-sm text-gray-400">Applied on : {student.joined_on}</p>
                 {!student.is_allowded ? (
                   <button
                     className="rounded bg-slate-400 hover:bg-green-500 mt-4 p-2 cursor-pointer"
@@ -161,8 +174,9 @@ export default function StudentsInSession() {
                   <div className="rounded bg-green-500 mt-4 p-2">Approved</div>
                 )}
               </div>
-            ))}
-            
+              )
+            })}
+
             {isOverlayActive && <div className="overlay active"></div>}
             <ToastContainer
               autoClose={1000}

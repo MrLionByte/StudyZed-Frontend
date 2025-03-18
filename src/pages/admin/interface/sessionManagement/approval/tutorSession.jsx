@@ -39,7 +39,6 @@ const SessionApproval = memo(() => {
                   session.is_active ? 'bg-blue-900' : 'bg-muted/50'
                 }`}
               >
-
                 <p className="font-bold">{session.session_code}</p>
                 <p className="text-sm text-gray-400">
                   Session Name : {session.session_name}

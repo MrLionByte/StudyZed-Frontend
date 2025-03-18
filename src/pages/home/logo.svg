@@ -1,8 +1,0 @@
-<svg width="500" height="200" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none" stroke="none" stroke-width="1">
-    <text x="10" y="40" font-family="Arial" font-size="40" fill="blue">STUDY</text>
-    <path d="M250 10 H 290 V 50 H 250 Z M 250 50 L 290 90" fill="none" stroke="blue" stroke-width="5"/>
-    <text x="300" y="40" font-family="Arial" font-size="40" fill="blue">ED</text>
-    <text x="10" y="80" font-family="Arial" font-size="20" fill="black">LEARN GROW SUCCEED</text>
-  </g>
-</svg>

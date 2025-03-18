@@ -23,8 +23,8 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [markMarked, setMarkMarked] = useState(false);
   console.log(taskData);
-  
-  const studentDetails = getStudentByCode()
+
+  const studentDetails = getStudentByCode();
 
   const handleFinalizeMark = () => {
     setShowConfirmDialog(true);
@@ -44,7 +44,7 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
         },
       );
       console.log(response);
-      
+
       setMarkMarked(true);
     } catch (error) {
       console.log(error);
@@ -69,7 +69,6 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
     }
   };
 
-
   function getStudentNameByCode(studentCode) {
     const matchedStudent = studentDetails.find(
       (student) => student.user_code === studentCode,
@@ -83,8 +82,10 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
         <div className="p-6 space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold text-teal-400">
-              <span className='text-white text-opacity-50'>Submitted By : </span>
-                      {getStudentNameByCode(taskData.student_code)}
+              <span className="text-white text-opacity-50">
+                Submitted By :{' '}
+              </span>
+              {getStudentNameByCode(taskData.student_code)}
             </h2>
             <button
               onClick={handleClose}
@@ -98,35 +99,34 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
             <div className="flex flex-col space-y-2">
               <div className="flex justify-between rounded-lg">
                 <div>
-                {!taskData?.is_late_submission &&
-                <p className='bg-yellow-600 rounded-md text-center p-1 text-white'>
-                  Is late submission</p>
-                }
+                  {!taskData?.is_late_submission && (
+                    <p className="bg-yellow-600 rounded-md text-center p-1 text-white">
+                      Is late submission
+                    </p>
+                  )}
                 </div>
-                {
-                  markMarked || !taskData?.score ? (
-                      <div className="flex flex-col gap-2">
-                        <div>
-                          <label htmlFor="mark-input">Mark:</label>
-                          <input
-                            id="mark-input"
-                            type="text"
-                            value={mark}
-                            onChange={(e) => handleMarkInput(e.target.value)}
-                            className="p-1 ml-3 text-center font-bold rounded-2xl text-black bg-slate-500 shadow-inner w-24 hover:shadow-slate-100"
-                          />
-                        </div>
-                        <button
-                          onClick={handleFinalizeMark}
-                          className="bg-emerald-500 rounded-lg p-1 hover:bg-red-600"
-                        >
-                          Finalize
-                        </button>
-                      </div>
-                    ) : (
-                      <p>MARK : {markMarked || taskData?.score}</p>
-                    )
-                }
+                {markMarked || !taskData?.score ? (
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      <label htmlFor="mark-input">Mark:</label>
+                      <input
+                        id="mark-input"
+                        type="text"
+                        value={mark}
+                        onChange={(e) => handleMarkInput(e.target.value)}
+                        className="p-1 ml-3 text-center font-bold rounded-2xl text-black bg-slate-500 shadow-inner w-24 hover:shadow-slate-100"
+                      />
+                    </div>
+                    <button
+                      onClick={handleFinalizeMark}
+                      className="bg-emerald-500 rounded-lg p-1 hover:bg-red-600"
+                    >
+                      Finalize
+                    </button>
+                  </div>
+                ) : (
+                  <p>MARK : {markMarked || taskData?.score}</p>
+                )}
               </div>
 
               <p className="text-gray-400 w-full break-words">

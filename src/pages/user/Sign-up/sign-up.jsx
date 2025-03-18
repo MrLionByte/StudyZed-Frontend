@@ -4,11 +4,8 @@ import UserDetailStep from './steps/userdetails.jsx';
 import { useState, useEffect } from 'react';
 import Registration_pic from '../../../assets/registration_form.png';
 import Details_Registration from '../../../assets/loginpssssic.png';
-import LogoSvg from '../../../assets/test.svg';
 import { useNavigate } from 'react-router-dom';
-//import StepProgressBar from './Progress.jsx';
-import GoogleAuthApp from '../../../utils/GoogleAuth.jsx';
-import { Mosaic, FourSquare } from 'react-loading-indicators';
+import { FourSquare } from 'react-loading-indicators';
 import {
   ACCESS_TOKEN,
   REFRESH_TOKEN,
@@ -62,7 +59,7 @@ export default function Signup() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <div className="bg-white/10 backdrop-blur-lg md:p-5 rounded-2xl md:w-[800px] md:h-[530px] md:flex gap-8">
+      <div className="bg-white/10 backdrop-blur-lg md:p-5 rounded-2xl md:w-[800px] md:h-[570px] md:flex gap-8">
         <div className="hidden md:flex-1 md:justify-center items-end md:bg-opacity-10 md:bg-slate-400 md:rounded-xl md:overflow-hidden md:block relative">
           {currentStep != 3 ? (
             <img

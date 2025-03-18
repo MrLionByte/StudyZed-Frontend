@@ -5,7 +5,7 @@
   }
   
 
-  .tooltip {
+.tooltip {
     visibility: hidden;
     position: absolute;
     background-color: #333;
@@ -21,7 +21,7 @@
   }
   
  
-  .icon-container:hover .tooltip {
+.icon-container:hover .tooltip {
     visibility: visible;
     opacity: 1;
   }

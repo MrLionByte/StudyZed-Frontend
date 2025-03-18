@@ -1,5 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
-import { GraduationCap, Menu, UserCircle, LogOut, Bell } from 'lucide-react';
+import {
+  GraduationCap,
+  Menu,
+  UserCircle,
+  LogOut,
+  Bell,
+  Wallet,
+} from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../../../assets/studyzed_main.png';
 import {
@@ -32,7 +39,6 @@ export default function Navbar() {
   };
 
   const userData = getSavedAuthData();
-  const profile_url = userData.user.profile_url
 
   useEffect(() => {
     if (!userRole) {
@@ -44,7 +50,7 @@ export default function Navbar() {
     if (!userRole) {
       setUserRole(userData?.role);
     }
-    
+
     if (notificationRef.current) {
       notificationRef.current.refreshNotifications();
       notificationRef.current.requestNotificationPermission(userData.user_code);
@@ -53,44 +59,32 @@ export default function Navbar() {
 
   return (
     <nav className="bg-teal-900/50 backdrop-blur-sm relative z-10">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="flex items-center justify-between md:h-16">
-          <Link to="/" className="flex items-center space-x-7 md:space-x-0 align-middle">
+          <Link to="/" className="flex items-center md:space-x-0 align-middle">
             <GraduationCap className="h-8 w-8 text-emerald-400" />
             <img className="size-1/2 md:size-1/4 mt-2" src={Logo} alt="Logo" />
           </Link>
-          
+
           <div className="flex items-center space-x-4">
-            {/* {userRole === 'STUDENT' ? (
-              <Link
-                to="/student/choose-session"
-                className="hover:text-emerald-400"
-              >
-                Home
-              </Link>
-            ) : (
-              <Link
-                to="/tutor/choose-session"
-                className="hover:text-emerald-400"
-              >
-                Home
-              </Link>
-            )} */}
             {userRole === 'STUDENT' ? (
               <Link
                 to="/student/student-wallet/"
                 className="hover:text-emerald-400"
               >
-                Wallet
+                <Wallet />
               </Link>
             ) : (
               <Link
                 to="/tutor/tutor-wallet/"
                 className="hover:text-emerald-400"
               >
-                Wallet
+                <Wallet />
               </Link>
             )}
+
+            <Notification ref={notificationRef} />
+
             <button
               className="p-2 hover:bg-teal-800 rounded-full relative"
               onClick={() => setShowAccountMenu(!showAccountMenu)}
@@ -102,7 +96,7 @@ export default function Navbar() {
               <div
                 className="absolute right-4 z-50
               top-16 w-48 py-2 bg-teal-900/95 backdrop-blur-sm rounded-lg shadow-xl"
-                style={{ zIndex: 9999 }} 
+                style={{ zIndex: 9999 }}
               >
                 <button
                   className="w-full flex items-center space-x-2 px-4 py-2 hover:bg-teal-800 transition-colors"
@@ -122,11 +116,7 @@ export default function Navbar() {
                 </button>
               </div>
             )}
-            <Notification ref={notificationRef} />
           </div>
-           
-              
-        
         </div>
       </div>
     </nav>

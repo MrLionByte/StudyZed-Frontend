@@ -5,11 +5,11 @@ import TutorManagement from '../../pages/admin/interface/userManagement/tutorMan
 import StudentManagement from '../../pages/admin/interface/userManagement/studentManagement/studentManagement.jsx';
 import SessionApproval from '../../pages/admin/interface/sessionManagement/approval/tutorSession.jsx';
 import ActiveSessions from '../../pages/admin/interface/sessionManagement/activeSessions/activeSession.jsx';
+import InActiveSessions from '../../pages/admin/interface/sessionManagement/inActiveSessions/inActiveSession.jsx';
 import PriceSetter from '../../pages/admin/interface/priceSetter/pricesetter.jsx';
-import AssessmentsData from '../../pages/admin/interface/growthData/assessmentsData.jsx'
-import SessionData from '../../pages/admin/interface/growthData/sessionsData.jsx'
-import CompanyRevenue from '../../pages/admin/interface/growthData/companyRevenue.jsx'
-
+import AssessmentsData from '../../pages/admin/interface/growthData/assessmentsData.jsx';
+import SessionData from '../../pages/admin/interface/growthData/sessionsData.jsx';
+import CompanyRevenue from '../../pages/admin/interface/growthData/companyRevenue.jsx';
 
 import NotFound from '../../components/Errors/NotFound.jsx';
 
@@ -25,7 +25,9 @@ export default function TutorRoutes() {
 
         <Route path="session-approval/" element={<SessionApproval />} />
         <Route path="active-session/" element={<ActiveSessions />} />
-
+        <Route path="inactive-session/" element={<InActiveSessions />} />
+        <Route path="blocked-sessions/" element={<InActiveSessions />} />
+        
         <Route path="price-setter/" element={<PriceSetter />} />
 
         <Route path="assessment-growth-data/" element={<AssessmentsData />} />

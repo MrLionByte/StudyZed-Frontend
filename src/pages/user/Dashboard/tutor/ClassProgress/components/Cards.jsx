@@ -1,12 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, AlertCircle } from "lucide-react";
-import { useState } from "react";
-import Chart from "react-apexcharts";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { TrendingUp, TrendingDown, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import Chart from 'react-apexcharts';
 
 const ProgressCardDashboard = ({ studentTasks }) => {
-
   const calculateMetrics = (tasks) => {
     const completed = tasks?.filter((t) => t.score !== null);
     const total = tasks?.length;
@@ -14,9 +13,10 @@ const ProgressCardDashboard = ({ studentTasks }) => {
     const avgScore =
       completed?.length > 0
         ? (
-            completed?.reduce((sum, t) => sum + (t.score || 0), 0) / completed?.length
+            completed?.reduce((sum, t) => sum + (t.score || 0), 0) /
+            completed?.length
           ).toFixed(2)
-        : "0";
+        : '0';
 
     return {
       completionRate: ((completed?.length / total) * 100).toFixed(1),
@@ -42,52 +42,61 @@ const ProgressCardDashboard = ({ studentTasks }) => {
   const chartData = {
     series: [
       {
-        name: "High Performers",
+        name: 'High Performers',
         data: [
           groupedData?.high?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).completionRate),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).completionRate),
             0,
           ) / groupedData?.high?.length || 0,
           groupedData?.high?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).averageScore),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).averageScore),
             0,
           ) / groupedData?.high?.length || 0,
           groupedData?.high?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).lateSubmissions),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).lateSubmissions),
             0,
           ) / groupedData?.high?.length || 0,
         ],
       },
       {
-        name: "Medium Performers",
+        name: 'Medium Performers',
         data: [
           groupedData?.medium?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).completionRate),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).completionRate),
             0,
           ) / groupedData?.medium?.length || 0,
           groupedData?.medium?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).averageScore),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).averageScore),
             0,
           ) / groupedData?.medium?.length || 0,
           groupedData?.medium?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).lateSubmissions),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).lateSubmissions),
             0,
           ) / groupedData?.medium?.length || 0,
         ],
       },
       {
-        name: "Low Performers",
+        name: 'Low Performers',
         data: [
           groupedData?.low?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).completionRate),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).completionRate),
             0,
           ) / groupedData?.low?.length || 0,
           groupedData?.low?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).averageScore),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).averageScore),
             0,
           ) / groupedData?.low?.length || 0,
           groupedData?.low?.reduce(
-            (sum, student) => sum + Number(calculateMetrics(student.tasks).lateSubmissions),
+            (sum, student) =>
+              sum + Number(calculateMetrics(student.tasks).lateSubmissions),
             0,
           ) / groupedData?.low?.length || 0,
         ],
@@ -96,29 +105,29 @@ const ProgressCardDashboard = ({ studentTasks }) => {
     options: {
       chart: {
         height: 350,
-        type: "bar",
-        background: "#2d2d2d", 
-        foreColor: "#e0e0e0", 
+        type: 'bar',
+        background: '#2d2d2d',
+        foreColor: '#e0e0e0',
       },
       xaxis: {
-        categories: ["Completion Rate", "Average Score", "Late Submissions"],
+        categories: ['Completion Rate', 'Average Score', 'Late Submissions'],
       },
       yaxis: {
         min: 0,
         max: 100,
         title: {
-          text: "Percentage",
+          text: 'Percentage',
           style: {
-            color: "#e0e0e0", 
+            color: '#e0e0e0',
           },
         },
       },
-      colors: ["#00E396", "#FFB019", "#FF4560"], 
+      colors: ['#00E396', '#FFB019', '#FF4560'],
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: "55%",
-          endingShape: "rounded",
+          columnWidth: '55%',
+          endingShape: 'rounded',
         },
       },
       dataLabels: {
@@ -127,33 +136,38 @@ const ProgressCardDashboard = ({ studentTasks }) => {
       stroke: {
         show: true,
         width: 2,
-        colors: ["transparent"],
+        colors: ['transparent'],
       },
       tooltip: {
         y: {
           formatter: function (value) {
-            return `${value.toFixed(2)}%`; 
+            return `${value.toFixed(2)}%`;
           },
         },
       },
       theme: {
-        mode: "dark",
+        mode: 'dark',
       },
     },
   };
 
   return (
     <div className="space-y-8 p-4 bg-[#1a1a1a] rounded-lg">
-     
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {studentTasks?.map((student, index) => {
           const metrics = calculateMetrics(student.tasks);
-          const trendIcon = Number(metrics.completionRate) > 80 ? TrendingUp : TrendingDown;
+          const trendIcon =
+            Number(metrics.completionRate) > 80 ? TrendingUp : TrendingDown;
           const trendColor =
-            Number(metrics.completionRate) > 80 ? "text-[#4CAF50]" : "text-[#FF5252]";
+            Number(metrics.completionRate) > 80
+              ? 'text-[#4CAF50]'
+              : 'text-[#FF5252]';
 
           return (
-            <Card key={index} className="bg-[#2d2d2d] border-[#404040] shadow-none">
+            <Card
+              key={index}
+              className="bg-[#2d2d2d] border-[#404040] shadow-none"
+            >
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-[#e0e0e0]">
                   {student.name}
