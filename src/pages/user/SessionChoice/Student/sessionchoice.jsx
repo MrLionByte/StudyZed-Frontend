@@ -144,8 +144,9 @@ const SessionPage = () => {
 
       {!isJoinSession ? (
         <>
-          <div className="flex flex-col items-center align-middle mt-4">
-            <button className="default_button p-3" onClick={handleJoinSession}>
+          <div className="flex flex-col items-center align-middle mt-4 ">
+            <button className="hidden md:block p-3 border-2 rounded-2xl hover:bg-emerald-400 hover:text-black hover:border-black font-sans" 
+              onClick={handleJoinSession}>
               JOIN SESSION
             </button>
           </div>

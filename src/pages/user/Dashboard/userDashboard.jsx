@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   Library,
+  Settings2,
 } from 'lucide-react';
 import Navbar from '../SessionChoice/components/navbar';
 import DashboardMain from './students/Main/dashboard';
@@ -21,6 +22,7 @@ import MyClass from './students/MyClass/myclass.jsx';
 import StudyMaterial from './students/StudyMaterial/studyMaterial.jsx';
 import BatchMembers from './students/BatchMembers/batchMembers.jsx';
 import MyProgress from './students/MyProgress/myProgress.jsx';
+import Settings from './students/Settings/settings.jsx';
 import {
   clearSavedAuthData,
   getSavedAuthData,
@@ -31,6 +33,10 @@ import { saveSessionData, getSessionData } from './components/currentSession';
 import { saveStudentsDataToSession } from './components/studentsInSession.js';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api, { API_BASE_URLS } from '../../../api/axios_api_call.js';
+import { useFont } from '../../../context/FontContext.jsx';
+import { useTheme } from '../../../context/ThemeContext.jsx';
+import { useSideBarColor } from '../../../context/SideBarColorContext.jsx';
+import { useNavBarColor } from '../../../context/NavbarColorContext.jsx';
 
 const menuItems = [
   {
@@ -76,15 +82,26 @@ const menuItems = [
     id: 'members',
     component: <BatchMembers />,
   },
-  { icon: UserCircle, label: 'My Account', id: 'account' },
+  { icon: Settings2, 
+    label: 'Settings', 
+    id: 'settings',
+    component: <Settings /> 
+  }
 ];
 
 export default function Dashboard() {
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const [activeSection, setActiveSection] = useState(
+    () => localStorage.getItem('activeSection') || 'dashboard'
+  );
   const [sessionData, setSessionData] = useState('');
   const [sessionCode, setSessionCode] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
+
+  const { fontSettings, fontClasses } = useFont();
+  const { theme } = useTheme();
+  const { sideBarColor } = useSideBarColor();
+
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -116,6 +133,10 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    localStorage.setItem('activeSection', activeSection);
+  }, [activeSection]);
+
+  useEffect(() => {
     if (location.state) {
       setSessionData(location.state);
       setSessionCode(location.state.sessions.session_code);
@@ -144,10 +165,11 @@ export default function Dashboard() {
   const handleAccounts = () => {
     navigate('/student/profile/');
   };
-
+  
   return (
-    <div className="h-screen flex flex-col">
-      <Navbar logout={handleLogout} userProfile={handleAccounts} />
+    <div className={`h-screen flex flex-col ${theme === 'light' ? 'bg-[#2f7062]' : 'bg-[#102020] text-white'} ${fontClasses[fontSettings.fontStyle] || 'font-sans'}`}>
+
+      <Navbar />
 
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -159,21 +181,21 @@ export default function Dashboard() {
 
       <div className="flex flex-1">
         <div
-          className={`fixed md:relative top-0 left-0 h-full bg-[#051F1E] p-4 transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:flex md:w-64 transition-transform duration-300 ease-in-out z-10`}
+          className={`fixed md:relative top-0 left-0 h-full p-4 transform 
+            md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:flex md:w-64 
+            transition-transform duration-300 ease-in-out z-10`}
+            style={{ backgroundColor: sideBarColor }}
         >
           <div className="w-full space-y-2 mt-11 md:mt-0">
             {menuItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
-                  if (item.id === 'account') {
-                    handleAccounts();
-                  } else {
-                    setActiveSection(item.id);
-                  }
+                  setActiveSection(item.id);
                   setIsSidebarOpen(false);
                 }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${activeSection === item.id ? 'bg-emerald-500 text-white' : 'hover:bg-teal-900/30 text-gray-300'}`}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors 
+                  ${activeSection === item.id ? 'bg-emerald-500 text-white' : 'hover:bg-teal-900/30 text-gray-300'}`}
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>

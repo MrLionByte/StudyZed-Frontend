@@ -6,7 +6,7 @@ import {
   MessageSquare,
   Users,
   TrendingUp,
-  UserCircle,
+  Settings2,
   School,
   Menu,
   X,
@@ -19,9 +19,9 @@ import Assessment from './tutor/Assessment/assessment';
 import Messaging from './tutor/Messages/message';
 import TutorTask from './tutor/Task/task';
 import Class from './tutor/MyClass/class';
-import MyAccount from './tutor/MyAccount/myaccount';
 import ClassProgress from './tutor/ClassProgress/classProgress';
 import StudyMaterial from './tutor/StudyMaterial/studyMaterial';
+import Settings from './tutor/Settings/settings';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   clearSavedAuthData,
@@ -32,8 +32,9 @@ import { logout } from '../../../redux/slice';
 import { saveSessionData, getSessionData } from './components/currentSession';
 import { TutorEndPoints } from '../../../api/endpoints/userEndPoints';
 import { saveStudentsDataToSession } from './components/studentsInSession';
-import { comment } from 'postcss';
 import api, { API_BASE_URLS } from '../../../api/axios_api_call';
+import { useTheme } from '../../../context/ThemeContext';
+import { useFont } from '../../../context/FontContext';
 
 const menuItems = [
   {
@@ -70,10 +71,10 @@ const menuItems = [
   },
   { icon: Users, label: 'My Students', id: 'members', component: <Members /> },
   {
-    icon: UserCircle,
-    label: 'My Account',
-    id: 'account',
-    component: <MyAccount />,
+    icon: Settings2,
+    label: 'Settings',
+    id: 'settings',
+    component: <Settings />,
   },
 ];
 
@@ -86,6 +87,9 @@ export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
+
+  const { fontSettings, fontClasses } = useFont();
+  const { theme, setTheme } = useTheme();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -153,7 +157,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className={`h-screen flex flex-col ${theme === 'light' ? 'bg-[#2f7062]' : 'bg-[#102020] text-white'} ${fontClasses[fontSettings.fontStyle] || 'font-sans'}`}>
       <Navbar logout={handleLogout} />
 
       <button

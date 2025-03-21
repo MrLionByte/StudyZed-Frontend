@@ -1,4 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
+import {FontProvider} from '../../context/FontContext';
+import {ThemeProvider} from '../../context/ThemeContext';
 import TutorSessionPage from '../../pages/user/SessionChoice/Tutor/sessionchoice';
 import MyProfile from '../../pages/user/MyProfile/Tutor/userProfile';
 import NotFound from '../../components/Errors/NotFound';
@@ -16,7 +18,13 @@ export default function TutorStates() {
       <Route path={'payment-failed/'} element={<PaymentFailed />} />
       <Route path={'payment-cancel/'} element={<PaymentCancelled />} />
 
-      <Route path={'enter-session/'} element={<Dashboard />} />
+      <Route path={'enter-session/'} element={
+        <ThemeProvider>
+          <FontProvider>
+            <Dashboard />
+          </FontProvider>
+        </ThemeProvider>
+        } />
 
       <Route path="profile/" element={<MyProfile />} />
 

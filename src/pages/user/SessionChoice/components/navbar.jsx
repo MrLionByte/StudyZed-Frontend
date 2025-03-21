@@ -6,6 +6,7 @@ import {
   LogOut,
   Bell,
   Wallet,
+  Home
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../../../assets/studyzed_main.png';
@@ -16,11 +17,15 @@ import {
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../../redux/slice';
 import Notification from '../../Dashboard/components/notification';
+import logoutUser from '../../../../utils/LogoutApi';
+import { useNavBarColor } from '../../../../context/NavbarColorContext';
 
 export default function Navbar() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [userRole, setUserRole] = useState();
   const notificationRef = useRef();
+
+  const { navBarColor } = useNavBarColor();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,6 +37,7 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
+    logoutUser();
     dispatch(logout());
     clearSavedAuthData();
     setShowAccountMenu(false);
@@ -58,26 +64,29 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-teal-900/50 backdrop-blur-sm relative z-10">
+    <nav className=" backdrop-blur-sm relative z-10" style={{backgroundColor: navBarColor }}>
       <div className="container mx-auto">
         <div className="flex items-center justify-between md:h-16">
-          <Link to="/" className="flex items-center md:space-x-0 align-middle">
-            <GraduationCap className="h-8 w-8 text-emerald-400" />
-            <img className="size-1/2 md:size-1/4 mt-2" src={Logo} alt="Logo" />
-          </Link>
+          <div className="flex items-center md:size-96">
+            <GraduationCap className="hidden md:block size-14 text-emerald-400" />
+            <img className="w-28 md:w-fit md:h-36 object-cover object-center" src={Logo} alt="Logo" />
+          </div>
 
           <div className="flex items-center space-x-4">
+            <Link to="/" className="flex items-center text-emerald-400 hover:bg-teal-800 transition-colors rounded-full p-2">
+              <Home />
+            </Link>
             {userRole === 'STUDENT' ? (
               <Link
                 to="/student/student-wallet/"
-                className="hover:text-emerald-400"
+                className="hover:bg-teal-800 transition-colors"
               >
                 <Wallet />
               </Link>
             ) : (
               <Link
                 to="/tutor/tutor-wallet/"
-                className="hover:text-emerald-400"
+                className="hover:bg-teal-800 rounded-full p-2 text-emerald-400"
               >
                 <Wallet />
               </Link>
@@ -114,6 +123,7 @@ export default function Navbar() {
                   <LogOut className="h-5 w-5" />
                   <span>Logout</span>
                 </button>
+                
               </div>
             )}
           </div>

@@ -178,9 +178,9 @@ export default function StudentMessaging() {
   }, [messages]);
 
   return (
-    <div className="flex w-full justify-center mt-5 items-center bg-transparent">
-      <div className="flex flex-col h-[550px] md:h-[800px] w-full max-w-7xl mx-auto bg-[#e7ebf0] rounded-lg shadow-md overflow-hidden">
-        <div className="flex items-center p-3 bg-[#236383] text-white">
+    <div className="flex w-full justify-center mt-5 items-center bg-transparent ">
+      <div className="flex flex-col h-[550px] md:h-[800px] w-full max-w-7xl mx-auto rounded-3xl overflow-hidden">
+        <div className="flex items-center p-3 bg-[#2f726d] text-white">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
               T
@@ -206,7 +206,7 @@ export default function StudentMessaging() {
           </div>
         </div>
 
-        <ScrollArea className="flex-1 p-4 bg-[#232E3C] text-[#AEBAC1]">
+        <ScrollArea className="flex-1 p-4 bg-gray-400/20 text-[#AEBAC1]">
           <div className="space-y-2 text-black opacity-75 ">
             {loading ? (
               <ChatSkeleton />
@@ -247,7 +247,7 @@ export default function StudentMessaging() {
           </div>
         </ScrollArea>
 
-        <div className="p-3 bg-[#236383] border-t">
+        <div className="p-3 bg-[#2a6965] border-t">
           <div className="flex items-center space-x-2">
             {/* <Button variant="ghost" size="icon" className="text-gray-500">
             <Paperclip className="h-5 w-5" />
@@ -268,7 +268,7 @@ export default function StudentMessaging() {
               <Send className="h-4 w-4" />
             </Button>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && <p className="text-red-500 text-sm mt-2">*</p>}
         </div>
       </div>
     </div>

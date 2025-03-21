@@ -1,3 +1,4 @@
+
 const {heroui} = require('@heroui/theme');
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -10,6 +11,12 @@ export default {
   ],
   theme: {
   	extend: {
+		fontFamily: {
+			montserrat: ["Montserrat", "sans-serif"],
+			sans: ["Roboto", "sans-serif"],
+			roboto: ["Roboto", "sans-serif"],
+			playful: ["Sue Ellen Francisco", "cursive"],
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

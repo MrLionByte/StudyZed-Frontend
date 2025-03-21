@@ -395,7 +395,7 @@ export default function CardWithForm({ cancelModal }) {
             Cancel
           </Button>
           {/* <Button>Add to Cart</Button> */}
-          <Button onClick={handleSubmit} className="hover:bg-green-600">
+          <Button onClick={handleSubmit} className="border text-black hover:bg-green-600">
             Buy Session
           </Button>
         </CardFooter>

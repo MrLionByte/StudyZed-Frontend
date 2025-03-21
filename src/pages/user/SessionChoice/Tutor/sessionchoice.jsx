@@ -51,11 +51,12 @@ const TutorSessionPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleEnterSession = (e, tutor_code, session_code, is_approved) => {
+  const handleEnterSession = (e, tutor_code, session_code,days_left, is_approved) => {
     e.preventDefault();
     const sessionData = {
       tutor_code: tutor_code,
       session_code: session_code,
+      days_left: days_left,
     };
     if (tutor_code && is_approved) {
       navigate('/tutor/enter-session/', { state: { sessions: sessionData } });
@@ -129,7 +130,7 @@ const TutorSessionPage = () => {
   return (
     <div className="min-h-screen text-white">
       <Navbar />
-      <div className="flex items-center justify-end mt-4">
+      <div className="flex items-center justify-end mt-4 mr-10">
         <button className="hidden md:block p-3 border-2 rounded-2xl hover:bg-emerald-400 hover:text-black hover:border-black font-sans" onClick={openModal}>
           CREATE NEW SESSION
         </button>
@@ -197,6 +198,7 @@ const TutorSessionPage = () => {
                         e,
                         session.tutor_code,
                         session.session_code,
+                        session.days_left,
                         session.is_active,
                       )
                     }

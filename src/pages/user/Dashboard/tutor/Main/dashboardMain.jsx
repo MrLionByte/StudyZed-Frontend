@@ -217,10 +217,10 @@ export default function Dashboard() {
           <div>
             <h1 className="text-2xl md:text-3xl font-bold mb-2">
               SESSION REMAINING, <br />
-              <span className="text-teal-200">2 M and 6 days</span>
+              <span className="text-teal-200">{session?.sessions?.days_left} days</span>
             </h1>
             <p className="text-gray-400">
-              Buy more time and keep up your good work!
+              {/* Buy more time and keep up your good work! */}
             </p>
           </div>
         </div>

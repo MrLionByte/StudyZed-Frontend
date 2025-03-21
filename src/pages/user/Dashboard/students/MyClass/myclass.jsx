@@ -78,8 +78,10 @@ const VideoChat = ({ userToken, studentId }) => {
         params: { session_code: session?.sessions?.session_code },
       });
       setScheduledSessions(response.data);
+      console.log('live :',response.data);
+      
     } catch (err) {
-      toast.error('minor error occurred, try again later')
+      // toast.error('minor error occurred, try again later')
     }
   };
 
@@ -193,6 +195,7 @@ const VideoChat = ({ userToken, studentId }) => {
                   </div>
                 </div>
                 <div className="flex items-center justify-center ">
+                  {scheduledSessions.status === 'live' ? 
                   <button
                     onClick={handleLiveSession}
                     className="bg-[#00FF9D] text-[#0A1929] px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-[#00CC7D] transition-colors"
@@ -200,6 +203,17 @@ const VideoChat = ({ userToken, studentId }) => {
                     <span>Join Session</span>
                     <ChevronRight size={16} />
                   </button>
+                  
+                  : 
+                  <div
+                  className="flex flex-col items-center justify-center p-3 
+    border-2 border-red-500 rounded-lg 
+    transition-all duration-300 w-full"
+                >
+                  Session {scheduledSessions.status}
+                </div>
+                  
+                  }
                 </div>
               </div>
             </div>
