@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import {FontProvider} from '../../context/FontContext';
 import {ThemeProvider} from '../../context/ThemeContext';
+import {SideBarColorProvider} from '../../context/SideBarColorContext';
+import {NavBarColorProvider} from '../../context/NavbarColorContext';
 import TutorSessionPage from '../../pages/user/SessionChoice/Tutor/sessionchoice';
 import MyProfile from '../../pages/user/MyProfile/Tutor/userProfile';
 import NotFound from '../../components/Errors/NotFound';
@@ -21,7 +23,11 @@ export default function TutorStates() {
       <Route path={'enter-session/'} element={
         <ThemeProvider>
           <FontProvider>
-            <Dashboard />
+            <SideBarColorProvider>
+              <NavBarColorProvider>
+                <Dashboard />
+              </NavBarColorProvider>
+            </SideBarColorProvider>
           </FontProvider>
         </ThemeProvider>
         } />

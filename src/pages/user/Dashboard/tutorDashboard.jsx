@@ -35,6 +35,7 @@ import { saveStudentsDataToSession } from './components/studentsInSession';
 import api, { API_BASE_URLS } from '../../../api/axios_api_call';
 import { useTheme } from '../../../context/ThemeContext';
 import { useFont } from '../../../context/FontContext';
+import { useSideBarColor } from '../../../context/SideBarColorContext';
 
 const menuItems = [
   {
@@ -83,13 +84,13 @@ export default function Dashboard() {
     () => localStorage.getItem('activeSection') || 'dashboard'
   );
   const [sessionCode, setSessionCode] = useState('');
-  const [sessionData, setSessionData] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
 
   const { fontSettings, fontClasses } = useFont();
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
+  const { sideBarColor } = useSideBarColor();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -101,16 +102,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (location.state) {
-      setSessionData(location.state);
       setSessionCode(location.state.sessions.session_code);
       saveSessionData(location?.state);
     }
-
-    if (sessionCode) {
+    console.log('!!!!!',sessionCode);
+    
+    if (sessionCode === '') {
       const session = getSessionData();
-      setSessionCode(session);
+      setSessionCode(session?.sessions?.session_code);
     }
-  }, [location.state]);
+  }, [location.state, sessionCode]);
 
   useEffect(() => {
     if (fetchFromBackend) {
@@ -169,9 +170,10 @@ export default function Dashboard() {
 
       <div className="flex flex-1">
         <div
-          className={`fixed md:relative top-0 left-0 h-full bg-[#051F1E] p-4 transform md:translate-x-0 ${
+          className={`fixed md:relative top-0 left-0 h-full p-4 transform md:translate-x-0 ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } md:flex md:w-64 transition-transform duration-300 ease-in-out z-10 `}
+          style={{ backgroundColor: sideBarColor }}
         >
           <div className="w-full space-y-2">
             {menuItems.map((item) => (

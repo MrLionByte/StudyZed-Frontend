@@ -2,68 +2,113 @@ import React, { useEffect, useState } from 'react';
 import { CreditCard, AlertCircle, Save, RefreshCw, Sun, Moon, Image, PenBoxIcon, XIcon } from 'lucide-react';
 import { useFont } from '../../../../../context/FontContext';
 import { useTheme } from '../../../../../context/ThemeContext';
+import { useSideBarColor } from '../../../../../context/SideBarColorContext';
+import { useNavBarColor } from '../../../../../context/NavbarColorContext';
 import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
 import { getSessionData } from '../../components/currentSession';
+import RenewSubscription from './components/renewSubscription.jsx';
 
 function Settings() {
-  const daysLeft = 30;
-  const [isSaving, setIsSaving] = useState(false);
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [isRenewModal ,setIsRenewModal] = useState(false);
+  const [isSavingImg, setIsSavingImg] = useState(false);
   const [editName, setEditName] = useState(false);
   const [editDescription, setEditDescription] = useState(false);
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
   const { fontSettings, fontUpdateSettings, fontClasses } = useFont() || {}; 
   const { theme, setTheme } = useTheme() || {};
+  const { sideBarColor, setSideBarColor } = useSideBarColor() || {};
+  const { navBarColor, setNavBarColor } = useNavBarColor() || {};
 
-  const [settings, setSettings] = useState({
-    sessionName: 'ASWSA-F766DC',
-    description: 'Learn, Grow, Succeed',
-    navbarColor: '#051F1E',
-    navbarImage: '',
-    joinCardBgImage: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=2400',
-    theme: 'dark',
-    notificationsEnabled: true,
-    fontStyle: 'default',
-  });
-  
+  const [settings, setSettings] = useState({});
+  const session = getSessionData();
+
   const updateSettings = (newSettings) => {
     setSettings(prev => ({ ...prev, ...newSettings }));
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setImageUrl(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
   const getDataFromBackend = async () => {
-    const session = getSessionData();
+   
     try{
-      const response = await api.get('session-student/session-details/',{
+      const response = await api.get('session-tutor/update-session/',{
         baseURL: API_BASE_URLS['Session_Service'],
         params: {
           session_code: session?.sessions?.session_code,
         },
       });
-      // setSettings(response.data[0])
+      setSettings(response.data)
       console.log("ASSESS :", response);
     } catch (err){
       console.error(err);
     }
   };
 
-  const handleSave = () => {
+  const saveChanges = async (field, value) => {
     setIsSaving(true);
+    console.log('CHANGE :',field, value);
     
-    setTimeout(() => {
-      setIsSaving(false);
-    }, 1000);
+    try {
+      const formData = new FormData();
+            formData.append(field, value);
+      
+      await api.patch('session-tutor/update-session/', formData, {
+        baseURL: API_BASE_URLS['Session_Service'],
+        params: { session_code: session?.sessions?.session_code,}
+      });
+      getDataFromBackend();
+    } catch (error) {
+      console.error('Error updating:', error);
+    }
+    setIsSaving(false);
+  };
+
+  const saveImage = async () => {
+    if (!imageFile) {
+      console.error("No image selected!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    
+    try {
+      setIsSavingImg(true);
+      const response = await api.patch('session-tutor/update-session/', formData, {
+        baseURL: API_BASE_URLS['Session_Service'],
+        params: { session_code: session?.sessions?.session_code },
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+  
+      console.log("Image upload successful:", response.data);
+      setSettings(response.data);
+    } catch (err) {
+      console.error("Error updating image:", err);
+    } finally {
+      setIsSavingImg(false);
+    }
   };
 
   const resetToDefaults = () => {
-    setSettings({
-      sessionName: 'ASWSA-F766DC',
-      description: 'Learn, Grow, Succeed',
-      navbarColor: '#051F1E',
-      navbarImage: '',
-      joinCardBgImage: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&q=80&w=2400',
-      theme: 'dark',
-      notificationsEnabled: true,
-      fontStyle: 'default',
-    });
+    setNavBarColor('#134E4A80');
+    setSideBarColor('#1B4D4A');
+    fontUpdateSettings('default');
+    setTheme('dark');
   };
 
   useEffect(()=>{
@@ -71,7 +116,7 @@ function Settings() {
       getDataFromBackend();
       setFetchFromBackend(false);
     }
-  })
+  }, [fetchFromBackend])
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl mt-5">
@@ -81,18 +126,21 @@ function Settings() {
         <div className="bg-[#1B4D4A] rounded-lg p-6 shadow-lg border border-[#2A5956]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
             <div>
-              <h2 className="text-xl font-semibold mb-2">Session Duration</h2>
-              {/* <p className="text-emerald-300">Premium Plan</p> */}
+              <h2 className="text-xl font-semibold mb-2">Days Left</h2>
             </div>
             <div className="text-left sm:text-right bg-[#17403D] p-4 rounded-lg">
-              <div className="text-2xl font-bold text-[#00E08E]">{settings.session_duration} </div>
+              <div className="text-2xl font-bold text-[#00E08E]">{settings?.days_left} </div>
               <div className="text-sm text-gray-300">months</div>
             </div>
           </div>
-          {/* <button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+          {settings?.days_left < 2 &&
+          <button
+             onClick={() => setIsRenewModal(true)}
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
             <CreditCard size={20} />
             Renew Subscription
-          </button> */}
+          </button>
+          }
         </div>
         
         <div className="bg-[#1B4D4A] rounded-lg p-6 shadow-lg border border-[#2A5956]">
@@ -109,19 +157,19 @@ function Settings() {
   {editName ? (
     <input
       type="text"
-      value={settings.sessionName}
-      onChange={(e) => updateSettings({ sessionName: e.target.value })}
+      value={settings?.session_name  || ''}
+      onChange={(e) => setSettings({ ...settings, session_name: e.target.value })}
       className="w-full bg-[#234E4B] rounded-lg px-4 py-2 text-white border border-[#2A5956] focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
     />
   ) : (
     <p className="w-full bg-[#234E4B] rounded-lg px-4 py-3 text-white border border-[#2A5956]">
-      A unique identifier for your session. This helps others identify and join your study sessions.
+      {settings?.session_name}
     </p>
   )}
 
   {editName &&
   <button
-    onClick={() => setEditName(!editName)}
+    onClick={() => { if (editName) saveChanges('session_name', settings.session_name); setEditName(!editName); }}
     className="bg-emerald-500 hover:bg-blue-600  text-white p-2 rounded-lg transition-colors flex items-center justify-center"
   >
     <Save />
@@ -146,18 +194,18 @@ function Settings() {
               <div className="flex items-center gap-2">
                 {editDescription ? 
               <textarea
-                value={settings.description}
-                onChange={(e) => updateSettings({ description: e.target.value })}
+                value={settings?.session_discription  || ''}
+                onChange={(e) => setSettings({ ...settings, session_discription: e.target.value })}
                 className="w-full bg-[#234E4B] rounded-lg px-4 py-3 text-white h-24 border border-[#2A5956] focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
               />
               :
               <p className="w-full bg-[#234E4B] rounded-lg px-4 py-3 text-white border border-[#2A5956]">
-                {settings.session_discription || 'no description available'}
+                {settings?.session_discription || 'no description available'}
               </p>
                 }
               {editDescription &&
                 <button
-                  onClick={() => setEditDescription(!editDescription)}
+                onClick={() => { if (editDescription) saveChanges('session_discription', settings.session_discription); setEditDescription(!editDescription); }}
                   className="bg-emerald-500 hover:bg-blue-600  text-white p-2 rounded-lg transition-colors flex items-center justify-center"
                 >
                   <Save />
@@ -194,31 +242,45 @@ function Settings() {
       </div>
       
       <div className="flex flex-col gap-6">
-        <div className="bg-[#1B4D4A] rounded-lg p-6 shadow-lg border border-[#2A5956]">
+        <div className="bg-[#1B4D4A] rounded-lg p-6 shadow-lg border border-[#b0b6b5]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Appearance Settings</h2>
           </div>
           
           <div className="space-y-4">
-            <div>
+            <div className='flex justify-between px-5'>
+              <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
                 Navbar Color
               </label>
               <div className="flex gap-2">
                 <input
                   type="color"
-                  value={settings.navbarColor}
-                  onChange={(e) => updateSettings({ navbarColor: e.target.value })}
-                  className="h-10 w-20 rounded cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={settings.navbarColor}
-                  onChange={(e) => updateSettings({ navbarColor: e.target.value })}
-                  className="flex-1 bg-[#234E4B] rounded-lg px-4 py-2 text-white border border-[#2A5956] focus:border-emerald-500 focus:outline-none"
+                  value={navBarColor  || ''}
+                  onChange={(e) => setNavBarColor({ navbarColor: e.target.value })}
+                  className="h-10 w-20 rounded cursor-pointer "
                 />
               </div>
-            </div>
+              </div>
+              <div>
+
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                  SideBar Color
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="color"
+                    value={sideBarColor  || ''}
+                    onChange={(e) =>  setSideBarColor(e.target.value)}
+                    className="h-10 w-20 rounded cursor-pointer"
+                  />
+
+              </div>
+              </div>
+              </div>
+            
+
+            
   
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -227,24 +289,81 @@ function Settings() {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  value={settings.joinCardBgImage}
-                  onChange={(e) => updateSettings({ joinCardBgImage: e.target.value })}
+                  value={imageUrl || settings.image || ''}
+                  onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="add url or choose a image..."
-                  className="flex-1 bg-[#234E4B] rounded-lg px-4 py-2 text-white border border-[#2A5956] focus:border-emerald-500 focus:outline-none"
+                  className="flex-1 text-tiny bg-[#234E4B] rounded-lg px-4 py-2 text-white border border-[#2A5956] focus:border-emerald-500 focus:outline-none"
                 />
                 <div className='flex items-center'>
                   <input
-                    type='file'
-                    id='picture'
-                    className="bg-[#17403D] hover:bg-[#123532] rounded-lg hidden s"
-                    title="Select Image"
+                    type="file"
+                    id="picture"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleFileChange}
                   />
                   <label htmlFor="picture"><Image size={20} className="text-emerald-300 cursor-pointer" /></label>
                 </div>
-                
-              </div>
             </div>
-  
+            </div>
+            <div className="bg-[#1B4D4A] rounded-lg p-6 space-y-2 shadow-lg border border-[#2A5956]">
+              <div className='flex justify-between'>
+              <button 
+                onClick={() => setShowPreview(!showPreview)}
+                className="text-sm bg-[#17403D] hover:bg-[#123532] text-emerald-300 py-1 px-3 rounded-lg"
+              >
+                {showPreview ? "Hide Preview" : "Show Preview"}
+              </button>
+              <button 
+                onClick={saveImage}
+                className="text-sm bg-[#42b3ab] hover:bg-[#123532] text-slate-800 hover:text-teal-300  py-1 px-3 rounded-lg"
+              >
+                Save Image
+              </button>
+              </div>
+            <div>
+            {showPreview && (
+  <div className="bg-[#0D2C2A] rounded-lg p-2 border border-[#2A5956]">
+    <div className="text-center text-sm text-gray-300 mb-2">Preview</div>
+    
+    <div
+      className="relative group rounded-xl border border-yellow-500 overflow-hidden h-40"
+    >
+      
+      <div
+        className="absolute  inset-0 bg-cover bg-center bg-slate-400"
+        style={{ backgroundImage: `url(${imageUrl || settings.image})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
+      
+      <div className="relative p-2 flex flex-col">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-400 text-xs font-medium">SESSION123</span>
+          </div>
+          <span className="bg-emerald-400/20 text-emerald-400 px-2 py-1 rounded-full text-xs">
+            Sample Session
+          </span>
+        </div>
+        
+        <h3 className="text-white text-sm font-bold mb-2 group-hover:text-emerald-400 transition-colors">
+          Sample Session Name
+        </h3>
+        
+        <div className="space-y-1 mt-auto">
+          <div className="flex items-center text-gray-300 text-xs">
+            <span className='mr-1 text-rose-400 font-bold'>10</span><span>Days Left</span>
+          </div>
+          <div className="flex items-center text-gray-300 text-xs">
+            <span>5 Students</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+            </div>
+              </div>
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
                 Theme
@@ -298,6 +417,11 @@ function Settings() {
         </div>
       </div>
     </div>
+    {isRenewModal &&
+      <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-30">
+         <RenewSubscription cancelModal={() => setIsRenewModal(false)} />
+      </div>
+    }
   </div>
   );
 }

@@ -372,7 +372,7 @@ export default function StudyMaterial() {
             ))}
           </div>
           </div>
-            <form action={handleSubmit} className="flex space-x-2">
+            <form onSubmit={handleSubmit} className="flex space-x-2">
             <input
               type="text"
               value={aiPrompt}

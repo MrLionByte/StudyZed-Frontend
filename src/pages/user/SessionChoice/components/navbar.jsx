@@ -25,7 +25,7 @@ export default function Navbar() {
   const [userRole, setUserRole] = useState();
   const notificationRef = useRef();
 
-  const { navBarColor } = useNavBarColor();
+  const { navBarColor } = useNavBarColor() || '#134E4A80';
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
