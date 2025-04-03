@@ -14,25 +14,21 @@ export const useApproveSessionManagement = () => {
     const [isOverlayActive, setIsOverlayActive] = useState(false);
     const [sessionPayment, setSessionsPayment] = useState([]);
 
-    useEffect(()=> {
+    async function fetchSessionsData () {
+        setLoading(true);
+        try {
+            const url = API_BASE_URLS["Session_Service"]
+            const response = await api.get(adminEndPoints.SeeSessionsToApprove, {
+                baseURL: url, 
+            });
+            setSessions(response.data);
+        } catch (e) {
+            setError('some error occurred, connect with the support');
+            setLoading(false);
+        }
+    };
 
-        async function fetchSessionsData () {
-            setLoading(true);
-            try {
-                const url = API_BASE_URLS["Session_Service"]
-                const response = await api.get(adminEndPoints.SeeSessionsToApprove, {
-                    baseURL: url, 
-                });
-                
-                setSessions(response.data);
-                console.log("RESPONSE BRUT",response.data)
-            } catch (e) {
-                setError(e);
-                setLoading(false);
-                console.error("Error :", e);
-            }
-        };
-        console.log("RESPONSE Session",sessions)
+    useEffect(()=> {
         if (fetchFromBackend){
             fetchSessionsData();
             setFetchFromBackend(false);
@@ -43,21 +39,17 @@ export const useApproveSessionManagement = () => {
         e.preventDefault();
         e.target.disabled = true;
         try {
-           
-            const Pkey = sessionPayment.session_key;
-            
+            const Pkey = sessionPayment.session_key;   
             const url = API_BASE_URLS["Session_Service"];
             const response = await api.patch(adminEndPoints.GiveApprovelForSession+`${Pkey}/`,
               Pkey,{
                 baseURL: url,
             });
-            console.log("SEE PAYMENT :", response);
             toast.success(response.data.message)
             setIsModalOpen(false)
             setFetchFromBackend(true)
             
         }catch (e) {
-            console.error("Error :", e);
             alert("Failed to block user. Please try again.");
         }finally {
             e.target.disabled = false;
@@ -73,11 +65,11 @@ export const useApproveSessionManagement = () => {
             baseURL: url,
             params: session_data,
           });
-          response.data["session_key"] = session_id
-          setSessionsPayment(response.data);
+          
+          response.data[0]["session_key"] = session_id
+          setSessionsPayment(response.data[0]);
           setIsModalOpen(true);
         } catch (e) {
-          console.error("Error fetching session details:", e);
           alert("Failed to fetch session details. Please try again.");
         }
       };

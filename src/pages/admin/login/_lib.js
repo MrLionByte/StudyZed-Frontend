@@ -60,7 +60,7 @@ export const adminLoginLogic = () => {
                 navigate('/admin/dashboard/');
                 
             } else {
-                
+                return;
             }
             
         }

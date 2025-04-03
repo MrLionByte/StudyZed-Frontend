@@ -71,7 +71,7 @@ export default function StudentMessaging() {
       const tutorData = JSON.parse(localStorage.getItem('tutor_id'));
       console.log(tutor.data.tutor_code);
       const ws = new WebSocket(
-        `ws://localhost:8006/ws/chat/${tutor.data.tutor_code}/?token=${user_data.accessToken}`,
+        `ws://localhost:8080/ws/chat/${tutor.data.tutor_code}/?token=${user_data.accessToken}`,
       );
 
       ws.onopen = () => {

@@ -12,11 +12,8 @@ import { useState } from 'react';
 import { Info } from 'lucide-react';
 import { adminEndPoints } from './../../../../../../api/endpoints/adminEndPoint';
 
-export default function SessionPaymentDetails({
-  SessionData,
-  cancelModal,
-  handleSessionApproval,
-}) {
+export default function SessionPaymentDetails({SessionData,cancelModal,handleSessionApproval,}) 
+{
   return (
     <>
       <Card className="w-[450px]">
@@ -26,28 +23,28 @@ export default function SessionPaymentDetails({
         <CardContent>
           <div className="space-y-2">
             <div>
-              <strong>Is Active:</strong> {SessionData.is_active ? 'Yes' : 'No'}
+              <strong>Is Active:</strong> {SessionData?.is_active ? 'Yes' : 'No'}
             </div>
             <div>
-              <strong>Session Code:</strong> {SessionData.session_code}
+              <strong>Session Code:</strong> {SessionData?.session_code}
             </div>
             <div>
-              <strong>Tutor Code:</strong> {SessionData.tutor_code}
+              <strong>Tutor Code:</strong> {SessionData?.tutor_code}
             </div>
             <div>
               <strong>Subscription Type:</strong>{' '}
-              {SessionData.subscription_type} month
+              {SessionData?.subscription_type} month
             </div>
             <div>
-              <strong>Created At:</strong> {SessionData.created_at}
+              <strong>Created At:</strong> {SessionData?.created_at}
             </div>
             <div>
-              <strong>Expiry Time:</strong> {SessionData.expiry_time}
+              <strong>Expiry Time:</strong> {SessionData?.expiry_time}
             </div>
             <div>
               <strong>Payment Details:</strong>
               <ul className="list-disc pl-5">
-                {SessionData.payment_set.map((payment, index) => (
+                {SessionData?.payment_set.map((payment, index) => (
                   <li key={index}>
                     <div className="text-green-500">
                       <strong>Amount:</strong> {payment.amount}

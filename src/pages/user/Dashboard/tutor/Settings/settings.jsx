@@ -7,6 +7,13 @@ import { useNavBarColor } from '../../../../../context/NavbarColorContext';
 import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
 import { getSessionData } from '../../components/currentSession';
 import RenewSubscription from './components/renewSubscription.jsx';
+import { 
+  CustomToastContainer,
+  notifySuccess,
+  notifyError,
+  notifyInfo,
+  notifyWarning
+} from './components/toast-config.jsx';
 
 function Settings() {
 
@@ -40,6 +47,7 @@ function Settings() {
       const reader = new FileReader();
       reader.onloadend = () => setImageUrl(reader.result);
       reader.readAsDataURL(file);
+      notifyInfo("Image selected. Click 'Save Image' to apply changes.");
     }
   };
 
@@ -53,15 +61,13 @@ function Settings() {
         },
       });
       setSettings(response.data)
-      console.log("ASSESS :", response);
     } catch (err){
-      console.error(err);
+      notifyError("Failed to load settings. Please try again.");
     }
   };
 
   const saveChanges = async (field, value) => {
     setIsSaving(true);
-    console.log('CHANGE :',field, value);
     
     try {
       const formData = new FormData();
@@ -73,14 +79,14 @@ function Settings() {
       });
       getDataFromBackend();
     } catch (error) {
-      console.error('Error updating:', error);
+      notifyError(`Failed to update ${field.replace('_', ' ')}`);
     }
     setIsSaving(false);
   };
 
   const saveImage = async () => {
     if (!imageFile) {
-      console.error("No image selected!");
+      notifyWarning("No image selected. Please choose an image first.");
       return;
     }
 
@@ -95,10 +101,10 @@ function Settings() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
   
-      console.log("Image upload successful:", response.data);
+      notifySuccess("Session image updated successfully");
       setSettings(response.data);
     } catch (err) {
-      console.error("Error updating image:", err);
+      notifyError("Failed to update session image");
     } finally {
       setIsSavingImg(false);
     }
@@ -422,6 +428,8 @@ function Settings() {
          <RenewSubscription cancelModal={() => setIsRenewModal(false)} />
       </div>
     }
+
+<CustomToastContainer />
   </div>
   );
 }

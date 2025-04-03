@@ -79,14 +79,14 @@ export default function Navbar() {
             {userRole === 'STUDENT' ? (
               <Link
                 to="/student/student-wallet/"
-                className="hover:bg-teal-800 transition-colors"
+                className="text-emerald-400 hover:bg-teal-800 transition-colors p-2 rounded-full"
               >
                 <Wallet />
               </Link>
             ) : (
               <Link
                 to="/tutor/tutor-wallet/"
-                className="hover:bg-teal-800 rounded-full p-2 text-emerald-400"
+                className="text-emerald-400 hover:bg-teal-800 rounded-full p-2"
               >
                 <Wallet />
               </Link>
@@ -95,7 +95,7 @@ export default function Navbar() {
             <Notification ref={notificationRef} />
 
             <button
-              className="p-2 hover:bg-teal-800 rounded-full relative"
+              className="p-2 text-emerald-400 hover:bg-teal-800 rounded-full relative"
               onClick={() => setShowAccountMenu(!showAccountMenu)}
             >
               <UserCircle className="h-6 w-6 text-emerald-400" />

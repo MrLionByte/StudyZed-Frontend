@@ -36,7 +36,7 @@ const SessionApproval = memo(() => {
               <div
                 key={session.id}
                 className={`aspect-video rounded-xl flex flex-col items-center p-4 ${
-                  session.is_active ? 'bg-blue-900' : 'bg-muted/50'
+                  session?.is_active ? 'bg-blue-900' : 'bg-muted/50'
                 }`}
               >
                 <p className="font-bold">{session.session_code}</p>
@@ -80,7 +80,7 @@ const SessionApproval = memo(() => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <SessionPaymentDetails
-            SessionData={sessionPayment[0]}
+            SessionData={sessionPayment}
             cancelModal={closeModal}
             handleSessionApproval={handleApproveSession}
           />

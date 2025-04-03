@@ -1,251 +1,173 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight, GraduationCap, Users } from 'lucide-react';
-import { CircleUserRound } from 'lucide-react';
-import './style.css';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../../../redux/slice';
-import {
-  clearSavedAuthData,
-  getSavedAuthData,
-} from '../../../../utils/Localstorage';
-import api, { API_BASE_URLS } from '../../../../api/axios_api_call';
-import { studentEndPoints } from '../../../../api/endpoints/userEndPoints';
-import { toast, ToastContainer, Bounce } from 'react-toastify';
-import Navbar from '../components/navbar.jsx';
+import { ArrowRight, GraduationCap, Users, PlusCircleIcon } from 'lucide-react';
+import { ToastContainer, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Navbar from '../components/navbar';
+import SessionCard from './components/sessionCard';
+import JoinSessionModal from './components/joinSession';
+import { useStudentSessions } from './_lib';
 
-const SessionPage = () => {
-  const [isJoinSession, setIsJoinSession] = useState(false);
-  const [sessionCode, setSessionCode] = useState('');
-  const [fetchFromBackend, setFetchFromBackend] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [studentCode, setStudentCode] = useState('');
-  const [error, setError] = useState(false);
-  const [sessions, setSessions] = useState([]);
+const StudentSessionPage = () => {
+  const {
+    sessions,
+    loading,
+    isJoinModalOpen,
+    activeTab,
+    currentPage,
+    totalPages,
+    sessionCode,
+    openJoinModal,
+    closeJoinModal,
+    handleEnterSession,
+    handleTabChange,
+    handlePageChange,
+    setSessionCode,
+    submitSessionRequest
+  } = useStudentSessions();
 
-  const [tutorData, setTutorData] = useState({});
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const handleJoinSession = () => {
-    setIsJoinSession(true); //
-  };
-
-  const SubmitSessionRequest = async (e) => {
-    e.preventDefault();
-    try {
-      const enter_data = {
-        student_code: studentCode,
-        session_code: sessionCode,
-      };
-
-      console.log('Payload being sent:', enter_data);
-
-      const url = API_BASE_URLS['Session_Service'];
-      const response = await api.post(
-        studentEndPoints.ChooseSession,
-        enter_data,
-        {
-          baseURL: url,
-        },
-      );
-      if (response.status === 201) {
-        toast.success('Successfully Joined the session');
-        setIsJoinSession(false);
-      }
-      console.log('RESPONSE JOIN :', response);
-    } catch (error) {
-      if (error.response.data.error === 'exsist') {
-        toast.warning('You are already part of the session');
-      } else if (error.response.data.error === 'not_approved') {
-        toast.warning('This ession is yet to be approved');
-      } else {
-        console.error(
-          'Error while submitting session request:',
-          error.response || error,
-        );
-        toast.error('The given session code doesnot exsist. Give a valid one');
-      }
-    }
-
-    setFetchFromBackend(true);
-  };
-
-  const cancelSessionJoin = () => {
-    setIsJoinSession(false);
-  };
-
-  const handleEnterSession = (e, tutor_code, session_code, is_approved) => {
-    console.log(tutor_code, session_code);
-
-    e.preventDefault();
-    const sessionData = {
-      tutor_code: tutor_code,
-      session_code: session_code,
-    };
-    if (tutor_code && is_approved) {
-      navigate('/student/enter-session/', { state: { sessions: sessionData } });
-    } else if (!is_approved) {
-      toast.warning('Please wait, your tutor need to approve this.');
-    }
-  };
-
-  async function fetchSessionsData() {
-    const student_data = getSavedAuthData();
-
-    if (student_data?.user_code) {
-      setStudentCode(student_data.user_code);
-    } else {
-      clearSavedAuthData();
-      return;
-    }
-
-    setLoading(true);
-
-    console.log(student_data?.user_code);
-    const qury_data = { student_code: student_data?.user_code };
-
-    if (!qury_data) {
-      clearSavedAuthData();
-      navigate('/login/');
-    }
-
-    try {
-      const url = API_BASE_URLS['Session_Service'];
-      const response = await api.get(studentEndPoints.AllSessions, {
-        baseURL: url,
-        params: qury_data,
-      });
-
-      setSessions(response.data);
-      console.log('RESPONSE BRUT', response?.data);
-      console.log('RESPONSE BRUT', response);
-    } catch (e) {
-      setError(e);
-      setLoading(false);
-      console.error('Error :', e);
-    }
-  }
-
-  useEffect(() => {
-    if (fetchFromBackend) {
-      fetchSessionsData();
-      setFetchFromBackend(false);
-    }
-  }, [fetchFromBackend]);
-
-  const bg_image =
-    'https://img.freepik.com/free-photo/back-school-witch-school-supplies_23-2148151036.jpg?t=st=1738668597~exp=1738672197~hmac=103229c509cd3cf9de122633137ff9fd612fa133f5bee4e8335c820b73e856ca&w=900';
+  const EmptyState = () => (
+    <div className="text-center py-16 bg-slate-800/50 rounded-xl">
+      <h3 className="text-2xl font-semibold text-gray-300 mb-3">No {activeTab} sessions found</h3>
+      <p className="text-gray-400 mb-6">
+        {activeTab === 'active' 
+          ? 'You have no active sessions at the moment.' 
+          : 'You have no pending session requests.'}
+      </p>
+      <button 
+        className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-all duration-300 flex items-center gap-2 mx-auto"
+        onClick={openJoinModal}
+      >
+        <PlusCircleIcon size={20} />
+        <span>JOIN A SESSION</span>
+      </button>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen text-white bg-slate-900">
       <Navbar />
+      
+      {/* Header Section */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+        <div className="flex bg-slate-800 rounded-lg p-1 mt-10 md:mb-0 max-w-xs relative z-10">
+          <button
+            className={`flex py-2 px-4 cursor-pointer rounded-md text-center transition-all ${
+              activeTab === 'active'
+                ? 'bg-emerald-500 text-white'
+                : 'text-gray-400 hover:text-white'
+            }`}
+            onClick={() => handleTabChange('active')}
+            style={{ zIndex: 20 }} // Ensure this is set if needed
+          >
+            Active
+          </button>
+          <button
+            className={`flex-1 py-2 px-4 cursor-pointer rounded-md text-center transition-all ${
+              activeTab === 'pending' 
+                ? 'bg-emerald-500 text-white' 
+                : 'text-gray-400 hover:text-white'
+            }`}
+            onClick={() => handleTabChange('pending')}
+            style={{ zIndex: 20 }} // Ensure this is set if needed
+          >
+            Pending
+          </button>
+        </div>
 
-      {!isJoinSession ? (
-        <>
-          <div className="flex flex-col items-center align-middle mt-4 ">
-            <button className="hidden md:block p-3 border-2 rounded-2xl hover:bg-emerald-400 hover:text-black hover:border-black font-sans" 
-              onClick={handleJoinSession}>
-              JOIN SESSION
+          <h1 className="text-3xl font-bold text-emerald-400 mb-4 md:mb-0">My Learning Sessions</h1>
+          <button 
+            className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg"
+            onClick={openJoinModal}
+          >
+            <PlusCircleIcon size={20} />
+            <span className="hidden md:inline">JOIN SESSION</span>
+            <span className="md:hidden">JOIN</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-slate-900/90 z-50">
+          <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      {/* Session Cards Grid */}
+      <div className="container mx-auto px-4 pb-12">
+        {sessions?.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sessions.map((session) => (
+              <SessionCard 
+                key={session.session || session.id}
+                session={session}
+                onEnterSession={handleEnterSession}
+                isPending={activeTab === 'pending'}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyState />
+        )}
+        
+        {/* Pagination Controls */}
+        {sessions?.length > 0 && totalPages > 1 && (
+          <div className="flex justify-center items-center mt-28 gap-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`p-2 rounded-md ${
+                currentPage === 1 
+                  ? 'text-gray-500 cursor-not-allowed' 
+                  : 'text-white hover:bg-slate-700'
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m15 18-6-6 6-6"/>
+              </svg>
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`w-10 h-10 rounded-md flex items-center justify-center ${
+                  currentPage === page
+                    ? 'bg-emerald-500 text-white'
+                    : 'text-gray-300 hover:bg-slate-700'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+            
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`p-2 rounded-md ${
+                currentPage === totalPages
+                  ? 'text-gray-500 cursor-not-allowed'
+                  : 'text-white hover:bg-slate-700'
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m9 18 6-6-6-6"/>
+              </svg>
             </button>
           </div>
+        )}
+      </div>
 
-          <div className="grid md:grid-cols-4 gap-4 p-4">
-            {sessions?.length > 0 ? (
-              sessions.map((session, index) => (
-                <div
-                  key={session.id || index}
-                  className="relative group rounded-xl border border-x-yellow-500
-        overflow-hidden h-[220px] hover:transform hover:scale-105 
-        transition-all duration-300"
-                >
-                  <div
-                    className="absolute inset-0 bg-cover bg-center bg-slate-400"
-                    style={{
-                      backgroundImage: `url(${session.image || bg_image})`,
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
-
-                  <div className="relative p-3 flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-emerald-400 text-sm font-medium">
-                          {session.session_code}
-                        </span>
-                      </div>
-                    </div>
-
-                    <h3 className="text-white text-xl font-bold mb-4 group-hover:text-emerald-400 transition-colors">
-                      {session.session_name}
-                    </h3>
-
-                    <div className="space-y-3 mt-auto">
-                      <div className="flex items-center text-gray-300">
-                        <GraduationCap className="w-5 h-5 mr-2 text-emerald-400" />
-                        <span>{session.instructor || session.tutor_code}</span>
-                      </div>
-                      <div className="flex items-center text-gray-300">
-                        <Users className="w-5 h-5 mr-2 text-emerald-400" />
-                        {/* <span>{session.students} Students</span> */}
-                      </div>
-
-                      <button
-                        onClick={(e) =>
-                          handleEnterSession(
-                            e,
-                            session.tutor_code,
-                            session.session,
-                            session.is_allowded,
-                          )
-                        }
-                        className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
-                      >
-                        Enter Session
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-white text-lg">No sessions available</p>
-            )}
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="flex justify-center items-center min-h-[80vh]">
-            <div className="border border-teal-500 p-6 rounded-md bg-black/80 shadow-md flex">
-              <form action="" className="flex justify-center ">
-                <label htmlFor="session-d" className="font-bold text-xl m-2">
-                  Enter Session ID :
-                </label>
-                <input
-                  onChange={(e) => setSessionCode(e.target.value)}
-                  maxLength={15}
-                  type="text"
-                  id="session-id"
-                  className="text-green-900 rounded p-2 ml-3"
-                  placeholder="XXXXX-XXXX"
-                />
-                <div className="icon-container">
-                  <ArrowRight
-                    className="size-8 m-1 ml-3 cursor-pointer"
-                    onClick={SubmitSessionRequest}
-                  />
-                  <div className="tooltip">Submit</div>
-                </div>
-                <p
-                  onClick={cancelSessionJoin}
-                  className="p-1 bg-red-500 rounded-xl m-1"
-                >
-                  Cancel
-                </p>
-              </form>
-            </div>
-          </div>
-        </>
+      {/* Join Session Modal */}
+      {isJoinModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40 backdrop-blur-sm">
+          <JoinSessionModal 
+            sessionCode={sessionCode}
+            setSessionCode={setSessionCode}
+            onSubmit={submitSessionRequest}
+            onCancel={closeJoinModal}
+          />
+        </div>
       )}
 
       <ToastContainer
@@ -253,12 +175,12 @@ const SessionPage = () => {
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick={false}
+        closeOnClick={true}
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme="dark"
         transition={Bounce}
         className="toast-center"
       />
@@ -266,4 +188,4 @@ const SessionPage = () => {
   );
 };
 
-export default SessionPage;
+export default StudentSessionPage;

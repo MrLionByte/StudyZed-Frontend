@@ -17,7 +17,7 @@ import { Info, Wallet, X } from 'lucide-react';
 import {
   userCommonEndPoints,
   TutorEndPoints,
-} from './../../../../../api/endpoints/userEndPoints';
+} from '../../../../../api/endpoints/userEndPoints';
 
 import { getSavedAuthData } from '../../../../../utils/Localstorage';
 import { toast, ToastContainer } from 'react-toastify';

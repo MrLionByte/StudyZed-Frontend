@@ -132,9 +132,9 @@ const AppNotification = forwardRef((_, ref) => {
 
   return (
     <>
-      <Badge count={unreadCount} offset={[-5, 5]}>
+      <Badge count={unreadCount} offset={[-5, 5]} >
         <Button
-          className="p-2 hover:bg-transparent bg-transparent border-0 rounded-full relative"
+          className="p-2 bg-transparent border-0 rounded-full relative"
           onClick={() => setOpen(true)}
         >
           <Bell className="text-teal-400 cursor-pointer" />
