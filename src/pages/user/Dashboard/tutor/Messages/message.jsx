@@ -58,7 +58,7 @@ export default function Messaging() {
 
     const connectWebSocket = () => {
       const ws = new WebSocket(
-        `ws://localhost:8080/ws/chat/${selectedUser.student_code}/?token=${user_data.accessToken}`,
+        `${import.meta.env.VITE_CHAT_URL}/ws/chat/${selectedUser.student_code}/?token=${user_data.accessToken}`,
       );
 
       ws.onopen = () => {
