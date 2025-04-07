@@ -14,7 +14,7 @@ const firebaseConfig = {
 // Initialize Firebase first
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
-const vapidKey = import.meta.env.VITE_VAPID_KEY;
+const vapidKey = "BLu8ur7rWFdv1DCqieJMJmx2KBVL_iqBAtBWNc1MbhoYFJ3cMrXYgbsZADcVFOzGqecT8_EQjatZBOriPOOHhfI";
 
 // Register service worker AFTER initializing Firebase
 // Only register if it's a browser environment
