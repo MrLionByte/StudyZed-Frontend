@@ -1,5 +1,5 @@
-import {initializeApp} from 'firebase/app';
-import {getMessaging, getToken, onMessage} from 'firebase/messaging';
+import { initializeApp } from 'firebase/app';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
@@ -9,18 +9,24 @@ const firebaseConfig = {
     messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
     appId: import.meta.env.VITE_APP_ID,
     measurementId: import.meta.env.VITE_MEASUREMENT_ID
-  };
+};
 
-navigator.serviceWorker
-  .register("/firebase-messaging-sw.js")
-  .then((registration) => {
-    console.log("Service Worker registered:", registration);
-  })
-  .catch((err) => {
-    console.error("Service Worker registration failed:", err);
-  });
-
+// Initialize Firebase first
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
-const vapidKey = import.meta.env.VITE_VAPID_KEY
-export { messaging, getToken, onMessage,vapidKey };
+const vapidKey = import.meta.env.VITE_VAPID_KEY;
+
+// Register service worker AFTER initializing Firebase
+// Only register if it's a browser environment
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then((registration) => {
+            console.log("Service Worker registered:", registration);
+        })
+        .catch((err) => {
+            console.error("Service Worker registration failed:", err);
+        });
+}
+
+export { messaging, getToken, onMessage, vapidKey };
