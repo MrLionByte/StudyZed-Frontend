@@ -35,7 +35,7 @@ export default function TutorStudentlogin({ passwordForgot }) {
     switch (authStatus) {
       case 'user-notexsist':
       case 'validation-failed':
-        return { email: 'This email is not registered.' };
+        return { email: 'This email or username is not registered.' };
       case 'password-failed':
         return {
           password:
@@ -222,7 +222,7 @@ export default function TutorStudentlogin({ passwordForgot }) {
             />
 
             {errorMessages.email && (
-              <p className="text-red-600 font-medium text-center bg-red-200 bg-opacity-25">
+              <p className="text-red-600 font-medium text-center bg-opacity-25">
                 {errorMessages.email}
               </p>
             )}
@@ -263,7 +263,7 @@ export default function TutorStudentlogin({ passwordForgot }) {
               </button>
             </div>
             {errorMessages.password && (
-              <p className="text-red-600 font-medium text-center text-sm bg-red-200 bg-opacity-25">
+              <p className="text-red-600 font-medium text-center text-sm bg-opacity-25">
                 {errorMessages.password}
               </p>
             )}

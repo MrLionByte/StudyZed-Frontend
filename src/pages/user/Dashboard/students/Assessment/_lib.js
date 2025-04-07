@@ -56,7 +56,6 @@ export const useAssessments = () => {
       setAttemptedAssessments(response.data)
       
       // setAssessments((prev) => [response.data, ...prev]);
-      toast.success("Assessment created successfully");
     } catch (err) {
       setError("Failed to create assessment");
       toast.error("Error creating assessment");
