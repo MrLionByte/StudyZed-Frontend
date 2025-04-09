@@ -8,6 +8,8 @@ import { getSessionData } from '../../components/currentSession';
 import { getStudentByCode } from '../../components/studentsInSession';
 import TaskSubmittedModal from './components/showTasks.jsx';
 import { Textarea } from '@/components/ui/textarea';
+import LogoSvg from '../../../../../assets/test.svg';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function TutorTask() {
   const [tasks, setTasks] = useState([]);
@@ -20,6 +22,8 @@ export default function TutorTask() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedSubmittedTask, setSelectedSubmittedTask] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const studentDetails = getStudentByCode();
 
   const today = new Date();
@@ -39,8 +43,6 @@ export default function TutorTask() {
       ...taskData,
       session: session_data?.sessions,
     };
-    console.log(newTask);
-    console.log(taskData);
 
     try {
       const url = API_BASE_URLS['Session_Service'];
@@ -48,10 +50,10 @@ export default function TutorTask() {
       const response = await api.post(TutorEndPoints.CreateNewTask, newTask, {
         baseURL: url,
       });
-      console.log(response);
+      toast.success("Successfully created new task")
       setTasks([...tasks, response.data]);
     } catch (error) {
-      console.log(error);
+      toast.error("Error occurred while submitting, please try again after a refresh")
     }
 
     setSelectedDate(null);
@@ -60,22 +62,11 @@ export default function TutorTask() {
   const handleTaskClick = (task, x, y) => {
     setSelectedTask(task);
     setSubmittedStudents(task.attended);
-    console.log('task', task);
-    console.log('task x :', x);
-    console.log('task y :', y);
-
     setSelectedDate(null);
   };
 
-  const toggleTaskCompletion = (taskId) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task,
-      ),
-    );
-  };
-
   const GetAllTasks = async () => {
+    setLoading(true);
     const session_data = getSessionData();
     try {
       const url = API_BASE_URLS['Session_Service'];
@@ -83,13 +74,13 @@ export default function TutorTask() {
         baseURL: url,
         params: {
           session_code: session_data.sessions.session_code,
-          // month: '',
         },
       });
-      console.log(response);
       setTasks(response.data);
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to fetch data,Something happened, refresh the page")
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -98,7 +89,7 @@ export default function TutorTask() {
       GetAllTasks();
       setFetchFromBackend(false);
     }
-  }, []);
+  }, [fetchFromBackend]);
 
   const handleSubmittedUsers = (e, student) => {
     e.preventDefault();
@@ -130,7 +121,6 @@ export default function TutorTask() {
     const defaultTime = `${datePortion}T${'12:00'}`;
     const updatedDateTime = `${datePortion}T${value}`;
 
-    console.log(selectedTask);
     if (updatedDateTime < defaultTime) {
       setSelectedTask({
         ...selectedTask,
@@ -158,11 +148,11 @@ export default function TutorTask() {
           baseURL: url,
         },
       );
-      console.log('TASk EDIT :', response);
       setBeforeEditTask(selectedTask);
       setIsEdit(false);
+      toast.success("Edited successfully")
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to submit, try again after refresh")
     }
   };
 
@@ -347,6 +337,28 @@ export default function TutorTask() {
           handleClose={() => setIsSubmitted(false)}
         />
       )}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900/75 z-50">
+          <img
+            src={LogoSvg}
+            alt="Loading"
+            className="w-64 h-64 animate-pulse"
+          />
+        </div>
+      )}
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={true}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        className="toast-center"
+      />
     </div>
   );
 }

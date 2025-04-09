@@ -1,181 +1,23 @@
-import { useEffect, useState, useRef } from 'react';
-import { Send, Paperclip, MoreVertical, Phone, VideoIcon } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { getSavedAuthData } from '../../../../../utils/Localstorage';
-import { getSessionData } from '../../components/currentSession';
-import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
-import { studentEndPoints } from '../../../../../api/endpoints/userEndPoints';
 import ChatSkeleton from '../../components/chatSkelton';
+import { useStudentMessaging } from './_lib';
 
 export default function StudentMessaging() {
-  const [socket, setSocket] = useState(null);
-  const [connected, setConnected] = useState(false);
-  const [error, setError] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [student, setStudent] = useState();
-  const [tutor, setTutor] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [fetchFromBackend, setFetchFromBackend] = useState(true);
-  const retryCountRef = useRef(0);
-  const maxRetries = 5;
-  const maxDelay = 16000;
-
-  const lastMessageRef = useRef(null);
-
-  async function fetchStudentsData() {
-    const session_data = getSessionData();
-    try {
-      console.log('session_code :', session_data);
-
-      const query_data = { tutor_code: session_data?.sessions?.tutor_code };
-      console.log('QUERY :', query_data);
-
-      const response = await api.get(studentEndPoints.TutorSessionDetails, {
-        params: query_data,
-      });
-      // setStudents(response.data);
-      console.log('RESPONSE BRUT', response.data);
-      localStorage.setItem('tutor_id', JSON.stringify(response.data.data));
-
-      setTutor(response.data);
-    } catch (e) {
-      setError(e);
-      console.log('Error :', e);
-    }
-  }
-
-  useEffect(() => {
-    if (fetchFromBackend) {
-      setLoading(true);
-      setTimeout(() => {
-        fetchStudentsData().then(() => setFetchFromBackend(false));
-        setLoading(false);
-      }, 2000);
-    }
-  }, [fetchFromBackend]);
-
-  useEffect(() => {
-    let retryCount = 0;
-    if (!tutor) return;
-    const user_data = getSavedAuthData();
-    const session_data = getSessionData();
-    setStudent(user_data);
-
-    const connectWebSocket = () => {
-      console.log('TUTOR ON CHAT :', tutor);
-      console.log('TUTOR ON CHAT :', session_data);
-      const tutorData = JSON.parse(localStorage.getItem('tutor_id'));
-      console.log(tutor.data.tutor_code);
-      const ws = new WebSocket(
-        `${import.meta.env.VITE_CHAT_URL}/ws/chat/${tutor.data.tutor_code}/?token=${user_data.accessToken}`,
-      );
-
-      ws.onopen = () => {
-        console.log('Connected to WebSocket');
-        setConnected(true);
-        setError(null);
-        retryCount = 0;
-      };
-
-      ws.onmessage = (event) => {
-        console.log('Received WebSocket message:', event.data);
-
-        const data = JSON.parse(event.data);
-
-        if (!data) {
-          console.log('Invalid message received:', data);
-          return;
-        }
-        if (data.type === 'chat_history' && Array.isArray(data.messages)) {
-          console.log('Received chat history:', data.messages);
-          setMessages(data.messages);
-          return;
-        }
-
-        if (data.type === 'chat_message' && data.message) {
-          console.log('Received chat message:', data);
-          setMessages((prev) => {
-            const exists = prev.some((msg) => msg.timestamp === data.timestamp);
-            return exists ? prev : [...prev, data];
-          });
-          return;
-        }
-
-        console.log('Unhandled message type:', data);
-      };
-
-      ws.onclose = (event) => {
-        console.log('WebSocket closed:', event.code, event.reason);
-        setConnected(false);
-
-        if (event.code !== 1000 && retryCount < maxRetries) {
-          retryCount++;
-          console.log(
-            `Attempting to reconnect... (${retryCount}/${maxRetries})`,
-          );
-          setTimeout(connectWebSocket, 3000);
-        }
-      };
-
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        setError('Failed to connect to chat server');
-        setConnected(false);
-      };
-
-      setSocket(ws);
-      return ws;
-    };
-
-    const ws = connectWebSocket();
-
-    return () => {
-      if (ws) {
-        ws.close();
-      }
-    };
-  }, [tutor]);
-
-  const sendMessage = (e) => {
-    e.preventDefault();
-    if (!socket || !input.trim() || !connected) return;
-
-    try {
-      console.log('FIX SEND :', student, tutor);
-      const messageData = {
-        type: 'chat_message',
-        message: input.trim(),
-        sender: student.user_code,
-        chat_id: tutor.data.tutor_code,
-      };
-
-      // setMessages((prev) => [...prev, messageData]);
-
-      socket.send(JSON.stringify(messageData));
-      console.log('FIX SEND :', messageData);
-      setInput('');
-    } catch (error) {
-      console.error('Error sending message:', error);
-      setError('Failed to send message');
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage(e);
-    }
-  };
-
-  useEffect(() => {
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
+  const {
+    connected,
+    error,
+    messages,
+    input,
+    student,
+    loading,
+    lastMessageRef,
+    setInput,
+    sendMessage,
+    handleKeyPress,
+  } = useStudentMessaging();
 
   return (
     <div className="flex w-full justify-center mt-5 items-center bg-transparent ">

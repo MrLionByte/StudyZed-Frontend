@@ -31,7 +31,7 @@ const TutorSessionPage = () => {
       
       {/* Header Section */}
       <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row items-center justify-between mb-8 items-center">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8">
         <div className="flex bg-slate-800 rounded-lg p-1 mb-6 max-w-xs">
           <button
             className={`flex-1 py-2 px-4 rounded-md text-center transition-all ${

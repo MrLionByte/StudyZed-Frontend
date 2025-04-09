@@ -6,7 +6,6 @@ import {
   MessageSquare,
   Users,
   TrendingUp,
-  UserCircle,
   School,
   Menu,
   X,
@@ -23,12 +22,6 @@ import StudyMaterial from './students/StudyMaterial/studyMaterial.jsx';
 import BatchMembers from './students/BatchMembers/batchMembers.jsx';
 import MyProgress from './students/MyProgress/myProgress.jsx';
 import Settings from './students/Settings/settings.jsx';
-import {
-  clearSavedAuthData,
-  getSavedAuthData,
-} from '../../../utils/Localstorage';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../../redux/slice';
 import { saveSessionData, getSessionData } from './components/currentSession';
 import { saveStudentsDataToSession } from './components/studentsInSession.js';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -36,7 +29,6 @@ import api, { API_BASE_URLS } from '../../../api/axios_api_call.js';
 import { useFont } from '../../../context/FontContext.jsx';
 import { useTheme } from '../../../context/ThemeContext.jsx';
 import { useSideBarColor } from '../../../context/SideBarColorContext.jsx';
-import { useNavBarColor } from '../../../context/NavbarColorContext.jsx';
 
 const menuItems = [
   {
@@ -102,10 +94,7 @@ export default function Dashboard() {
   const { theme } = useTheme();
   const { sideBarColor } = useSideBarColor();
 
-
-  const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
 
   const getAllStudentsInSession = async () => {
     try {
@@ -119,16 +108,14 @@ export default function Dashboard() {
             location.state.sessions.session_code,
         },
       });
-      console.log(response);
       const studentCodes = response.data;
       const studentDetails = await api.post(
         'class-app/all-batch-mates-details/',
         studentCodes,
       );
-      console.log(studentDetails.data);
       saveStudentsDataToSession(studentDetails.data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -155,16 +142,6 @@ export default function Dashboard() {
       setFetchFromBackend(false);
     }
   }, [fetchFromBackend]);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    clearSavedAuthData();
-    navigate('/login/');
-  };
-
-  const handleAccounts = () => {
-    navigate('/student/profile/');
-  };
   
   return (
     <div className={`h-screen flex flex-col ${theme === 'light' ? 'bg-[#2f7062]' : 'bg-[#102020] text-white'} ${fontClasses[fontSettings.fontStyle] || 'font-sans'}`}>

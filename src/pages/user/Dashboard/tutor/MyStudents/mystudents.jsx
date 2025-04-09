@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Bounce, toast, ToastContainer } from 'react-toastify';
 import { TutorEndPoints } from '../../../../../api/endpoints/userEndPoints';
 import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
-import { LucideSquareArrowRight } from 'lucide-react';
 import { getSessionData } from '../../components/currentSession';
 import { getStudentByCode } from '../../components/studentsInSession';
+import LogoSvg from '../../../../../assets/test.svg';
 
 export default function StudentsInSession() {
   const [students, setStudents] = useState([]);
@@ -58,8 +58,9 @@ export default function StudentsInSession() {
       console.log('RESPONSE BRUT', response.data);
     } catch (e) {
       setError(e);
-      setLoading(false);
       console.error('Error :', e);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -191,6 +192,15 @@ export default function StudentsInSession() {
           <p>No students found.</p>
         )}
       </div>
+            {loading && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-900/75 z-50">
+                <img
+                  src={LogoSvg}
+                  alt="Loading"
+                  className="w-64 h-64 animate-pulse"
+                />
+              </div>
+            )}
     </div>
   );
 }

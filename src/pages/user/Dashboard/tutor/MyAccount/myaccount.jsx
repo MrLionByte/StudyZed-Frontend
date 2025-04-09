@@ -87,7 +87,6 @@ function MyAccount() {
             </div>
           </div>
 
-          {/* Content Area */}
           <div className="w-2/3 p-6">
             {activeTab === 'profile' && (
               <div>

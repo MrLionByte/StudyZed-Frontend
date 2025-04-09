@@ -15,6 +15,12 @@ export default function AdminHome() {
     { path: '/admin/tutor-management', breadcrumb: 'Tutor Management' },
     { path: '/admin/student-management', breadcrumb: 'Student Management' },
     { path: '/admin/tutor-session', breadcrumb: 'Tutor Session' },
+    { path: '/admin/session-approval/', breadcrumb: 'Session Approval' },
+    { path: '/admin/active-session/', breadcrumb: 'Active Session' },
+    { path: '/admin/price-setter/', breadcrumb: 'Price' },
+    { path: '/admin/assessment-task-growth-data/', breadcrumb: 'Assessment Task Growth' },
+    { path: '/admin/video-meet-data/', breadcrumb: 'Video Status' },
+    { path: '/admin/company-revenue/', breadcrumb: 'Revenue' },
   ];
 
   console.log('DASHBOIARD');

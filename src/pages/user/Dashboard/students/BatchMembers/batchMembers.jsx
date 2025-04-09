@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  CheckCircle,
-  Clock,
-  Award,
-  XCircle,
-  TrendingUp,
-  User,
-} from 'lucide-react';
+import { User } from 'lucide-react';
 import { getStudentByCode } from '../../components/studentsInSession';
 
 export default function BatchMembers() {

@@ -60,6 +60,8 @@ export default function Navbar() {
     if (notificationRef.current) {
       notificationRef.current.refreshNotifications();
       notificationRef.current.requestNotificationPermission(userData.user_code);
+      console.log("REFRESGING");
+      
     }
   }, []);
 

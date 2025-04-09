@@ -2,21 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Search,
   Send,
-  Menu,
-  Paperclip,
   MoreVertical,
   ChevronLeft,
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
 import { getSessionData } from '../../components/currentSession';
 import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
 import { TutorEndPoints } from '../../../../../api/endpoints/userEndPoints';
 import { getSavedAuthData } from '../../../../../utils/Localstorage';
 import { getStudentByCode } from '../../components/studentsInSession';
-import { DateTime } from 'luxon';
 
 export default function Messaging() {
   const [socket, setSocket] = useState(null);
@@ -31,6 +27,7 @@ export default function Messaging() {
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
   const [loading, setLoading] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [onlineStudents, setOnlineStudents] = useState([]);
 
   const lastMessageRef = useRef(null);
 
@@ -51,10 +48,8 @@ export default function Messaging() {
     const maxRetries = 3;
     const session_data = getSessionData();
     setTutor(session_data.sessions.tutor_code);
-    console.log('TUTOR', session_data.sessions.tutor_code);
     const user_data = getSavedAuthData();
     setTutor(user_data);
-    console.log('TUTOR 22', user_data);
 
     const connectWebSocket = () => {
       const ws = new WebSocket(
@@ -62,57 +57,46 @@ export default function Messaging() {
       );
 
       ws.onopen = () => {
-        console.log('Connected to WebSocket');
         setConnected(true);
         setError(null);
         retryCount = 0;
+        setOnlineStudents(prev => [...prev, selectedUser.id]);
       };
 
       ws.onmessage = (event) => {
-        console.log('Received WebSocket message:', event.data);
-
         const data = JSON.parse(event.data);
 
         if (!data) {
-          console.log('Invalid message received:', data);
           return;
         }
 
         if (data.type === 'chat_history' && Array.isArray(data.messages)) {
-          console.log('Received chat history:', data.messages);
           setMessages(data.messages);
           return;
         }
 
         if (data.type === 'chat_message' && data.message) {
-          console.log('Received chat message:', data);
           setMessages((prev) => {
             const exists = prev.some((msg) => msg.timestamp === data.timestamp);
             return exists ? prev : [...prev, data];
           });
           return;
         }
-
-        console.log('Unhandled message type:', data);
       };
 
       ws.onclose = (event) => {
-        console.log('WebSocket closed:', event.code, event.reason);
-        setConnected(false);
-
+        setConnected(false);    
+        setOnlineStudents(prev => prev.filter(id => id !== selectedUser.id));
         if (event.code !== 1000 && retryCount < maxRetries) {
           retryCount++;
-          console.log(
-            `Attempting to reconnect... (${retryCount}/${maxRetries})`,
-          );
           setTimeout(connectWebSocket, 3000);
         }
       };
 
       ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
         setError('Failed to connect to chat server');
         setConnected(false);
+        setOnlineStudents(prev => prev.filter(id => id !== selectedUser.id));
       };
 
       setSocket(ws);
@@ -134,18 +118,16 @@ export default function Messaging() {
     try {
       const url = API_BASE_URLS['Session_Service'];
       const query_data = { session_code: session_data.sessions.session_code };
-
       const response = await api.get(TutorEndPoints.StudentsInSession, {
         baseURL: url,
         params: query_data,
       });
-      console.log('RES :', response);
 
       setStudents(response.data);
+      setLoading(false);
     } catch (e) {
       setError(e);
       setLoading(false);
-      console.error('Error:', e);
     }
   }
 
@@ -164,9 +146,8 @@ export default function Messaging() {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    if (!socket || !input.trim() || !connected) return;
-    console.log('test', selectedUser);
-
+    if (!socket || !input.trim() || !isStudentOnline(selectedUser?.id)) return;
+    
     try {
       const messageData = {
         type: 'chat_message',
@@ -178,7 +159,6 @@ export default function Messaging() {
       socket.send(JSON.stringify(messageData));
       setInput('');
     } catch (error) {
-      console.error('Error sending message:', error);
       setError('Failed to send message');
     }
   };
@@ -194,6 +174,10 @@ export default function Messaging() {
     setSelectedUser(student);
     setMessages([]);
     setSidebarOpen(false);
+  };
+
+  const isStudentOnline = (studentId) => {
+    return onlineStudents.includes(studentId);
   };
 
   const filteredStudents = students.filter((student) =>
@@ -217,23 +201,29 @@ export default function Messaging() {
   }
 
   const extractTime = (timestamp) => {
-    console.log(timestamp);
-
-    const timePart = timestamp?.split('T')[1];
-    return timePart.slice(0, 5);
+    if (!timestamp) return '';
+    
+    try {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch (e) {
+      const timePart = timestamp?.split('T')[1];
+      return timePart ? timePart.slice(0, 5) : '';
+    }
   };
 
   return (
     <div className="flex justify-center items-center h-full w-full bg-transparent p-2">
-      <div className="flex h-[550px] md:h-[750px] w-full max-w-7xl mx-auto bg-transparent rounded-lg shadow-md overflow-hidden">
+      <div className="flex h-[550px] md:h-[800px] w-full max-w-7xl mx-auto bg-transparent rounded-3xl shadow-md overflow-hidden">
+  
         <div
           className={`${sidebarOpen ? 'flex' : 'hidden'} md:flex w-full md:w-80 flex-col border-r bg-gray-800`}
         >
-          <div className="p-4 bg-[#236383] text-white flex items-center justify-between">
+          <div className="p-4 bg-[#2f726d] text-white flex items-center justify-between">
             <h2 className="font-bold">Messages</h2>
-            {/* <Button variant="ghost" size="icon" className="text-white hover:bg-[#c2ccd6]">
-            <Menu className="h-5 w-5" />
-          </Button> */}
           </div>
           <div className="p-3 border-b">
             <div className="relative">
@@ -242,7 +232,7 @@ export default function Messaging() {
                 placeholder="Search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 bg-gray-100 border-none text-gray-700"
+                className="pl-9 bg-gray-700 border-none text-white placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -251,14 +241,14 @@ export default function Messaging() {
               <div
                 key={student.id}
                 className={`p-3 flex items-center space-x-3 cursor-pointer 
-                hover:bg-gray-600 border-b text-slate-200 ${
-                  selectedUser?.id === student.id ? 'bg-blue-50' : ''
+                hover:bg-gray-700 border-b border-gray-700 text-slate-200 ${
+                  selectedUser?.id === student.id ? 'bg-[#2a6965]/40' : ''
                 }`}
                 onClick={() => {
                   handleSelectedStudent(student);
                 }}
               >
-                <div className="w-12 h-12 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
+                <div className="w-10 h-10 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold relative">
                   {getStudentProfile(student.student_code) ? (
                     <img
                       className="rounded-full"
@@ -268,23 +258,20 @@ export default function Messaging() {
                   ) : (
                     <p>{student.student_code.charAt(0)}</p>
                   )}
+                  {isStudentOnline(student.id) && (
+                    <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-gray-800"></div>
+                  )}
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between">
                     <h3 className="font-medium">
                       {getStudentNameByCode(student.student_code)}
                     </h3>
-                    {/* <span className="text-xs text-gray-400">
-                    {lastMsgTime}
-                  </span> */}
                   </div>
                   <div className="flex justify-between mt-1">
-                    <p className="text-sm text-gray-500 truncate">
-                      {connected ? 'Click to start chatting' : 'Offline'}
+                    <p className="text-sm text-gray-400 truncate">
+                      {isStudentOnline(student.id) ? 'Online' : 'Offline'}
                     </p>
-                    <div className="flex items-center">
-                      <span className="w-5 h-5 rounded-full bg-[#5682a3] text-white text-xs flex items-center justify-center"></span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -293,45 +280,47 @@ export default function Messaging() {
         </div>
 
         <div
-          className={`${!sidebarOpen ? 'flex' : 'hidden'} md:flex flex-col flex-1 bg-[#b6c4d4]`}
+          className={`${!sidebarOpen ? 'flex' : 'hidden'} md:flex flex-col flex-1 bg-gray-400/20`}
         >
           {selectedUser ? (
             <>
-              <div className="flex items-center p-3 bg-[#5682a3] text-white">
+              <div className="flex items-center p-3 bg-[#2f726d] text-white">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-white hover:bg-[#4a729a] md:hidden mr-1"
+                  className="text-white hover:bg-[#2a6965] md:hidden mr-1"
                   onClick={goBackToContacts}
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
-                <div className="w-10 h-10 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold">
+                <div className="w-10 h-10 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] font-bold relative">
                   <img
                     className="rounded-full"
                     src={getStudentProfile(selectedUser.student_code)}
                     alt={selectedUser.student_code.charAt(0)}
                   />
+                  {isStudentOnline(selectedUser.id) && (
+                    <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-[#2f726d]"></div>
+                  )}
                 </div>
                 <div className="ml-3 flex-1">
                   <h2 className="font-semibold">
                     {getStudentNameByCode(selectedUser.student_code)}
                   </h2>
                   <p className="text-xs opacity-80">
-                    {connected ? '' : 'last seen recently'}
-                    {/* {connected ? 'online' : 'last seen recently'} */}
+                    {isStudentOnline(selectedUser.id) ? 'online' : 'last seen recently'}
                   </p>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-white hover:bg-[#4a729a]"
+                  className="text-white hover:bg-[#2a6965]"
                 >
                   <MoreVertical className="h-5 w-5" />
                 </Button>
               </div>
 
-              <ScrollArea className="flex-1 p-4 bg-gray-400/20">
+              <ScrollArea className="flex-1 p-4">
                 <div className="space-y-2 text-black opacity-75">
                   {messages.map((message, index) => (
                     <div
@@ -339,14 +328,14 @@ export default function Messaging() {
                       className={`flex ${message.sender === tutor.user_code ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[75%] rounded-lg p-3 ${
+                        className={`max-w-[80%] rounded-lg p-3 ${
                           message.sender === tutor.user_code
                             ? 'bg-[#effdde]'
                             : 'bg-white'
                         }`}
                       >
                         <div className="flex flex-col">
-                          <p className="text-[15px]">
+                          <p className="text-[15px] break-words">
                             {message.content || message.message}
                           </p>
                           <p className="flex justify-end text-[11px] text-gray-500 mt-1">
@@ -363,11 +352,8 @@ export default function Messaging() {
                 </div>
               </ScrollArea>
 
-              <div className="p-3 bg-[#082c6a]">
+              <div className="p-3 bg-[#2a6965]">
                 <div className="flex items-center space-x-2">
-                  {/* <Button variant="ghost" size="icon" className="text-gray-500">
-                  <Paperclip className="h-5 w-5" /> 
-                </Button> */}
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
@@ -378,8 +364,8 @@ export default function Messaging() {
                   <Button
                     onClick={sendMessage}
                     size="icon"
-                    disabled={!connected || !input.trim()}
-                    className="bg-[#9daebc] text-white hover:bg-[#4a729a] rounded-full h-10 w-10"
+                    disabled={!isStudentOnline(selectedUser.id) || !input.trim()}
+                    className="bg-[#5682a3] text-white hover:bg-[#4a729a] rounded-full h-10 w-10"
                   >
                     <Send className="h-4 w-4" />
                   </Button>
@@ -389,14 +375,14 @@ export default function Messaging() {
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
-              <div className="w-16 h-16 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#5682a3] mb-4">
+              <div className="w-16 h-16 bg-[#e0eaff] rounded-full flex items-center justify-center text-[#2f726d] mb-4">
                 <Send className="h-6 w-6" />
               </div>
               <p className="text-lg font-medium">
-                Select a chat to start messaging
+                Select a student to start messaging
               </p>
               <p className="text-sm mt-1">
-                Choose from your existing conversations
+                Choose a student from your contacts list
               </p>
             </div>
           )}

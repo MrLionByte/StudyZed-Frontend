@@ -3,7 +3,7 @@ import { useApproveSessionManagement } from './_lib.js';
 import { ToastContainer, toast } from 'react-toastify';
 import SessionPaymentDetails from './components/sessiondetailsmodal.jsx';
 
-const SessionApproval = memo(() => {
+const SessionBlocked = memo(() => {
   const {
     sessions,
     loading,
@@ -40,7 +40,6 @@ const SessionApproval = memo(() => {
                 }`}
               >
                 <p className="font-bold">{session.session_code}</p>
-                <p>{session.is_paid}</p>
                 <p className="text-sm text-gray-400">
                   Session Name : {session.session_name}
                 </p>
@@ -91,4 +90,4 @@ const SessionApproval = memo(() => {
   );
 });
 
-export default SessionApproval;
+export default SessionBlocked;

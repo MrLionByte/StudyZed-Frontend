@@ -8,16 +8,15 @@ import AttendAssessmentModal from './components/AttendAssessment.jsx';
 import ShowAssessmentModal from './components/showAssessment.jsx';
 import { getSessionData } from '../../components/currentSession.js';
 import { attempt } from 'lodash';
+import LogoSvg from '../../../../../assets/test.svg';
 
 export default function Assessment({ session_data }) {
   const {
     assessments,
     loading,
-    isCreatingAssessment,
     attemptedAssessments,
     selectedAssessment,
     attemptedAssessment,
-    fetchFromBackend,
     setFetchFromBackend,
     setSelectedAssessment,
     setAttemptedAssessment,
@@ -157,6 +156,15 @@ export default function Assessment({ session_data }) {
           <ShowAssessmentModal
             assessmentData={attemptedAssessment}
             handleClose={() => setShowAttemptedAssessment(false)}
+          />
+        </div>
+      )}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900/75 z-50">
+          <img
+            src={LogoSvg}
+            alt="Loading"
+            className="w-64 h-64 animate-pulse"
           />
         </div>
       )}

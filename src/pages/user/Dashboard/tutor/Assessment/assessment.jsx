@@ -1,42 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Bounce, toast, ToastContainer } from 'react-toastify';
-import { TutorEndPoints } from '../../../../../api/endpoints/userEndPoints';
-import api, { API_BASE_URLS } from '../../../../../api/axios_api_call.js';
+import { useState } from 'react';
 import CreateAssessment from './components/createAssessment';
 import AssessmentModal from './components/showAssessment.jsx';
 import StudentAssessmentModal from './components/showStudentAssessment.jsx';
-import { Plus, X, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useAssessments } from './_lib.js';
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-  ChevronsLeft,
-} from 'lucide-react';
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from '@/components/ui/command';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import DatePickerWithRange from './components/dateRangePicker.jsx';
+import LogoSvg from '../../../../../assets/test.svg';
 import { getStudentByCode } from '../../components/studentsInSession.js';
 
 export default function Assessment({ session_data }) {
@@ -225,6 +193,16 @@ export default function Assessment({ session_data }) {
           assessmentData={studentAttendedAssessment}
           handleClose={() => setShowStudentModal(false)}
         />
+      )}
+
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900/75 z-50">
+          <img
+            src={LogoSvg}
+            alt="Loading"
+            className="w-64 h-64 animate-pulse"
+          />
+        </div>
       )}
     </>
   );

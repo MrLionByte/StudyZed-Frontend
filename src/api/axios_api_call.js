@@ -1,6 +1,7 @@
 import axios from "axios"
 import { savedAuthData, clearSavedAuthData, getSavedAuthData } from "../utils/Localstorage";
 
+
 export const API_BASE_URLS = {
     Usermanagement_Service: import.meta.env.VITE_USERMANAGEMENT_SERVICE,
     Message_Service: import.meta.env.VITE_MESSAGE_SERVICE,
@@ -112,14 +113,25 @@ api.interceptors.response.use(
                 console.error("Token refresh failed:", refreshError);
                 if (originalRequest.retryCount >= MAX_RETRY_ATTEMPTS) {
                     clearSavedAuthData();
+                    localStorage.removeItem("adminAuthState");
                     localStorage.removeItem("authState")
                     window.location.href = "/login";
                 }
                 if (refreshError.status === 401 && refreshError.response.statusText === 'Unauthorized'){
                     clearSavedAuthData();
+                    localStorage.removeItem("adminAuthState");
                     localStorage.removeItem("authState")
                     window.location.href = "/login";
                 }
+                if (
+                    originalRequest.retryCount >= MAX_RETRY_ATTEMPTS ||
+                    (refreshError.response?.status === 401)
+                  ) {
+                    clearSavedAuthData();
+                    localStorage.removeItem("adminAuthState");
+                    localStorage.removeItem("authState");
+                    window.location.href = "/login";
+                  }
                 return Promise.reject(refreshError);
             }
         }

@@ -11,7 +11,6 @@ export default function ClassProgress() {
   const [assessmentPerformance, setAssessmentPerformance] = useState([]);
   const [taskPerformance, setTaskPerformance] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const session = getSessionData().sessions?.session_code;
   const url = API_BASE_URLS['Session_Service'];
 

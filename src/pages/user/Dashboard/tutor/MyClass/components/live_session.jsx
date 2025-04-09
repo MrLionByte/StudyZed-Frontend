@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getSavedAuthData } from '../../../../../../utils/Localstorage';
-import { getSessionData } from '../../../components/currentSession';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { toast } from 'react-toastify';
 
 const GroupVideoCall = ({ onEndCall, sessionCode }) => {
   const videoRef = useRef(null);
@@ -82,20 +82,18 @@ const GroupVideoCall = ({ onEndCall, sessionCode }) => {
   };
 
   const handleCleanup = () => {
-    console.log('Cleaning up ZegoCloud resources');
     if (zpRef.current) {
       try {
         zpRef.current.destroy();
         zpRef.current = null;
       } catch (error) {
-        console.error('Error during ZegoCloud cleanup:', error);
+        // toast.error('Error during ZegoCloud cleanup:', error);
       }
     }
   };
 
   const handleExitCall = () => {
     handleCleanup();
-
     onEndCall();
   };
 

@@ -13,6 +13,7 @@ import {
   PieChart,
   ChartLine,
   SquareTerminal,
+  DollarSign,
 } from 'lucide-react';
 
 import { NavMain } from './nav-main.jsx';
@@ -47,6 +48,18 @@ const data = {
   ],
   navMain: [
     {
+      title: 'Dashboard',
+      url: '#',
+      icon: PieChart,
+      isActive: true,
+      items: [
+        {
+          title: 'Default',
+          url: '/admin/',
+        },
+      ],
+    },
+    {
       title: 'User Management',
       url: '#',
       icon: SquareTerminal,
@@ -75,10 +88,10 @@ const data = {
           title: 'Active',
           url: '/admin/active-session/',
         },
-        {
-          title: 'Blocked',
-          url: '#',
-        },
+        // {
+        //   title: 'Blocked',
+        //   url: '#',
+        // },
       ],
     },
     {
@@ -98,45 +111,33 @@ const data = {
       icon: ChartLine,
       items: [
         {
-          title: 'Sessions',
-          url: '/admin/session-growth-data/',
-        },
-        {
-          title: 'Assessments',
-          url: '/admin/assessment-growth-data/',
-        },
-        {
-          title: 'Tasks',
-          url: '#',
-        },
-        {
-          title: 'Maximum sessions',
-          url: '',
+          title: 'Assessments & Tasks',
+          url: '/admin/assessment-task-growth-data/',
         },
         {
           title: 'Video Meets',
-          url: '',
+          url: '/admin/video-meet-data/',
         },
       ],
     },
     {
       title: 'Revenue',
-      url: '#',
-      icon: ChartLine,
+      url: '/admin/company-revenue/',
+      icon: DollarSign,
       items: [
         {
           title: 'total',
-          url: '/admin/company-growth-data/',
+          url: '/admin/company-revenue/',
         },
       ],
     },
   ],
   projects: [
-    // {
-    //   name: "Design Engineering",
-    //   url: "#",
-    //   icon: Frame,
-    // },
+    {
+      name: "Future integrations",
+      url: "#",
+      icon: Frame,
+    },
     // {
     //   name: "Sales & Marketing",
     //   url: "#",

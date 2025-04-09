@@ -1,69 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { CreditCard, AlertCircle, Save, RefreshCw, Sun, Moon, Image, PenBoxIcon, XIcon } from 'lucide-react';
-import { useFont } from '../../../../../context/FontContext';
-import { useTheme } from '../../../../../context/ThemeContext';
-import { useSideBarColor } from '../../../../../context/SideBarColorContext';
-import { useNavBarColor } from '../../../../../context/NavbarColorContext';
-import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
-import { getSessionData } from '../../components/currentSession';
+import React from 'react';
+import {
+  AlertCircle,
+  Moon,
+  Sun,
+} from 'lucide-react';
+import { useSettingsLogic } from './_lib';
 
 function Settings() {
-  const daysLeft = 30;
-  const [isSaving, setIsSaving] = useState(false);
-  const [editName, setEditName] = useState(false);
-  const [editDescription, setEditDescription] = useState(false);
-  const [fetchFromBackend, setFetchFromBackend] = useState(true);
-
-  const { fontSettings, fontUpdateSettings, fontClasses } = useFont() || {}; 
-  const { theme, setTheme } = useTheme() || {};
-  const { sideBarColor, setSideBarColor } = useSideBarColor() || {};
-  const { navBarColor, setNavBarColor } = useNavBarColor() || {};
-
-  const [settings, setSettings] = useState({});
-  
-  
-  const updateSettings = (newSettings) => {
-    setSettings(prev => ({ ...prev, ...newSettings }));
-  };
-  
-  const getDataFromBackend = async () => {
-    const session = getSessionData();
-    try{
-      const response = await api.get('session-student/session-details/',{
-        baseURL: API_BASE_URLS['Session_Service'],
-        params: {
-          session_code: session?.sessions?.session_code,
-        },
-      });
-      setSettings(response.data[0])
-      console.log("ASSESS :", response);
-    } catch (err){
-      console.error(err);
-    }
-  };
-
-  const handleSave = () => {
-    setIsSaving(true);
-    
-    setTimeout(() => {
-      setIsSaving(false);
-    }, 1000);
-  };
-
-  const resetToDefaults = () => {
-    setNavBarColor('#134E4A80');
-    setSideBarColor('#1B4D4A');
-    fontUpdateSettings('default');
-    setTheme('dark');
-  };
-
-  useEffect(()=>{
-    if (fetchFromBackend){
-      getDataFromBackend();
-      setFetchFromBackend(false);
-    }
-  })
-  console.log(settings);
+  const {
+    settings,
+    fontSettings,
+    fontUpdateSettings,
+    fontClasses,
+    theme,
+    setTheme,
+    sideBarColor,
+    setSideBarColor,
+    navBarColor,
+    setNavBarColor,
+    resetToDefaults,
+  } = useSettingsLogic();
   
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl mt-5">
@@ -96,7 +52,6 @@ function Settings() {
     Session Name
   </label>
   
-  {/* Flex container to align input/text with button */}
   <div className="flex items-center gap-2">
     
       <p className="w-full bg-[#234E4B] rounded-lg px-4 py-3 text-white border border-[#2A5956]">
@@ -223,7 +178,6 @@ function Settings() {
             </div>
           </div>
           
-          {/* Save Changes */}
           <div className="bg-[#1B4D4A] rounded-lg p-6 shadow-lg border border-[#2A5956]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-2 text-yellow-300">

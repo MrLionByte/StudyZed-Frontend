@@ -105,7 +105,6 @@ export default function Dashboard() {
       setSessionCode(location.state.sessions.session_code);
       saveSessionData(location?.state);
     }
-    console.log('!!!!!',sessionCode);
     
     if (sessionCode === '') {
       const session = getSessionData();
@@ -132,16 +131,14 @@ export default function Dashboard() {
             location.state.sessions.session_code,
         },
       });
-      console.log(response);
       const studentCodes = response.data;
       const studentDetails = await api.post(
         TutorEndPoints.StudentsDetailsList,
         studentCodes,
       );
-      console.log(studentDetails.data);
       saveStudentsDataToSession(studentDetails.data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

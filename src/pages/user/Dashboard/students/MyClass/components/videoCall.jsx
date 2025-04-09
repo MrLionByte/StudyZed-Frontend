@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getSessionData } from '../../components/currentSession';
-import { getSavedAuthData } from '../../../../../utils/Localstorage';
+import { getSessionData } from '../../../components/currentSession';
+import { getSavedAuthData } from '../../../../../../utils/Localstorage';
 import { X } from 'lucide-react';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { toast } from 'react-toastify';
 
-const StudentGroupVideoCall = ({ onEndCall, scheduledSession }) => {
+const StudentGroupVideoCall = ({ onEndCall }) => {
   const videoRef = useRef(null);
   const zpRef = useRef(null);
   const [isCallInitialized, setIsCallInitialized] = useState(false);
@@ -38,13 +39,6 @@ const StudentGroupVideoCall = ({ onEndCall, scheduledSession }) => {
       const userID = userId
         ? userId.toString()
         : `student-${Math.floor(Math.random() * 10000)}`;
-
-      console.log('Initializing ZegoCloud with:', {
-        roomID,
-        userID,
-        userName,
-        containerElement: videoRef.current,
-      });
 
       if (!videoRef.current) {
         console.error('Video container ref is not available');
@@ -100,14 +94,12 @@ const StudentGroupVideoCall = ({ onEndCall, scheduledSession }) => {
       });
 
       setIsCallInitialized(true);
-      console.log('ZegoCloud initialized successfully');
     } catch (error) {
-      console.error('Failed to initialize ZegoCloud:', error);
+      toast.error("Minor error in video call, try again")
     }
   };
 
   const handleCleanup = () => {
-    console.log('Cleaning up ZegoCloud resources');
     if (zpRef.current) {
       try {
         zpRef.current.destroy();

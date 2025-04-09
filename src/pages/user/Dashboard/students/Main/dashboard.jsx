@@ -1,9 +1,4 @@
-import { useEffect, useState } from 'react';
-import { getSavedAuthData } from '../../../../../utils/Localstorage';
 import StudentProgressCard from './components/progressChart';
-import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
-import { getSessionData } from '../../components/currentSession';
-import { getStudentByCode } from '../../components/studentsInSession';
 import {
   Table,
   TableBody,
@@ -13,76 +8,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import LogoSvg from '../../../../../assets/test.svg';
+import {useDashboardData} from "./_lib";
 
 export default function Dashboard() {
-  const [fetchFromBackend, setFetchFromBackend] = useState(true);
-  const [studentProgress, setStudentProgress] = useState({});
-  const [studentTableLeaderBoard, setStudentTableLeaderBoard] = useState({});
-
-  const user = getSavedAuthData();
-  const url = API_BASE_URLS['Session_Service'];
-  const session = getSessionData();
-
-  const students = getStudentByCode();
-
-  function getStudentNameByCode(studentCode) {
-    const matchedStudent = students.find(
-      (student) => student.user_code === studentCode,
-    );
-    return matchedStudent ? matchedStudent.username : studentCode;
-  }
-
-  const getStudentProgressCardData = async () => {
-    try {
-      const response = await api.get('/dashboard-student/data/', {
-        baseURL: url,
-        params: { session_code: session?.sessions?.session_code },
-      });
-      console.log('AS ', response);
-      const values = {
-        completion_rate: response.data.completion_rate,
-        on_time_rate: response.data.on_time_rate,
-        average_score: response.data.average_score,
-        total_tasks_scheduled: response.data.total_tasks_scheduled,
-        late_submission_count: response.data.late_submission_count,
-        performance: response.data.performance,
-      };
-
-      setStudentProgress(values);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const getStudentTableAndLeaderBoard = async () => {
-    try {
-      const response = await api.get('/dashboard-student/table-view/', {
-        baseURL: url,
-        params: { session_code: session?.sessions?.session_code },
-      });
-      console.log('AsxS ', response);
-      const values = {
-        leaderboard: response.data.leaderboard.map(([id, scores]) => ({
-          name: id,
-          score: scores.total_score,
-        })),
-        recent_assessments: response.data.recent_assessments,
-        recent_tasks: response.data.recent_tasks,
-      };
-
-      setStudentTableLeaderBoard(values);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    if (fetchFromBackend) {
-      getStudentProgressCardData();
-      getStudentTableAndLeaderBoard();
-      setFetchFromBackend(false);
-    }
-  }, [fetchFromBackend]);
+  const {
+    user,
+    loading,
+    studentProgress,
+    studentTableLeaderBoard,
+    getStudentNameByCode,
+  } = useDashboardData();
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-y-auto max-h-[860px]">
@@ -190,6 +126,15 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900/75 z-50">
+          <img
+            src={LogoSvg}
+            alt="Loading"
+            className="w-64 h-64 animate-pulse"
+          />
+        </div>
+      )}
     </div>
   );
 }

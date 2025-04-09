@@ -1,21 +1,18 @@
-import { UserPen, Pen, CircleCheck, CircleX, X, Check } from 'lucide-react'; // Ensure you have these icons imported
+import { useState, useRef } from 'react';
+import { UserPen, Pen, CircleCheck, CircleX, X, Check, ArrowLeft,GraduationCap } from 'lucide-react';
 import { useUserProfile } from './_lib.js';
-import { OrbitProgress, ThreeDot } from 'react-loading-indicators';
 import { ToastContainer } from 'react-toastify';
+import Logo from '../../../../assets/studyzed_main.png';
 
 export default function MyProfile() {
   const {
     userData,
     profilePicture,
     previewUrl,
-    setPreviewUrl,
-    nowEdit,
-    setNowEdit,
     handleChange,
     handleImageUpload,
     editUserData,
     handleEdit,
-    setEditUserData,
     newData,
     handleUserDataEdit,
     handleSave,
@@ -23,174 +20,162 @@ export default function MyProfile() {
     handleCancelEdit,
     fileInputRef,
     handleProfilePictureEdit,
-    loading,
     handleBackToSession,
   } = useUserProfile();
 
   return (
-    <div className="bg-gradient-to-r from-black to-cyan-900 min-h-screen flex items-center justify-center p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
-        <div className="bg-gray-300 p-6 rounded-lg shadow-md text-black h-max">
-          <h1 className="text-black font-bold">STUDENT</h1>
-          <div className="flex flex-col items-center mb-6">
-            {!loading ? (
-              <div className="w-32 h-32 bg-teal-800 rounded-full flex items-center justify-center relative">
-                {previewUrl ? (
-                  <img
-                    src={previewUrl}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full object-cover"
-                  />
-                ) : profilePicture ? (
-                  <img
-                    src={profilePicture}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full object-cover"
-                  />
-                ) : (
-                  <svg
-                    className="text-white w-16 h-16"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 14l9-5-9-5-9 5 9 5z"
-                    ></path>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 14l6.16-3.422a12.083 12.083 0 01-.664 6.844C16.253 19.6 14.21 21 12 21c-2.21 0-4.253-1.4-5.496-3.578a12.083 12.083 0 01-.664-6.844L12 14z"
-                    ></path>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M12 14v7m0 0a3.5 3.5 0 110-7 3.5 3.5 0 010 7z"
-                    ></path>
-                  </svg>
-                )}
-                {/* UserPen Icon */}
-                {!previewUrl ? (
-                  <UserPen
-                    onClick={handleProfilePictureEdit}
-                    className="absolute bottom-2 left-7 text-black cursor-pointer hover:text-red-500 rounded-full bg-gray-600"
-                  />
-                ) : (
-                  <>
-                    <CircleCheck
-                      onClick={handleImageUpload}
-                      className="absolute bottom-2 rounded-full  bg-slate-300 left-8 text-black cursor-pointer hover:text-teal-500 z-10"
+    <div className="bg-gradient-to-r from-gray-900 to-cyan-900 min-h-screen p-6">
+     
+      <div className="hidden md:block">
+        <div className="flex items-center">
+            <GraduationCap className="hidden md:block size-14 text-emerald-400" />
+            <img className="w-28 md:w-fit md:h-36 object-cover object-center" src={Logo} alt="Logo" />
+          </div>
+      </div>
+
+      <div className="flex justify-center">
+        <div className="w-full max-w-4xl">
+          <h2 className="text-2xl font-bold text-white mb-6">My Profile</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+           
+            <div className="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 shadow-lg">
+              <h3 className="text-green-400 font-bold mb-6">STUDENT</h3>
+              
+              <div className="flex flex-col items-center mb-8">
+                <div className="w-32 h-32 rounded-full relative mb-4">
+                  {previewUrl ? (
+                    <img 
+                      src={previewUrl} 
+                      alt="Profile" 
+                      className="w-32 h-32 rounded-full object-cover border-4 border-green-400"
                     />
-                    <CircleX
-                      onClick={handleCancelProfilePicEdit}
-                      className="absolute bottom-2 right-8 rounded-full  bg-slate-300 text-black cursor-pointer hover:text-red-500 z-10"
+                  ) : profilePicture ? (
+                    <img 
+                      src={profilePicture} 
+                      alt="Profile" 
+                      className="w-32 h-32 rounded-full object-cover border-4 border-green-400"
                     />
-                  </>
-                )}
-              </div>
-            ) : (
-              <div className="rounded-full overflow-hidden">
-                <OrbitProgress
-                  variant="disc"
-                  color="#32cd32"
-                  size="medium"
-                  text=""
-                  textColor=""
+                  ) : (
+                    <div className="w-32 h-32 rounded-full bg-gray-700 flex items-center justify-center border-4 border-green-400">
+                      <UserPen className="text-green-400 w-12 h-12" />
+                    </div>
+                  )}
+                  
+                  {!previewUrl ? (
+                    <button 
+                      onClick={handleProfilePictureEdit}
+                      className="absolute bottom-0 right-0 bg-green-400 p-2 rounded-full hover:bg-green-300 transition-colors"
+                    >
+                      <Pen className="w-4 h-4 text-gray-900" />
+                    </button>
+                  ) : (
+                    <div className="absolute -bottom-2 left-0 right-0 flex justify-center gap-4">
+                      <button
+                        onClick={handleImageUpload}
+                        className="bg-green-400 p-2 rounded-full hover:bg-green-300 transition-colors"
+                      >
+                        <Check className="w-4 h-4 text-gray-900" />
+                      </button>
+                      <button
+                        onClick={handleCancelProfilePicEdit}
+                        className="bg-red-400 p-2 rounded-full hover:bg-red-300 transition-colors"
+                      >
+                        <X className="w-4 h-4 text-gray-900" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+                
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  name="image_url"
+                  accept="image/jpeg,image/png,image/gif"
+                  onChange={handleChange}
+                  className="hidden"
                 />
               </div>
-            )}
 
-            <input
-              ref={fileInputRef}
-              type="file"
-              name="image_url"
-              accept="image/jpeg,image/png,image/gif"
-              onChange={handleChange}
-              className="hidden"
-            />
-          </div>
-
-          {['username', 'first_name', 'last_name'].map((field) => (
-            <div key={field} className="mt-4">
-              <div className="bg-white rounded p-2 flex justify-between items-center">
-                {editUserData[field] ? (
-                  <>
-                    {!loading ? (
-                      <input
-                        type="text"
-                        value={newData[field]}
-                        onChange={(e) =>
-                          handleUserDataEdit(field, e.target.value)
-                        }
-                        className="flex-grow px-2 py-1 border rounded"
-                      />
+              {['username', 'first_name', 'last_name'].map((field) => (
+                <div key={field} className="mb-4">
+                  <div className="bg-gray-700 bg-opacity-40 rounded-lg p-3 flex justify-between items-center border border-gray-600">
+                    {editUserData[field] ? (
+                      <>
+                        <div className="flex-1">
+                          <label className="text-xs text-green-400 font-medium mb-1 block">
+                            {field.replace('_', ' ').toUpperCase()}
+                          </label>
+                          <input
+                            type="text"
+                            value={newData[field]}
+                            onChange={(e) => handleUserDataEdit(field, e.target.value)}
+                            className="w-full bg-gray-800 text-white px-3 py-2 rounded border border-gray-600 focus:border-green-400 focus:outline-none"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 ml-4">
+                          <button className="text-green-400 hover:text-green-300" onClick={() => handleSave(field)}>
+                            <Check className="w-5 h-5" />
+                          </button>
+                          <button className="text-red-400 hover:text-red-300" onClick={() => handleCancelEdit(field)}>
+                            <X className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </>
                     ) : (
-                      <div className="flex justify-center items-center h-full">
-                        <ThreeDot
-                          color="#32cd32"
-                          size="small"
-                          text=""
-                          textColor=""
-                        />
-                      </div>
+                      <>
+                        <div>
+                          <label className="text-xs text-green-400 font-medium mb-1 block">
+                            {field.replace('_', ' ').toUpperCase()}
+                          </label>
+                          <p className="text-white font-medium">{userData[field]}</p>
+                        </div>
+                        <button className="text-gray-400 hover:text-green-400" onClick={() => handleEdit(field)}>
+                          <Pen className="w-4 h-4" />
+                        </button>
+                      </>
                     )}
-                    <div className="flex items-center gap-2">
-                      <Check
-                        onClick={() => handleSave(field)}
-                        className="cursor-pointer hover:text-teal-500"
-                      />
-                      <X
-                        onClick={() => handleCancelEdit(field)}
-                        className="cursor-pointer hover:text-red-500"
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-sm text-gray-600">
-                      {field.toUpperCase()}:
-                      <span className="text-black font-semibold pl-2">
-                        {userData[field]}
-                      </span>
-                    </p>
-                    <Pen
-                      onClick={() => handleEdit(field)}
-                      className="cursor-pointer hover:text-teal-500"
-                    />
-                  </>
-                )}
-              </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Right Cards */}
-        <div className="flex flex-col gap-6">
-          <div className="bg-gray-300 rounded-lg p-6 shadow-md">
-            <p className="text-sm text-gray-600">
-              EMAIL:{' '}
-              <span className="font-bold text-gray-800">{userData.email}</span>
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              PHONE:{' '}
-              <span className="font-bold text-gray-800">
-                {userData.phone || 'Not added'}
-              </span>
-            </p>
+          
+            <div className="bg-gray-800 bg-opacity-50 rounded-lg p-6 border border-gray-700 shadow-lg h-max">
+              <h3 className="text-green-400 font-bold mb-6">CONTACT INFORMATION</h3>
+              
+              <div className="bg-gray-700 bg-opacity-40 rounded-lg p-4 border border-gray-600 mb-4">
+                <label className="text-xs text-green-400 font-medium mb-1 block">EMAIL</label>
+                <p className="text-white font-medium">{userData.email}</p>
+              </div>
+              
+              {/* <div className="bg-gray-700 bg-opacity-40 rounded-lg p-4 border border-gray-600">
+                <label className="text-xs text-green-400 font-medium mb-1 block">PHONE</label>
+                <p className="text-white font-medium">{userData.phone || 'Not added'}</p>
+              </div> */}
+              
+              <div className="mt-6">
+                {/* <h3 className="text-green-400 font-bold mb-4">CURRENT SESSION</h3>
+                <div className="bg-gray-700 bg-opacity-40 rounded-lg p-4 border border-gray-600">
+                  <div className="text-white mb-2">Power Systems Analysis</div>
+                  <div className="text-sm text-gray-400 mb-1">Tutor: ABIJI-D9DC3E0</div>
+                  <div className="text-sm text-gray-400">Joined: Apr 8, 2025</div>
+                </div> */}
+              </div>
+
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={handleBackToSession}
+              className="bg-green-400 text-gray-900 font-bold py-3 px-6 rounded-lg hover:bg-green-300 transition-colors flex items-center gap-2"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              BACK TO SESSION
+            </button>
           </div>
         </div>
-        <button
-          onClick={handleBackToSession}
-          className="bg-slate-400 rounded p-2"
-        >
-          GO BACK TO SESSION
-        </button>
       </div>
       <ToastContainer position="top-center" />
     </div>
