@@ -5,8 +5,31 @@ import { getStudentByCode } from '../../../components/studentsInSession';
 const StudentTaskPerformanceChart = ({ taskPerformance }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredStudents = taskPerformance.filter((student) =>
-    student.student_code.toLowerCase().includes(searchTerm.toLowerCase()),
+  const dummyData = [
+    {
+      student_code: 'STU001',
+      completion_rate: 85,
+      on_time_rate: 78,
+      average_score: 91
+    },
+    {
+      student_code: 'STU002',
+      completion_rate: 60,
+      on_time_rate: 72,
+      average_score: 75
+    },
+    {
+      student_code: 'STU003',
+      completion_rate: 95,
+      on_time_rate: 90,
+      average_score: 88
+    }
+  ];
+
+  const performanceData = taskPerformance?.length ? taskPerformance : dummyData;
+
+  const filteredStudents = performanceData.filter((student) =>
+    student.student_code.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const studentDetails = getStudentByCode();

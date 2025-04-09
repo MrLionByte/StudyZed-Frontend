@@ -147,28 +147,43 @@ const StudentPerformanceChart = ({ assessmentPerformance = [] }) => {
   };
 
   useEffect(() => {
-    if (assessmentPerformance.data && assessmentPerformance.data.length > 0) {
-      const transformedData = transformData(assessmentPerformance.data);
-      const uniqueAssessments = [
-        ...new Set(
-          assessmentPerformance.data.flatMap((student) =>
-            student.data.map((_, index) => `Assessment ${index + 1}`),
-          ),
-        ),
-      ];
-
-      setChartData((prev) => ({
-        ...prev,
-        series: transformedData,
-        options: {
-          ...prev.options,
-          xaxis: {
-            ...prev.options.xaxis,
-            categories: uniqueAssessments,
-          },
+    const dummyAssessmentPerformance = {
+      month: 4,
+      year: 2025,
+      data: [
+        {
+          name: 'STU001',
+          data: [78, 82, 91, 85],
         },
-      }));
-    }
+        {
+          name: 'STU002',
+          data: [65, 74, 69, 73],
+        },
+        {
+          name: 'STU003',
+          data: [88, 90, 86, 92],
+        },
+      ],
+    };
+  
+    const finalPerformance = assessmentPerformance.data?.length
+      ? assessmentPerformance
+      : dummyAssessmentPerformance;
+  
+    const transformedData = transformData(finalPerformance.data);
+    const uniqueAssessments = finalPerformance.data[0]?.data.map((_, index) => `Assessment ${index + 1}`) || [];
+
+    setChartData((prev) => ({
+      ...prev,
+      series: transformedData,
+      options: {
+        ...prev.options,
+        xaxis: {
+          ...prev.options.xaxis,
+          categories: uniqueAssessments,
+        },
+      },
+    }));
   }, [assessmentPerformance.data]);
 
   const handleLastMonth = () => {

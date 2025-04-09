@@ -94,7 +94,15 @@ const StudentTask = () => {
     </Card>
   );
 
-  const sortedTasks = tasks.sort((a, b) => {
+  const seen = new Set();
+  const deduplicatedTasks = tasks.filter(task => {
+    const key = task.id; 
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  
+  const sortedTasks = deduplicatedTasks.sort((a, b) => {
     const priority = { today: 0, upcoming: 1, past: 2 };
     return priority[getTaskStatus(a.due_date)] - priority[getTaskStatus(b.due_date)];
   });

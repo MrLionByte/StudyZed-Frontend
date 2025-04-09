@@ -3,7 +3,7 @@ import api from '../../../../api/axios_api_call';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { Twitter } from 'lucide-react';
-import GoogleApp from '../../../../components/GoogleAuth/GoogleAuth';
+import GoogleAuth from '../../../../components/GoogleAuth/GoogleAuth';
 import { jwtDecode } from 'jwt-decode';
 import { setUser } from '../../../../redux/slice';
 import { savedAuthData } from '../../../../utils/Localstorage';
@@ -195,8 +195,9 @@ export default function EmailStep({ onNext }) {
         >
           Continue
         </button>
+      </form>
 
-        <p className="text-sm text-center text-gray-300 mb-4">
+      <p className="text-sm text-center text-gray-300 mb-4">
           Already have an account?{' '}
           <span
             onClick={handleSignin}
@@ -211,34 +212,8 @@ export default function EmailStep({ onNext }) {
           <div className="flex-1 border-t border-gray-500"></div>
         </div>
         <div className="flex flex-col items-center gap-4 justify-center">
-          <GoogleApp clientId={GOOGLE_CLIENT_ID} />
+          <GoogleAuth clientId={GOOGLE_CLIENT_ID} requireRole={true} />
         </div>
-      </form>
-
-      {getUserRole && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-4 rounded shadow-md">
-            <h2 className="text-lg font-semibold text-black">
-              Select Your Role
-            </h2>
-            <div className="mt-4 flex gap-4">
-              <button
-                onClick={() => setRole('Tutor')}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Tutor
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('Student')}
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-              >
-                Student
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <ToastContainer position="top-center" autoClose={1000} />
     </div>

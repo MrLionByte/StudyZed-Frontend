@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../../../redux/slice.js';
 import { toast, ToastContainer } from 'react-toastify';
 import LogoSvg from '../../../../assets/test.svg';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import GoogleAuth from "../../../../components/GoogleAuth/GoogleAuth.jsx";
 
 export default function TutorStudentlogin({ passwordForgot }) {
   const [email, setEmail] = useState('');
@@ -297,9 +297,7 @@ export default function TutorStudentlogin({ passwordForgot }) {
       </p>
 
       <div className="flex items-center gap-4 justify-center">
-        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-          <GoogleLogin onSuccess={responseMessage} onError={errorMessages || ''} />
-        </GoogleOAuthProvider>
+        <GoogleAuth clientId={GOOGLE_CLIENT_ID} requireRole={false} />
       </div>
       <ToastContainer position="top-center" autoClose="1000" />
     </div>

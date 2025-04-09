@@ -21,7 +21,6 @@ export default function ClassProgress() {
       },
       baseURL: url,
     });
-    console.log(response);
     setAssessmentPerformance(response.data);
   };
 
@@ -32,8 +31,8 @@ export default function ClassProgress() {
       },
       baseURL: url,
     });
-    console.log('TASK :', response);
-
+    console.log("Progress",response);
+    
     setTaskPerformance(response.data);
   };
 

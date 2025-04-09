@@ -99,7 +99,7 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
             <div className="flex flex-col space-y-2">
               <div className="flex justify-between rounded-lg">
                 <div>
-                  {!taskData?.is_late_submission && (
+                  {taskData?.is_late_submission && (
                     <p className="bg-yellow-600 rounded-md text-center p-1 text-white">
                       Is late submission
                     </p>
