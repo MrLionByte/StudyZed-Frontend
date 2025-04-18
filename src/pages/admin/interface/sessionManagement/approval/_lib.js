@@ -65,11 +65,13 @@ export const useApproveSessionManagement = () => {
             baseURL: url,
             params: session_data,
           });
+          console.log(response);
           
           response.data[0]["session_key"] = session_id
           setSessionsPayment(response.data[0]);
           setIsModalOpen(true);
         } catch (e) {
+            console.log(e);            
           alert("Failed to fetch session details. Please try again.");
         }
       };

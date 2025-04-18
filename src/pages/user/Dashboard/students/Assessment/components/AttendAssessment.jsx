@@ -139,7 +139,6 @@ const AttendAssessmentModal = ({
 
   const handleSubmitAssessment = async () => {
     onSubmit(answers);
-    console.log(answers);
     try {
       const session_code = getSessionData();
       const student_code = getSavedAuthData();
