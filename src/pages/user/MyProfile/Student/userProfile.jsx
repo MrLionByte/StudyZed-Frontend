@@ -29,7 +29,7 @@ export default function MyProfile() {
       <div className="hidden md:block">
         <div className="flex items-center">
             <GraduationCap className="hidden md:block size-14 text-emerald-400" />
-            <img className="w-28 md:w-fit md:h-36 object-cover object-center" src={Logo} alt="Logo" />
+            <img className="ml-3 mt-2 w-36 md:w-56 md object-cover object-center" src={Logo} alt="Logo" />
           </div>
       </div>
 
