@@ -51,8 +51,6 @@ const TaskForm = ({ selectedDate, onSubmit, onCancel }) => {
         }
       }
 
-      console.log('DATE NO DUE:', dateAndTime);
-
       onSubmit({
         date: selectedDate,
         date_and_time: dateAndTime,

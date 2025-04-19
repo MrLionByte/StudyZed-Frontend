@@ -42,7 +42,7 @@ export const useTutorManagement = () => {
                 toast.success("User un-blocked successfully!");
             }
         }catch (e) {
-            console.error("Error :", e);
+            // console.error("Error :", e);
             alert("Failed to block user. Please try again.");
         }
     }

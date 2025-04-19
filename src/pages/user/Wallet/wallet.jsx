@@ -177,7 +177,6 @@ const Wallet = () => {
                         variant="outline"
                         size="sm"
                       >
-                        {/* Withdraw */}
                         <CirclePlus />
                       </Button>
 

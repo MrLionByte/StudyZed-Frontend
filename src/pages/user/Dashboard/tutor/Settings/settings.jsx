@@ -43,7 +43,7 @@ function Settings() {
             </div>
             <div className="text-left sm:text-right bg-[#17403D] p-4 rounded-lg">
               <div className="text-2xl font-bold text-[#00E08E]">{settings?.days_left} </div>
-              <div className="text-sm text-gray-300">months</div>
+              {/* <div className="text-sm text-gray-300">months</div> */}
             </div>
           </div>
           {settings?.days_left < 2 &&

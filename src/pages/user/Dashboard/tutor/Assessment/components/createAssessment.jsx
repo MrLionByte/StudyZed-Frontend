@@ -88,7 +88,6 @@ export default function CreateAssessment({ handleClose, fetchFromBackend }) {
         },
       ],
     }));
-    console.log('NEXt Q :', newAssessment);
 
     setNewQuestion({
       text: '',
@@ -126,7 +125,6 @@ export default function CreateAssessment({ handleClose, fetchFromBackend }) {
       })),
     };
 
-    console.log('FINAL ASSESSMENT:', finalAssessment);
 
     try {
       const url = API_BASE_URLS['Session_Service'];
@@ -137,11 +135,10 @@ export default function CreateAssessment({ handleClose, fetchFromBackend }) {
           baseURL: url,
         },
       );
-      console.log('NEW ASSESSMENT :', response);
       handleFetchFromBackend();
       handleCloseButton();
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
 
     setNewAssessment({

@@ -1,12 +1,10 @@
-import { button } from '@heroui/theme';
-import { Plus, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useState } from 'react';
 import api, { API_BASE_URLS } from '../../../../../../api/axios_api_call';
 import { TutorEndPoints } from '../../../../../../api/endpoints/userEndPoints';
 
 const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
   const [tempMarks, setTempMarks] = useState({});
-  console.log('TEMP MARKS :', tempMarks);
 
   const handleChangeMark = (value, id, question) => {
     let mark = value;
@@ -32,10 +30,9 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
           baseURL: url,
         },
       );
-      console.log(response);
       handleClose();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

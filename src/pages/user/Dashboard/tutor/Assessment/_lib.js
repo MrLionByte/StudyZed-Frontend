@@ -38,7 +38,6 @@ export const useAssessments = () => {
         },
         
       });
-      console.log(response);
       
       setAssessments(response.data);
       
@@ -72,26 +71,21 @@ export const useAssessments = () => {
         params:{assessment_id: assessment.id}
       });
       setAttendedStudents(response.data)
-      console.log(response);
-      
     } catch(error){
-      console.log("ATT ERROR",error);
-      
+      // console.log("ATT ERROR",error); 
     }
   }
 
   const handleStudentAssessment = async(student) => {
-    console.log(student);
     try {
       const url = API_BASE_URLS["Session_Service"]
       const response = await api.get(TutorEndPoints.GetAttendedAssessment,{
         baseURL: url,
         params:{student_id: student.id}
       });
-      console.log(response);
       setStudentAttendedAssessment(response.data)   
     } catch(error){
-      console.log("ATT ERROR",error);
+      // console.log("ATT ERROR",error);
     }
   }
 

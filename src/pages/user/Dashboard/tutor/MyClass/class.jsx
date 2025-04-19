@@ -14,6 +14,7 @@ import {useSessionSelection} from './_lib';
 
 const SessionSelection = () => {
   const {
+    selectedDay,
     sessionType,
     setSessionType,
     callStatus,

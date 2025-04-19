@@ -1,32 +1,35 @@
 import React, { useState } from 'react';
 import Chart from 'react-apexcharts';
 import { getStudentByCode } from '../../../components/studentsInSession';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 const StudentTaskPerformanceChart = ({ taskPerformance }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const dummyData = [
-    {
-      student_code: 'STU001',
-      completion_rate: 85,
-      on_time_rate: 78,
-      average_score: 91
-    },
-    {
-      student_code: 'STU002',
-      completion_rate: 60,
-      on_time_rate: 72,
-      average_score: 75
-    },
-    {
-      student_code: 'STU003',
-      completion_rate: 95,
-      on_time_rate: 90,
-      average_score: 88
-    }
-  ];
+  // const dummyData = [
+  //   {
+  //     student_code: 'STU001',
+  //     completion_rate: 85,
+  //     on_time_rate: 78,
+  //     average_score: 91
+  //   },
+  //   {
+  //     student_code: 'STU002',
+  //     completion_rate: 60,
+  //     on_time_rate: 72,
+  //     average_score: 75
+  //   },
+  //   {
+  //     student_code: 'STU003',
+  //     completion_rate: 95,
+  //     on_time_rate: 90,
+  //     average_score: 88
+  //   }
+  // ];
 
-  const performanceData = taskPerformance?.length ? taskPerformance : dummyData;
+  // const performanceData = taskPerformance?.length ? taskPerformance : dummyData;
+  const performanceData = taskPerformance;
 
   const filteredStudents = performanceData.filter((student) =>
     student.student_code.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,6 +66,8 @@ const StudentTaskPerformanceChart = ({ taskPerformance }) => {
         toolbar: {
           show: true,
         },
+        background: 'transparent',
+        foreColor: '#ffffff',
       },
       xaxis: {
         categories: filteredStudents.map((student) =>
@@ -72,6 +77,7 @@ const StudentTaskPerformanceChart = ({ taskPerformance }) => {
           rotate: -45,
           style: {
             fontSize: '12px',
+            colors: '#ffffff',
           },
         },
       },
@@ -80,9 +86,17 @@ const StudentTaskPerformanceChart = ({ taskPerformance }) => {
         max: 100,
         title: {
           text: 'Percentage',
+          style: {
+            color: '#ffffff',
+          },
+        },
+        labels: {
+          style: {
+            colors: '#ffffff',
+          },
         },
       },
-      colors: ['#008FFB', '#00E396', '#FF4560'],
+      colors: ['#00E396', '#008FFB', '#FF4560'],
       plotOptions: {
         bar: {
           horizontal: false,
@@ -104,38 +118,48 @@ const StudentTaskPerformanceChart = ({ taskPerformance }) => {
             return `${value.toFixed(2)}%`;
           },
         },
+        theme: 'dark',
+      },
+      grid: {
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+      },
+      legend: {
+        labels: {
+          colors: '#ffffff',
+        },
       },
     },
   };
 
   return (
-    <div className="p-4 bg-gray-300 bg-opacity-80 text-black shadow-md rounded-lg">
-      <h2 className="text-lg font-semibold text-black mb-4">
-        Student Task Performance
-      </h2>
-      <input
-        type="text"
-        placeholder="Search by student code..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="mb-4 p-2 border border-gray-300 rounded"
-      />
-      {filteredStudents.length > 0 ? (
-        <div className="overflow-x-auto">
-          <div style={{ minWidth: `${filteredStudents.length * 70}px` }}>
-            <Chart
-              options={chartData.options}
-              series={chartData.series}
-              type="bar"
-              height={350}
-              className="text-black"
-            />
+    <Card className="shadow-md bg-[#002020] border-[#00E396] border">
+      <CardHeader>
+        <CardTitle className="text-white">Student Task Performance</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input
+          type="text"
+          placeholder="Search by student code..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mb-4 bg-[#001516] border-[#00E396]/50 text-white placeholder:text-white/60"
+        />
+        {filteredStudents.length > 0 ? (
+          <div className="overflow-x-auto">
+            <div style={{ minWidth: `${Math.max(300, filteredStudents.length * 70)}px` }}>
+              <Chart
+                options={chartData.options}
+                series={chartData.series}
+                type="bar"
+                height={350}
+              />
+            </div>
           </div>
-        </div>
-      ) : (
-        <p className="text-black">No matching students found.</p>
-      )}
-    </div>
+        ) : (
+          <p className="text-white/80">No matching students found.</p>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

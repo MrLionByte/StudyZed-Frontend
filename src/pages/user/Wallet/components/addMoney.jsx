@@ -32,7 +32,6 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
 
   const handleCancelButton = () => {
     cancelModal();
-    console.log('MODAL Cloased');
   };
 
   const handleSubmit = async (e) => {
@@ -67,7 +66,7 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
       }
       console.log(response.data.error);
       if (response.data.status === 400) {
-        toast.warning('Session with same name already exist for you');
+        toast.warning('Failed to complete transaction');
       }
     } catch {
       console.error('Error creating payment session:', error);

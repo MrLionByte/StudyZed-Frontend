@@ -33,7 +33,6 @@ export const useAssessments = () => {
         },
         
       });
-      console.log(response);
       
       setAssessments(response.data);
       await attendedAssessments();
@@ -52,7 +51,6 @@ export const useAssessments = () => {
       const response = await api.get(studentEndPoints.GetAttendedAssessments, {
         baseURL:url,
       });
-      console.log("ASSESS :", response);
       setAttemptedAssessments(response.data)
       
       // setAssessments((prev) => [response.data, ...prev]);

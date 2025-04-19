@@ -49,11 +49,8 @@ api.interceptors.request.use(
         if (!config?.url) return config;
 
         const exclusion = Object.keys(EXCLUDED_URLS).find(url => config?.url?.includes(url));
-        console.log("XX :", exclusion);
         
         if (exclusion && EXCLUDED_URLS[exclusion].method === config.method.toUpperCase()) {
-            console.log(config);
-            
             return config;
         }
 
@@ -72,11 +69,8 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     async (error)=> {
-        console.log("API :",error);
-        
         const originalRequest = error.config;
         const status = error.response?.status || error.status;
-        console.log("API status :",status);
         originalRequest.retryCount = originalRequest.retryCount || 0;
 
         if (status === 401 || status === 403 && 
@@ -110,7 +104,6 @@ api.interceptors.response.use(
                 return api(originalRequest);
 
             } catch (refreshError) {
-                console.error("Token refresh failed:", refreshError);
                 if (originalRequest.retryCount >= MAX_RETRY_ATTEMPTS) {
                     clearSavedAuthData();
                     localStorage.removeItem("adminAuthState");

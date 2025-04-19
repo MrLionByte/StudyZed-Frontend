@@ -3,7 +3,6 @@ import {
   useState,
   forwardRef,
   useImperativeHandle,
-  useRef,
 } from 'react';
 import { Button, Drawer, message, Empty, List, Badge, Spin } from 'antd';
 import { Bell, RefreshCcw, CheckIcon } from 'lucide-react';
@@ -46,7 +45,7 @@ const AppNotification = forwardRef((_, ref) => {
           );
         }
       } else {
-        console.log('Permission denied for notifications');
+        // console.log('Permission denied for notifications');
       }
     } catch (error) {
       setError(error.message);
@@ -70,7 +69,6 @@ const AppNotification = forwardRef((_, ref) => {
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
-      console.error('Error marking notification as read:', error);
       message.error('Failed to mark notification as read');
       setError(error.message);
     }
@@ -83,7 +81,6 @@ const AppNotification = forwardRef((_, ref) => {
       const response = await axios.get(
         `${url}notification/list/${user.user_code}/`,
       );
-      console.log('Rfresh :', response);
 
       setNotifications(response.data);
       setUnreadCount(response.data.filter((notif) => !notif.read).length);
@@ -101,7 +98,6 @@ const AppNotification = forwardRef((_, ref) => {
 
   useEffect(() => {
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('Rfresh xx :', payload);
       const newNotification = {
         id: Date.now(),
         title: payload.notification?.title || 'New Notification',
@@ -118,7 +114,6 @@ const AppNotification = forwardRef((_, ref) => {
       if (newNotification?.type == 'alert') {
         message.warning(newNotification.body);
       }
-      console.log('Rfresh xx :', newNotification);
       if (document.hidden) {
         message.info({
           content: payload.notification?.title,

@@ -107,7 +107,7 @@ export const useSessionSelection = () => {
       });
       setGroupSession(response.data);
     } catch (err) {
-      toast.error("Failed to get data from backend, try again");
+      // toast.error("Failed to get data from backend, try again");
     } finally {
       setLoading(false);
     }
@@ -148,6 +148,7 @@ export const useSessionSelection = () => {
   }, [fetchFromBackend]);
 
   return {
+    selectedDay,
     sessionType,
     setSessionType,
     callStatus,

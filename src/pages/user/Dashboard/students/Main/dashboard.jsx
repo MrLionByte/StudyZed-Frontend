@@ -37,7 +37,7 @@ export default function Dashboard() {
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold text-[#509c80]">
-              {studentProgress?.performance} %
+              {studentProgress?.performance*0.1} %
             </p>
             <p className="text-sm text-[#51806f]">Weekly Progress</p>
           </div>

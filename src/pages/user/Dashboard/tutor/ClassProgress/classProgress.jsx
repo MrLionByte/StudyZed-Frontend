@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import CardWithForm from './components/Cards';
 import StudentPerformanceChart from './components/PerformanceChart';
 import DailyTaskChart from './components/DailyTaskChart';
 import Skeleton from '../../components/skelton';
@@ -31,7 +30,6 @@ export default function ClassProgress() {
       },
       baseURL: url,
     });
-    console.log("Progress",response);
     
     setTaskPerformance(response.data);
   };
@@ -51,7 +49,7 @@ export default function ClassProgress() {
   }, [fetchFromBackend]);
 
   return (
-    <div className="grid grid-cols-1 md:h-[830px] overflow-y-auto gap-2 p-4">
+    <div className="grid grid-cols-1 md:h-[830px] overflow-y-auto gap-2 p-4 ">
       <div className="">
         {isLoading ? (
           <Skeleton className="h-96 w-full" />

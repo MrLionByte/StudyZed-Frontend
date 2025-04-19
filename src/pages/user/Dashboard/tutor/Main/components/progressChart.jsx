@@ -89,13 +89,10 @@
 
 // export default StudentProgressCard;
 
-
-// Updated progressChart.jsx
 import React from 'react';
 import {
   CheckCircle,
   Clock,
-  Award,
   XCircle,
   TrendingUp,
   Book,

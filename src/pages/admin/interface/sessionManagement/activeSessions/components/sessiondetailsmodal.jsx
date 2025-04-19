@@ -69,13 +69,13 @@ export default function SessionPaymentDetails({
         </CardContent>
 
         <div className="flex justify-between p-4">
-          <Button
+          {/* <Button
             onClick={(e) => handleSessionBlock(e)}
             className="hover:bg-red-600"
             variant="outline"
           >
             Block Session
-          </Button>
+          </Button> */}
 
           <Button
             onClick={cancelModal}

@@ -150,9 +150,8 @@ const AttendAssessmentModal = ({
       const response = await api.post(studentEndPoints.AttendAssessment, data, {
         baseURL: url,
       });
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
     handleFetchAgain();
     handleClose();

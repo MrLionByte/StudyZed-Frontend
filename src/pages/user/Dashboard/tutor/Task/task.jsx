@@ -156,6 +156,18 @@ export default function TutorTask() {
     }
   };
 
+  const handleUpdateTaskMark = (taskId, newMark) => {
+    
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, score: newMark } : task
+      )
+    );
+    setFetchFromBackend(true);
+    setSubmittedStudents([]);
+  };
+  
+
   function getStudentNameByCode(studentCode) {
     const matchedStudent = studentDetails.find(
       (student) => student.user_code === studentCode,
@@ -334,6 +346,7 @@ export default function TutorTask() {
       {isSubmitted && (
         <TaskSubmittedModal
           taskData={selectedSubmittedTask}
+          onMarkFinalized={handleUpdateTaskMark}
           handleClose={() => setIsSubmitted(false)}
         />
       )}

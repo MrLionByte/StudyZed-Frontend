@@ -19,7 +19,6 @@ export default function StudentsInSession() {
     const matchedStudent = studentDetails.find(
       student => student.user_code === studentCode
     );
-    console.log(studentCode);
     
     return {
       username : matchedStudent ? matchedStudent.username : studentCode,
@@ -48,17 +47,14 @@ export default function StudentsInSession() {
     try {
       const url = API_BASE_URLS['Session_Service'];
       const qury_data = { session_code: session_data.sessions.session_code };
-      console.log('QURY ', qury_data);
 
       const response = await api.get(TutorEndPoints.StudentsInSession, {
         baseURL: url,
         params: qury_data,
       });
       setStudents(response.data);
-      console.log('RESPONSE BRUT', response.data);
     } catch (e) {
       setError(e);
-      console.error('Error :', e);
     } finally {
       setLoading(false);
     }
@@ -67,7 +63,6 @@ export default function StudentsInSession() {
   const handleApproveStudent = async (studentId) => {
     setLoading(true);
     try {
-      console.log('STUDENT ID', studentId);
 
       const url = API_BASE_URLS['Session_Service'];
       const dummy_data = { dummy: 'data' };
@@ -81,12 +76,10 @@ export default function StudentsInSession() {
       setStudents(response.data);
       setLoading(false);
       toast.success('sucessfully approved student');
-      console.log('RESPONSE BRUT', response.data);
       setFetchFromBackend(true);
     } catch (e) {
       setError(e);
       setLoading(false);
-      console.error('Error :', e);
     }
   };
 

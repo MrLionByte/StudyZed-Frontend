@@ -38,7 +38,7 @@ export const useMyProgressLogic = () => {
         marksLost: marks_lost,
       });
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
@@ -57,7 +57,7 @@ export const useMyProgressLogic = () => {
       setTotalTask(response.data.total_task);
       setTaskScoreRatio(response.data.task_score_ratio);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 

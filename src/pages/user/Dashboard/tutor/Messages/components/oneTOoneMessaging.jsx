@@ -36,27 +36,21 @@ const ChatComponent = ({ chatId, currentUser, session_data }) => {
   async function fetchStudentsData() {
     setLoading(true);
     try {
-      console.log('session_code :', session_data);
 
       const url = API_BASE_URLS['Session_Service'];
       const qury_data = { session_code: session_data.sessions.session_code };
-      console.log('QURY ', qury_data);
 
       const response = await api.get(TutorEndPoints.StudentsInSession, {
         baseURL: url,
         params: qury_data,
       });
       // setStudents(response.data);
-      console.log('RESPONSE BRUT', response.data);
       const students = response.data;
       const studentCodes = students.map((student) => student.student_code);
-      console.log('STUDENTS :', studentCodes);
-
       fetchStudentsDetails(studentCodes);
     } catch (e) {
       setError(e);
       setLoading(false);
-      console.error('Error :', e);
     }
   }
 
@@ -79,16 +73,13 @@ const ChatComponent = ({ chatId, currentUser, session_data }) => {
             baseURL: url,
           },
         );
-        console.log('MSG RESPONSe :>', response);
 
         setChattedUsers(response.data.chatted_users);
       } catch (err) {
-        console.error('Error fetching chatted users:', err);
         setError('Failed to load chat history');
       } finally {
         setLoading(false);
       }
-      console.log('users', chattedUsers);
       if (chattedUsers != null) {
         chattedUsers;
       }
@@ -103,8 +94,6 @@ const ChatComponent = ({ chatId, currentUser, session_data }) => {
     const maxRetries = 3;
 
     const connectWebSocket = () => {
-      console.log('CONNECt :', selectedUser, selectedUser_ID);
-      const chatId = selectedUser_ID || 1999;
       const ws = new WebSocket(
         `ws://localhost:8006/ws/chat/${sender_id}/?receiver_id=${user_data.user.id}`,
       );
@@ -191,16 +180,13 @@ const ChatComponent = ({ chatId, currentUser, session_data }) => {
     // const user_messages =
   };
 
-  console.log('JUSt :', selectedUser);
-
   const fetchStudentsDetails = async (studentCodes) => {
     try {
       const nextUrl = 'class-app/session-student-details/';
       const response = await api.post(nextUrl, { student_codes: studentCodes });
-      console.log('ASD RES', response.data);
       setAllStudentsMessages(response?.data);
     } catch (e) {
-      console.log('ERROR AT MSG 183:', e);
+      // console.log('ERROR AT MSG 183:', e);
     }
   };
 

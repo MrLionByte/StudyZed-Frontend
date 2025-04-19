@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Plus, X, Circle, Copy } from 'lucide-react';
+import {  useState } from 'react';
+import { X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -10,19 +10,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import api, { API_BASE_URLS } from '../../../../../../api/axios_api_call';
-import { TutorEndPoints } from '../../../../../../api/endpoints/userEndPoints';
 import { getStudentByCode } from '../../../components/studentsInSession';
 
-const TaskSubmittedModal = ({ taskData, handleClose }) => {
+const TaskSubmittedModal = ({ taskData, onMarkFinalized, handleClose }) => {
   const [mark, setMark] = useState('0');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [markMarked, setMarkMarked] = useState(false);
-  console.log(taskData);
 
   const studentDetails = getStudentByCode();
 
@@ -43,11 +38,12 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
           baseURL: url,
         },
       );
-      console.log(response);
-
       setMarkMarked(true);
+      if (onMarkFinalized) {
+        onMarkFinalized(taskData.id, mark);
+      }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
     setShowConfirmDialog(false);
   };
@@ -119,7 +115,10 @@ const TaskSubmittedModal = ({ taskData, handleClose }) => {
                     </div>
                     <button
                       onClick={handleFinalizeMark}
-                      className="bg-emerald-500 rounded-lg p-1 hover:bg-red-600"
+                      className={`bg-emerald-500 rounded-lg p-1 ${
+                        markMarked ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600 cursor-pointer'
+                      }`}
+                      disabled={markMarked}
                     >
                       Finalize
                     </button>

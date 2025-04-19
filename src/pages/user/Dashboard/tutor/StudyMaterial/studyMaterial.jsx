@@ -166,7 +166,6 @@ export default function StudyMaterial() {
       setMessages(finalMessages);
       saveMessagesToSession(finalMessages);
     } catch (err) {
-      console.error("Error generating response:", err);
       const errorMessage = {
         id: Date.now(),
         isAI: true,
@@ -208,13 +207,11 @@ export default function StudyMaterial() {
       title: noteTitle,
       description: noteDescription,
     };
-    console.log(newNote);
 
     try {
       const response = await api.post('study-material/add-notes/', newNote, {
         baseURL: url,
       });
-      console.log(response);
       message.success('Notes have been added successfully');
       if (response.status === 201) {
         setNotes([response.data, ...notes]);
@@ -226,7 +223,6 @@ export default function StudyMaterial() {
         setCreateNote(false);
       }
     } catch (error) {
-      console.error('Error saving note:', error);
       message.error('Failed to save note. Please try again.');
     }
   };
@@ -248,11 +244,10 @@ export default function StudyMaterial() {
         baseURL: url,
         params: { session_key: session?.sessions?.session_code },
       });
-      console.log('NOTES :', response.data);
 
       setNotes(response.data);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     } finally{
       setLoading(false)
     }

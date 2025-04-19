@@ -35,7 +35,6 @@ export default function CardWithForm({ cancelModal }) {
   const [sessionName, setSessionName] = useState('');
   const [duration, setDuration] = useState('');
   const [amount, setAmount] = useState(0);
-  const [description, setDescription] = useState('');
   const [grade, setGrade] = useState('A');
   const [selectedPayment, setSelectedPayment] = useState('stripe');
   const [walletBalance, setWalletBalance] = useState(0);

@@ -42,7 +42,6 @@ export const submitAnswer = async (taskId, answer, setSubmitted, setAnswer) => {
     setAnswer('');
     localStorage.setItem('submitted', taskId);
   } catch (error) {
-    console.error(error);
     toast.error('Failed to submit task');
   }
 };

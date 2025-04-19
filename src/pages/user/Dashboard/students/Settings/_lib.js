@@ -31,7 +31,7 @@ export function useSettingsLogic() {
       });
       setSettings(response.data[0]);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 

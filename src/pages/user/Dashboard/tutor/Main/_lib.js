@@ -5,6 +5,7 @@ import api, { API_BASE_URLS } from '../../../../../api/axios_api_call';
 import { getSavedAuthData } from '../../../../../utils/Localstorage';
 import { getSessionData } from '../../components/currentSession';
 import { getStudentByCode } from '../../components/studentsInSession';
+import { useNavigate } from 'react-router-dom';
 
 export function useDashboardData() {
   const [fetchFromBackend, setFetchFromBackend] = useState(true);
@@ -15,7 +16,7 @@ export function useDashboardData() {
   const session = getSessionData();
   const students = getStudentByCode();
   const url = API_BASE_URLS['Session_Service'];
-
+  const navigate = useNavigate()
   function getStudentNameByCode(studentCode) {
     const matchedStudent = students.find(
       (student) => student.user_code === studentCode,
@@ -41,7 +42,7 @@ export function useDashboardData() {
 
       setStudentProgress(values);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
@@ -63,7 +64,11 @@ export function useDashboardData() {
 
       setStudentTableLeaderBoard(values);
     } catch (err) {
-      console.error(err);
+      // if (err.response.data.detail === "Session is not active") {
+      //   localStorage.removeItem('activeSection');
+      //   navigate('/user/dashboard');
+      // }
+      // console.error(err);
     }
   };
 

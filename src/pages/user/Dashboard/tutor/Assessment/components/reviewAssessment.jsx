@@ -17,11 +17,7 @@ import DatePickerWithRange from './components/dateRangePicker.jsx';
 export default function ReviewAssessment({ session_data }) {
   const {
     assessments,
-    loading,
     isCreatingAssessment,
-    scheduled,
-    ongoing,
-    completed,
     setIsCreatingAssessment,
     setFetchFromBackend,
   } = useAssessments();

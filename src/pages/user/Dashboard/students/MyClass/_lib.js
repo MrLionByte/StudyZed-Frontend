@@ -28,7 +28,7 @@ export const useVideoChatLogic = () => {
       });
       setScheduledSessions(response.data);
     } catch (err) {
-      // You can plug in a toast message here if needed
+      // 
     } finally {
       setLoading(false);
     }

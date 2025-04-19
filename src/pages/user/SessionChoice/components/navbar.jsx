@@ -60,8 +60,6 @@ export default function Navbar() {
     if (notificationRef.current) {
       notificationRef.current.refreshNotifications();
       notificationRef.current.requestNotificationPermission(userData.user_code);
-      console.log("REFRESGING");
-      
     }
   }, []);
 
@@ -71,14 +69,14 @@ export default function Navbar() {
         <div className="flex items-center justify-between md:h-16">
           <div className="flex items-center md:size-96">
             <GraduationCap className="hidden md:block size-14 text-emerald-400" />
-            <img className="w-28 md:w-fit md:h-36 object-cover object-center" src={Logo} alt="Logo" />
+            <img className="ml-3 mt-2 w-36 md:w-56 md object-cover object-center" src={Logo} alt="Logo" />
           </div>
 
           <div className="flex items-center space-x-4">
             <Link to="/" className="flex items-center text-emerald-400 hover:bg-teal-800 transition-colors rounded-full p-2">
               <Home />
             </Link>
-            {userRole === 'STUDENT' ? (
+            {/* {userRole === 'STUDENT' ? (
               <Link
                 to="/student/student-wallet/"
                 className="text-emerald-400 hover:bg-teal-800 transition-colors p-2 rounded-full"
@@ -92,7 +90,7 @@ export default function Navbar() {
               >
                 <Wallet />
               </Link>
-            )}
+            )} */}
 
             <Notification ref={notificationRef} />
 

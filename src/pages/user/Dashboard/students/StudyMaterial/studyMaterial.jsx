@@ -39,22 +39,19 @@ export default function StudyMaterial() {
   const url = API_BASE_URLS['Session_Service'];
   const session = getSessionData();
 
-  // Limit messages to the latest 10
   const limitMessagesToLatest = (messagesArray) => {
     if (messagesArray.length <= MAX_HISTORY_LENGTH * 2) return messagesArray; // Keep all if under limit (10 pairs = 20 messages)
     return messagesArray.slice(-MAX_HISTORY_LENGTH * 2); // Keep last 10 user-bot message pairs
   };
 
-  // Save messages to session storage
   const saveMessagesToSession = (updatedMessages) => {
     try {
       const sessionKey = session?.sessions?.session_code;
       if (sessionKey) {
-        // Limit to last 10 conversation pairs before saving
+
         const limitedMessages = limitMessagesToLatest(updatedMessages);
         localStorage.setItem(`chat_history_${sessionKey}`, JSON.stringify(limitedMessages));
         
-        // Update chat history for AI context
         const formattedHistory = limitedMessages.map(msg => ({
           role: msg.isAI ? 'model' : 'user',
           parts: [{ text: msg.content }]
@@ -62,11 +59,10 @@ export default function StudyMaterial() {
         setHistory(formattedHistory);
       }
     } catch (error) {
-      console.error('Error saving messages to session:', error);
+      // console.error('Error saving messages to session:', error);
     }
   };
 
-  // Load messages from session storage
   const loadMessagesFromSession = () => {
     try {
       const sessionKey = session?.sessions?.session_code;
@@ -74,18 +70,16 @@ export default function StudyMaterial() {
         const savedMessages = localStorage.getItem(`chat_history_${sessionKey}`);
         if (savedMessages) {
           const parsedMessages = JSON.parse(savedMessages);
-          // Limit to last 10 conversation pairs
+  
           const limitedMessages = limitMessagesToLatest(parsedMessages);
           setMessages(limitedMessages);
           
-          // Initialize chat history for AI context
           const formattedHistory = limitedMessages.map(msg => ({
             role: msg.isAI ? 'model' : 'user',
             parts: [{ text: msg.content }]
           }));
           setHistory(formattedHistory);
           
-          // Track previous prompts to prevent duplicates
           const userPrompts = new Set(
             limitedMessages
               .filter(msg => !msg.isAI)
@@ -95,18 +89,16 @@ export default function StudyMaterial() {
         }
       }
     } catch (error) {
-      console.error('Error loading messages from session:', error);
+      // console.error('Error loading messages from session:', error);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Trim prompt and validate
     const trimmedPrompt = aiPrompt.trim();
     
     if (!trimmedPrompt) {
-      // Show validation message if empty
       const emptyPromptMessage = {
         id: Date.now(),
         isAI: true,
@@ -118,7 +110,6 @@ export default function StudyMaterial() {
       return;
     }
 
-    // Check if this is a duplicate prompt
     if (previousPrompts.has(trimmedPrompt.toLowerCase())) {
       const duplicateMessage = {
         id: Date.now(),
@@ -131,10 +122,8 @@ export default function StudyMaterial() {
       return;
     }
 
-    // Set loading state and disable input
     setIsLoading(true);
 
-    // Create user message
     const userMessage = {
       id: Date.now(),
       isAI: false,
@@ -142,7 +131,6 @@ export default function StudyMaterial() {
       timestamp: Date.now(),
     };
     
-    // Update messages and track this prompt
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setPreviousPrompts(prev => new Set(prev).add(trimmedPrompt.toLowerCase()));
@@ -150,7 +138,6 @@ export default function StudyMaterial() {
     setAiPrompt("");
     
     try {
-      // Generate AI response
       const botResponse = await generateContent(trimmedPrompt, history);
       const botMessage = {
         id: Date.now(),
@@ -159,12 +146,10 @@ export default function StudyMaterial() {
         timestamp: Date.now(),
       };
       
-      // Update messages with AI response
       const finalMessages = [...updatedMessages, botMessage];
       setMessages(finalMessages);
       saveMessagesToSession(finalMessages);
     } catch (err) {
-      console.error("Error generating response:", err);
       const errorMessage = {
         id: Date.now(),
         isAI: true,
@@ -176,7 +161,6 @@ export default function StudyMaterial() {
       saveMessagesToSession(finalMessages);
     } finally {
       setIsLoading(false);
-      // Focus input after response
       if (inputRef.current) {
         inputRef.current.focus();
       }
@@ -189,11 +173,9 @@ export default function StudyMaterial() {
         baseURL: url,
         params: { session_key: session?.sessions?.session_code },
       });
-      console.log('NOTES :', response.data);
-
       setNotes(response.data);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
@@ -205,14 +187,12 @@ export default function StudyMaterial() {
     }
   }, [fetchFromBackend]);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
-  // Focus input on first load
   useEffect(() => {
     if (inputRef.current && !isLoading) {
       inputRef.current.focus();
@@ -237,7 +217,7 @@ export default function StudyMaterial() {
 
   return (
     <div className="grid grid-cols-12 gap-4 max-h-full p-2">
-      {/* Notes section - responsive layout */}
+      
       <div className="col-span-12 md:col-span-8 border-emerald-900 border-2 bg-[#051F1E] bg-opacity-40 rounded-xl p-3 md:p-6 h-[400px] md:h-[800px] overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 h-fit overflow-y-auto">
           {notes.map((note) => (
@@ -304,7 +284,6 @@ export default function StudyMaterial() {
         </div>
       </div>
     
-      {/* Chat section - responsive layout */}
       <div className="col-span-12 md:col-span-4 border-emerald-900 border-2 rounded-xl p-3 md:p-6 h-[400px] md:h-[800px] flex flex-col">
         <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-6 flex items-center space-x-2">
           <Bot size={20} className="text-[#00FF9D]" />
@@ -337,7 +316,6 @@ export default function StudyMaterial() {
               </div>
             ))}
             
-            {/* Loading indicator */}
             {isLoading && (
               <div className="flex justify-start">
                 <div className="max-w-[90%] p-3 rounded-lg bg-[#1E3A5F] flex items-center">

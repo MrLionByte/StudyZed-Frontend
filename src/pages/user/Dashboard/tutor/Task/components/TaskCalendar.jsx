@@ -157,7 +157,6 @@ const TaskCalendar = ({ tasks, onCreateTask, onTaskClick }) => {
           ),
         )}
       </div>
-      <ToastContainer />
     </div>
   );
 };
