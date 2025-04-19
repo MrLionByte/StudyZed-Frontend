@@ -151,7 +151,7 @@ export default function Assessment({ session_data }) {
                         {getStudentNameByCode(student.student_code)}
                       </p>
                       {student?.is_late_submission ? (
-                        <p className="text-sm w-1/2 h-5 bg-yellow-700 rounded-full text-center">
+                        <p className="text-sm w-1/2 h-5 bg-yellow-700 rounded-full text-center w-full">
                           Late
                         </p>
                       ) : (

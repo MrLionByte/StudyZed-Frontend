@@ -164,7 +164,7 @@ const StudentAssessmentModal = ({ assessmentData, handleClose }) => {
                                       response.question,
                                     )
                                   }
-                                  className="w-16 rounded-full text-black text-center"
+                                  className="w-16 rounded-full text-white text-center"
                                 />
                               </>
                             )}

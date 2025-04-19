@@ -148,6 +148,7 @@ export const useSessionSelection = () => {
   }, [fetchFromBackend]);
 
   return {
+    session_data,
     selectedDay,
     sessionType,
     setSessionType,

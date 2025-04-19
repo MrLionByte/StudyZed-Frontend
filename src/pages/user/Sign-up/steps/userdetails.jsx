@@ -193,7 +193,7 @@ export default function UserDetailStep({ NextToSignin, onBack }) {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-2 flex items-center"
+            className="absolute inset-y-0 right-2 flex items-center text-black"
             aria-label="Toggle password visibility"
           >
             <p>
