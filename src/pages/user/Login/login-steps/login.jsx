@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import api from '../../../../api/axios_api_call.js';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeClosed } from 'lucide-react';
+import { Eye, EyeClosed,ChevronDown, ChevronUp } from 'lucide-react';
 import { savedAuthData } from '../../../../utils/Localstorage.js';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../../redux/slice.js';
@@ -9,10 +9,17 @@ import { toast, ToastContainer } from 'react-toastify';
 import LogoSvg from '../../../../assets/test.svg';
 import GoogleAuth from "../../../../components/GoogleAuth/GoogleAuth.jsx";
 
+
 export default function TutorStudentlogin({ passwordForgot }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const SAMPLE_STUDENT = import.meta.env.VITE_SAMPLE_STUDENT;
+  const SAMPLE_STUDENT_PASSWORD = import.meta.env.VITE_SAMPLE_STUDENT_PASSWORD;
+  console.log(SAMPLE_STUDENT, SAMPLE_STUDENT_PASSWORD);
+  
 
   const [errorMessages, setErrorMessages] = useState({
     email: '',
@@ -186,6 +193,29 @@ export default function TutorStudentlogin({ passwordForgot }) {
     passwordForgot();
   };
 
+  const fillSampleCredentials = (type) => {
+    const sampleEmail =
+      type === 'student'
+        ? 'shamand'
+        : import.meta.env.VITE_SAMPLE_TUTOR;
+  
+    const samplePassword =
+      type === 'student'
+        ? import.meta.env.VITE_SAMPLE_STUDENT_PASSWORD
+        : import.meta.env.VITE_SAMPLE_TUTOR_PASSWORD;
+    console.log(samplePassword);
+    console.log(sampleEmail);
+    
+    
+    if (!sampleEmail || !samplePassword) {
+      toast.error('Sample credentials not configured correctly.');
+      return;
+    }
+  
+    setEmail(sampleEmail);
+    setPassword(samplePassword);
+  };  
+
   return (
     <div className="flex-1">
       {loading && (
@@ -215,6 +245,7 @@ export default function TutorStudentlogin({ passwordForgot }) {
               type="email"
               id="email"
               name="email"
+              value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
@@ -299,6 +330,35 @@ export default function TutorStudentlogin({ passwordForgot }) {
       <div className="flex items-center gap-4 justify-center">
         <GoogleAuth clientId={GOOGLE_CLIENT_ID} requireRole={false} />
       </div>
+      <div className="mt-6 flex flex-col items-center">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1 text-sm px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-md"
+      >
+        Try a Sample Account {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+      </button>
+
+      {open && (
+        <div className="mt-2 flex gap-4">
+          <button
+            type="button"
+            onClick={() => fillSampleCredentials("student")}
+            className="px-3 py-1.5 text-sm bg-emerald-500 hover:bg-emerald-600 text-black font-medium rounded-md shadow-sm transition-all"
+          >
+            Try as Student
+          </button>
+          <button
+            type="button"
+            onClick={() => fillSampleCredentials("tutor")}
+            className="px-3 py-1.5 text-sm bg-indigo-500 hover:bg-indigo-600 text-white font-medium rounded-md shadow-sm transition-all"
+          >
+            Try as Tutor
+          </button>
+        </div>
+      )}
+    </div>
+
       <ToastContainer position="top-center" autoClose="1000" />
     </div>
   );
