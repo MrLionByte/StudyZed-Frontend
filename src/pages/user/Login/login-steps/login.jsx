@@ -16,11 +16,6 @@ export default function TutorStudentlogin({ passwordForgot }) {
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const SAMPLE_STUDENT = import.meta.env.VITE_SAMPLE_STUDENT;
-  const SAMPLE_STUDENT_PASSWORD = import.meta.env.VITE_SAMPLE_STUDENT_PASSWORD;
-  console.log(SAMPLE_STUDENT, SAMPLE_STUDENT_PASSWORD);
-  
-
   const [errorMessages, setErrorMessages] = useState({
     email: '',
     password: '',
@@ -196,7 +191,7 @@ export default function TutorStudentlogin({ passwordForgot }) {
   const fillSampleCredentials = (type) => {
     const sampleEmail =
       type === 'student'
-        ? 'shamand'
+        ? import.meta.env.VITE_SAMPLE_STUDENT
         : import.meta.env.VITE_SAMPLE_TUTOR;
   
     const samplePassword =
