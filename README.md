@@ -1,31 +1,58 @@
 
-# Study-Zed 
-### Frontend => Build Using React
-### Backend <a href="git" >GIT</a>
+# StudyZed — Frontend
+
+### 🚀 Built with React (Vite + Redux + Tailwind CSS)  
+🔗 **Backend Repository:** [StudyZed Backend (Django Microservices)](https://github.com/MrLionByte/StudyZed-Backend)
+
+---
 
 ## Overview  
 
-Studyzed is an innovative study management platform designed to help tutors and students organize their academic life effectively. The platform combines task management, scheduling, assessment creation,tracking and resource organization tools to create a comprehensive study environment.This repository contains the **frontend** of StudyZed, built with **React.js**, communicating seamlessly with the backend services.
+**StudyZed** is a personalized, modular education platform aimed at empowering tutors and engaging students through modern digital tools. This repository hosts the **frontend application**, developed using **React.js (Vite)** and styled with **Tailwind CSS**, interfacing with the backend microservices via RESTful APIs.
 
-## Features  
-- **Progress Tracking** – View study progress and insights.
-- **Leaderboard** – Engage in a competitive learning environment.  
-- **Real-time Notifications** – Get instant updates via Firebase Cloud Messaging (FCM).  
-- **Messaging System** – Send and receive messages in real time using websocket.
-- **One-on-One Video Calls** – Integrated for student and tutor interaction.  
+The frontend offers an easy-to-use interface for students, tutors, and admins, enabling daily task management,assessment and analysis, in-app messaging, real-time collaboration, video sessions, notifications and more.
+
+## ✨ Core Features
+
+- **Daily Task & Assessment Tracking** – Assign and evaluate daily activities.  
+- **Performance Analysis** – Visual insights into student progress.  
+- **Leaderboard System** – Competitive elements to boost motivation.  
+- **In-App Messaging** – Real-time chat using WebSockets.  
+- **Live Video Sessions** – One-on-one and group calls via WebRTC/ZegoCloud.  
+- **Firebase Push Notifications** – Stay informed with real-time alerts.  
+- **Session Scheduling** – Book and manage live classes.  
+- **Resource Sharing** – Upload and distribute notes, videos, and study materials.  
+- **Custom Dashboards** – Personalized views for different user roles.  
+- **Role-Based Login** – Secure access for tutors, students, and admins.  
+- **ZedBot AI Assistant** – Smart in-app assistant .  
+- **Tutor Payments** – Pay-per-session integration (Stripe, via backend).
+
+--- 
 
 ## 🛠️ Tech Stack  
-- **Frontend:** Vite-React.js, Tailwind CSS  
+- **Frontend:** Vite + React.js
 - **State Management:** Redux Toolkit  
 - **Real-Time Features:** Firebase Cloud Messaging (FCM), WebSockets  
 - **Video Call Integration:** WebRTC / ZegoCloud  
 - **Backend Communication:** Axios (REST API)  
 
+## 🛠️ Tech Stack
 
-## 🏗️ Installation & Setup  
+| Category            | Stack                                      |
+|---------------------|--------------------------------------------|
+| Frontend Framework  | Vite + React.js                            |
+| Styling             | Tailwind CSS                               |
+| State Management    | Redux Toolkit                              |
+| Realtime Features   | Firebase Cloud Messaging, WebSockets       |
+| Video Call          | ZegoCloud                                  |
+| API Communication   | Axios (REST API)                           |
 
-### **1. Clone the Repository**  
-```sh
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository  
+```bash
 git clone https://github.com/MrLionByte/Frontend---StudyZed.git
 cd Frontend---StudyZed
 ```
@@ -52,3 +79,6 @@ VITE_VAPID_KEY=your-vapid-key
 ```sh
 npm run dev
 ```
+
+## 📬 Contact
+For feature requests, contributions, or questions, feel free to connect via [LinkedIn)](https://www.linkedin.com/in/farhan-mahmood-n/) or open an issue on the repository.
