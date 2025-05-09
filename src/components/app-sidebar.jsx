@@ -28,9 +28,9 @@ import {
 
 const data = {
   user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: 'mrlionbyte',
+    email: 'admin.studyzed@gmail.com',
+    avatar: 'https://avatars.githubusercontent.com/MrLionByte',
   },
   navMain: [
     {

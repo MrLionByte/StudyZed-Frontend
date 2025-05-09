@@ -35,9 +35,9 @@ if (localStorage.getItem('adminAuthState')) {
 
 const data = {
   user: {
-    name: admin?.username || 'shadcn',
-    email: admin?.email || 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: admin?.username || 'mrlionbyte',
+    email: admin?.email || 'admin.studyzed@gmail.com',
+    avatar: 'https://avatars.githubusercontent.com/MrLionByte',
   },
   teams: [
     {
