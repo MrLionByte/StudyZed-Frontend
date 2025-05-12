@@ -28,8 +28,7 @@ export default function Contact() {
       const result = await response.json();
       alert(result.message);
     } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong!");
+      // console.error("Error:", error);
     }
   };
 

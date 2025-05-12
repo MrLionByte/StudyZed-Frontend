@@ -2,10 +2,8 @@ import { useEffect } from 'react';
 import Landingpageimage from '../../../assets/landingpageimage.png';
 import XmasCap from '../../../assets/xmascap.png';
 import {
-  clearSavedAuthData,
   getSavedAuthData,
 } from '../../../utils/Localstorage';
-import { logout } from '../../../redux/slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,10 +12,6 @@ const LandingPage = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
   useEffect(() => {
-    // if (isAuthenticated){
-    //   dispatch(logout());
-    //   clearSavedAuthData();
-    // }
     try {
       const role = getSavedAuthData();
       console.log('ROLE :', role.role.toLowerCase());

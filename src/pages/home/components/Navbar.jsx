@@ -1,14 +1,7 @@
-import { useEffect, useState } from 'react';
-import Landingpageimage from '../../../assets/landingpageimage.png';
-import XmasCap from '../../../assets/xmascap.png';
-import {
-  clearSavedAuthData,
-  getSavedAuthData,
-} from '../../../utils/Localstorage';
-import { logout } from '../../../redux/slice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap } from 'lucide-react';
+import Logo from '../../../assets/studyzed_main.png';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,18 +18,12 @@ export default function Navbar() {
     navigate('sign-up/');
   };
 
-  const handleTohome = () => {
-    navigate('/');
-  };
-
   return (
     <nav className="container mx-auto px-6 py-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <GraduationCap className="text-[#00FFB2] w-8 h-8" />
-          <span className="text-3xl font-bold ml-2 gradient-text">
-            Study-Zed
-          </span>
+          <img className="ml-3 mt-2 w-36 md:w-56 md object-cover object-center" src={Logo} alt="Logo" />
         </div>
         <div className="hidden md:flex space-x-8">
           <a href="#" className="text-gray-300 hover:text-[#00FFB2] transition">
