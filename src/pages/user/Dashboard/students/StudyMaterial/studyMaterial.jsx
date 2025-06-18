@@ -40,8 +40,8 @@ export default function StudyMaterial() {
   const session = getSessionData();
 
   const limitMessagesToLatest = (messagesArray) => {
-    if (messagesArray.length <= MAX_HISTORY_LENGTH * 2) return messagesArray; // Keep all if under limit (10 pairs = 20 messages)
-    return messagesArray.slice(-MAX_HISTORY_LENGTH * 2); // Keep last 10 user-bot message pairs
+    if (messagesArray.length <= MAX_HISTORY_LENGTH * 2) return messagesArray; 
+    return messagesArray.slice(-MAX_HISTORY_LENGTH * 2); 
   };
 
   const saveMessagesToSession = (updatedMessages) => {
