@@ -53,11 +53,11 @@ class WebRTCService {
       };
   
       peerConnection.onconnectionstatechange = () => {
-        console.log(`Connection state for ${userId}: ${peerConnection.connectionState}`);
+        // console.log(`Connection state for ${userId}: ${peerConnection.connectionState}`);
       };
   
       peerConnection.ontrack = (event) => {
-        console.log('Received remote track');
+        // console.log('Received remote track');
         if (this.onRemoteStream && event.streams && event.streams[0]) {
           this.onRemoteStream(userId, event.streams[0]);
         }

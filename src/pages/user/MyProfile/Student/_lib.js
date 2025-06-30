@@ -31,9 +31,7 @@ export const useUserProfile = () => {
             try {
                 const response = await api.get('user-app/user-profile/');
                 const data = response.data;
-                console.log(data);
-                console.log(data.email);
-                console.log(response.data);
+             
                 setUserData({
                     username: data.username,
                     first_name: data.first_name,
@@ -132,7 +130,7 @@ export const useUserProfile = () => {
     const handleSave = async (field) => {
         if (newData[field] !== undefined) {
             try {
-                console.log("NEW DATA ", newData[field], field);
+               
                 await api.patch(`user-app/update-profile/`, {
                     [field]: newData[field]
                 });
@@ -158,13 +156,9 @@ export const useUserProfile = () => {
     }
 
     const handleBackToSession = () => {
-        console.log("userData :",userData.role);
         if (userData.role){
-            console.log("Working : 11 ", userData.role);
-            
-            navigate(`/student/choose-session/`)
+           navigate(`/student/choose-session/`)
         } else {
-            console.log("Working : 11 2");
             navigate(`/login/`)
         }
         

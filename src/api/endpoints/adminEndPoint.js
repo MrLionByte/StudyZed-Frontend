@@ -7,6 +7,7 @@ export const adminEndPoints = {
 
     'SeeSessionsToApprove'            : `session-admin/see-session-to-approve/`,
     'GiveApprovelForSession'          : `session-admin/approve-session/`,
+    'GiveRejectForSession'            : 'session-admin/reject-session/',
     'ActiveSessions'                  : `session-admin/see-session-active/`,
     'BlockedSessions'                : 'session-admin/block-session/',
     'InactiveSessions'               : 'session-admin/see-session-inactive/',

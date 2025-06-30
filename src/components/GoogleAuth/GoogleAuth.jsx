@@ -211,7 +211,6 @@ const GoogleAuth = ({ clientId, requireRole = false }) => {
   };
 
   const handleAuthentication = async (userData) => {
-    console.log("Working  1");
     
     try {
       const response = await api.post('auth-app/login/google-account/', userData);
@@ -221,9 +220,7 @@ const GoogleAuth = ({ clientId, requireRole = false }) => {
       const refreshToken = response.data.refresh_token;
       const user = response.data.user;
       const role = response.data.role;
-      const userCode = response.data.user_code;      console.log("Working  2", response.data);
-      console.log("Working  2", response);
-      console.log("Working  2", authStatus);
+      const userCode = response.data.user_code;
       
       if (authStatus === 'success' || authStatus === 'created') {
         const authState = {

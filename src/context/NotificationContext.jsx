@@ -16,8 +16,7 @@ export const NotificationProvider = ({ children }) => {
       const response = await axios.get(
         `${API_BASE_URLS['Notification_Service']}notification/list/${user.user_code}/`,
       );
-      console.log('Notify Context :', response);
-
+      
       setNotifications(response.data);
       setUnreadAlerts(
         response.data.filter((notif) => notif.type === 'alert' && !notif.read)
@@ -32,7 +31,6 @@ export const NotificationProvider = ({ children }) => {
     fetchNotifications();
 
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('New notification received:', payload);
       fetchNotifications();
     });
     return () => unsubscribe();

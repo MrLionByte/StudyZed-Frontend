@@ -1,11 +1,52 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
+import {TutorEndPoints} from '../../../api/endpoints/userEndPoints';
+import api,{ API_BASE_URLS } from "../../../api/axios_api_call";
+import { useEffect } from 'react';
+
 
 const PaymentCancelled = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(
+    location.search);
+
+  const sessionCode = queryParams.get('session_code');
 
   const handleHomePage = () => {
     navigate('/tutor/choose-session/');
   };
+
+  async function deleteSession() {
+    try {
+      const url = API_BASE_URLS['Session_Service'];
+      const response = await api.delete(TutorEndPoints.DeleteSession, {
+        baseURL: url,
+        data: { session_code: sessionCode }
+      });
+    } catch (e) {
+      // console.error(e);
+    }
+  }
+
+  async function deleteSubscription() {
+    try {
+      const url = API_BASE_URLS['Payment_Service'];
+      const response = await api.delete(TutorEndPoints.DeleteSubscription, {
+        baseURL: url,
+        data: { session_code: sessionCode }
+      });
+    } catch (e) {
+      // console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    if (sessionCode) {
+      deleteSession();
+      deleteSubscription();
+    }
+  }, [sessionCode]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-950 px-4 md:px-6">

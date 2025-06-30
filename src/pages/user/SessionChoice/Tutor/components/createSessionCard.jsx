@@ -44,6 +44,9 @@ export default function CardWithForm({ cancelModal }) {
   const [isAmount, setIsAmount] = useState(false);
   const [prices, setPrices] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [timerCountdown, setTimerCountdown] = useState(0);
+
   const handleDurationChange = (e) => {
     const selectedDuration = Number(e.target.value);
     setDuration(selectedDuration);
@@ -97,6 +100,9 @@ export default function CardWithForm({ cancelModal }) {
       setErrorFound('Enter session name and Choose duration');
       return;
     }
+
+    let timerInterval = null;
+
     try {
       const teacher_data = getSavedAuthData();
 
@@ -116,7 +122,7 @@ export default function CardWithForm({ cancelModal }) {
           baseURL: url,
         },
       );
-
+      
       if (response.data.status === 201) {
         const paymentData = {
           session_code: response.data.data.session_code,
@@ -128,11 +134,25 @@ export default function CardWithForm({ cancelModal }) {
         const url = API_BASE_URLS['Payment_Service'];
 
         if (selectedPayment === 'wallet') {
-          const delay = (ms) =>
-            new Promise((resolve) => setTimeout(resolve, ms));
-          await delay(2000);
-          console.log('WHAT ', selectedPayment);
+          
+          setIsLoading(true)
+          setTimerCountdown(10)
 
+          const delay = (ms) =>
+            new Promise((resolve) => {
+              let count = 10;
+              timerInterval = setInterval(() => {
+                count--;
+                setTimerCountdown(count);
+                if (count <= 0) {
+                  clearInterval(timerInterval);
+                }
+              }, 1000);
+              setTimeout(resolve, ms);
+            });
+
+          await delay(10000);
+        
           const payment_response = await api.post(
             TutorEndPoints.CreateSessionUsingWallet,
             paymentData,
@@ -140,7 +160,10 @@ export default function CardWithForm({ cancelModal }) {
               baseURL: url,
             },
           );
-          console.log('WALLET :', payment_response);
+          if (timerInterval) clearInterval(timerInterval);
+            setIsLoading(false);
+            setTimerCountdown(0);
+
         } else {
           const payment_response = await api.post(
             TutorEndPoints.CreateSessionPayment,
@@ -164,8 +187,11 @@ export default function CardWithForm({ cancelModal }) {
         setErrorFound('Session name is already exist');
       }
     } catch (error) {
-      alert('There was an error initiating payment.');
-    }
+      toast.error('There was an error initiating payment.');
+      if (timerInterval) clearInterval(timerInterval);
+      setIsLoading(false);
+      setTimerCountdown(0);
+    } 
   };
 
   const handleBuySession = () => {};
@@ -181,10 +207,9 @@ export default function CardWithForm({ cancelModal }) {
       const response = await api.get(userCommonEndPoints.AllPaymentData, {
         baseURL: url,
       });
-      console.log(response.data);
       setPrices(response.data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -359,7 +384,7 @@ export default function CardWithForm({ cancelModal }) {
                     </Label>
                   </div>
 
-                  {/* <div className="flex items-center w-1/2 space-x-2">
+                  <div className="flex items-center w-1/2 space-x-2">
               {walletBalance < amount ? <div>Wallet Unavailable</div> :
               <>
                 <RadioGroupItem
@@ -380,7 +405,7 @@ export default function CardWithForm({ cancelModal }) {
                 </Label>
                 </>
                 }
-              </div> */}
+              </div>
                 </RadioGroup>
               </div>
             </div>
@@ -401,6 +426,15 @@ export default function CardWithForm({ cancelModal }) {
         </CardFooter>
         <ToastContainer />
       </Card>
+      
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex flex-col items-center justify-center z-50">
+          <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32 mb-4" style={{borderTopColor: '#3498db'}}></div>
+          <p className="text-white text-xl">Initiating payment...</p>
+          <p className="text-white text-lg">Please wait {timerCountdown} seconds</p>
+        </div>
+      )}
+
     </div>
   );
 }

@@ -23,8 +23,6 @@ export default function AdminHome() {
     { path: '/admin/company-revenue/', breadcrumb: 'Revenue' },
   ];
 
-  console.log('DASHBOIARD');
-
   return (
     <SidebarProvider>
       <AppSidebar />

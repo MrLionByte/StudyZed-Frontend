@@ -18,7 +18,6 @@ export const useTutorManagement = () => {
             try {
                 const response = await api.get(adminEndPoints.TutorManagement);
                 setTutors(response.data);
-                console.log("RESPONSE BRUT",response.data)
             } catch (e) {
                 console.error("Error :", e);
             }   
@@ -34,7 +33,6 @@ export const useTutorManagement = () => {
         e.preventDefault();
         try {
             const response = await api.patch(adminEndPoints.BlockTutor+`${tutor_id}/`);
-            console.log(response.data);
             setFetchFromBackend(true);
             if (isActive){
                 toast.success("User blocked successfully!");

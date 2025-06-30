@@ -156,12 +156,10 @@ export default function EmailStep({ onNext }) {
         toast.error('Faced some error. try again later.')
       }
     } catch (error) {
-      console.log('ERROR ', error);
+      // console.log('ERROR ', error);
     }
   };
-  const errorMessage = (error) => {
-    console.log(error);
-  };
+
 
   return (
     <div className="flex-1">

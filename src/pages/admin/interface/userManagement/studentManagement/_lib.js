@@ -19,7 +19,6 @@ export const useTutorManagement = () => {
             try {
                 const response = await api.get(adminEndPoints.StudentManamgement);
                 setstudents(response.data);
-                console.log("RESPONSE BRUT",response.data.results)
             } catch (e) {
                 setError(e);
                 setLoading(false);
@@ -36,7 +35,7 @@ export const useTutorManagement = () => {
         e.preventDefault();
         try {
             const response = await api.patch(adminEndPoints.BlockTutor+`${student_id}/`);
-            console.log(response.data);
+
             if (isActive){
                 toast.success("User un-blocked successfully!");
             } else {

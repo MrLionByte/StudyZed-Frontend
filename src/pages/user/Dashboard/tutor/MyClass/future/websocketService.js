@@ -13,7 +13,6 @@ class WebSocketService {
         this.socket = new WebSocket(wsUrl);
         
         this.socket.onopen = () => {
-          console.log('WebSocket connection established');
           resolve();
         };
         
@@ -25,10 +24,10 @@ class WebSocketService {
             if (this.messageHandlers[action]) {
               this.messageHandlers[action](data);
             } else {
-              console.log('No handler for action:', action);
+              // console.log('No handler for action:', action);
             }
           } catch (error) {
-            console.error('Error parsing WebSocket message:', error);
+            // console.error('Error parsing WebSocket message:', error);
           }
         };
         
@@ -38,7 +37,7 @@ class WebSocketService {
         };
         
         this.socket.onclose = () => {
-          console.log('WebSocket connection closed');
+          // console.log('WebSocket connection closed');
         };
       });
     }

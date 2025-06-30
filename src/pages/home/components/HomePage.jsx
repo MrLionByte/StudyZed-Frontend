@@ -14,7 +14,6 @@ const LandingPage = () => {
   useEffect(() => {
     try {
       const role = getSavedAuthData();
-      console.log('ROLE :', role.role.toLowerCase());
       if (isAuthenticated) {
         navigate(`/${role.role.toLowerCase()}/choose-session/`);
       }

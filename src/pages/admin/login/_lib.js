@@ -18,7 +18,6 @@ export const adminLoginLogic = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log("ADTH :",isAdminAuthenticated);
     
     useEffect(() => {
         if (isAdminAuthenticated) {
@@ -39,7 +38,6 @@ export const adminLoginLogic = () => {
         try {
             const response = await api.post(adminEndPoints.AdminLogin,
                 {username, password});
-            console.log("ADMIN LOGIN", response);
             if (response.data["auth-status"] === "success"){
             
                 const authData = {
@@ -51,8 +49,7 @@ export const adminLoginLogic = () => {
                     lastName: response.data['user']['last_name'],
                     email: response.data['user']['email']
                 }
-                console.log("ADMIN LOGIN", authData);
-                
+             
                 savedAuthData(authData);
                 toast.success("Welcome Mr Admin")
                 dispatch(setAdmin({user:response.data['user'], role: 'Admin'}))
@@ -65,7 +62,6 @@ export const adminLoginLogic = () => {
             
         }
         catch (error) {
-            console.log(error);
             
             if (error.response && error.response.status === 403){
                 toast.error("You are not an Admin, not allowded to login.")

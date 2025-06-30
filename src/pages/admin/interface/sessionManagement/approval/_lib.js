@@ -13,6 +13,9 @@ export const useApproveSessionManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isOverlayActive, setIsOverlayActive] = useState(false);
     const [sessionPayment, setSessionsPayment] = useState([]);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [sessionToRejectId, setSessionToRejectId] = useState(null);
+
 
     async function fetchSessionsData () {
         setLoading(true);
@@ -50,33 +53,69 @@ export const useApproveSessionManagement = () => {
             setFetchFromBackend(true)
             
         }catch (e) {
-            alert("Failed to block user. Please try again.");
+            toast.error("Failed to approve session. Please try again.");
         }finally {
             e.target.disabled = false;
         }
     }
 
-    const handleModal = async (e, session_code, tutor_code, session_id) => {
-        e.preventDefault();
-        try {
-          const session_data = { session_code, tutor_code };
-          const url = API_BASE_URLS["Payment_Service"];
-          const response = await api.get(adminEndPoints.SeeSessionPayment, {
-            baseURL: url,
-            params: session_data,
-          });
-          console.log(response);
-          
-          response.data[0]["session_key"] = session_id
-          setSessionsPayment(response.data[0]);
-          setIsModalOpen(true);
-        } catch (e) {
-            console.log(e);            
-          alert("Failed to fetch session details. Please try again.");
-        }
-      };
-      
+    const handleRejectSession = async () => {
         
+        const Pkey = sessionToRejectId; 
+        if (!Pkey) {
+            toast.error("Session ID not found for rejection.");
+            setIsConfirmModalOpen(false);
+            return;
+        }
+
+        try {
+            const url = API_BASE_URLS["Session_Service"];
+            
+            const response = await api.patch(adminEndPoints.GiveRejectForSession+`${Pkey}/`,
+              Pkey,{
+                baseURL: url,
+            });
+            
+            toast.success(response.data.message)
+            setIsModalOpen(false)
+            setFetchFromBackend(true)
+            
+        }catch (e) {
+            console.error("Failed to reject session:", e); 
+            toast.error("Failed to reject session. Please try again.");
+        }finally {
+            setIsConfirmModalOpen(false);
+            setSessionToRejectId(null);
+        }
+    }
+
+const handleModal = async (e, session_code, tutor_code, session_id) => {
+  e.preventDefault();
+  try {
+    const session_data = { session_code, tutor_code };
+    const url = API_BASE_URLS["Payment_Service"];
+    
+    const response = await api.get(adminEndPoints.SeeSessionPayment, {
+      baseURL: url,
+      params: session_data,
+    });
+
+    const paymentData = response?.data?.[0];
+
+    if (!paymentData) {
+      toast.error("No payment data found for this session.");
+      return;
+    }
+
+    paymentData.session_key = session_id;
+    setSessionsPayment(paymentData);
+    setIsModalOpen(true);
+  } catch (e) {
+    console.error("Error", e);
+    toast.error("Failed to fetch session details. Please try again.");
+  }
+};
+
 
     const handleApprove = async (e, session_code, tutor_code) => {
         handleApproveSession(sessionDetails.session_code, sessionDetails.tutor_code);
@@ -91,13 +130,18 @@ export const useApproveSessionManagement = () => {
         isModalOpen,
         isOverlayActive,
         sessionPayment,
-        
+        isConfirmModalOpen, 
+        sessionToRejectId,
+
+        setSessionToRejectId,
+        setIsConfirmModalOpen,
         setIsOverlayActive,
         setIsModalOpen,
         setSessions,
         setLoading,
         setError,
         handleApproveSession,
+        handleRejectSession,
         handleModal,
     }
     

@@ -138,7 +138,7 @@ export default function Dashboard() {
       );
       saveStudentsDataToSession(studentDetails.data);
     } catch (error) {
-      console.log("!!!!!!!",error);
+      // console.log("!!!!!!!",error);
     }
   };
 

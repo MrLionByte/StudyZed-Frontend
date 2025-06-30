@@ -12,13 +12,18 @@ const SessionApproval = memo(() => {
     isOverlayActive,
     sessionDetails,
     sessionPayment,
+    isConfirmModalOpen, 
+    sessionToRejectId,
 
+    setSessionToRejectId,
+    setIsConfirmModalOpen,
     setIsOverlayActive,
     setIsModalOpen,
     setSessions,
     setLoading,
     setError,
     handleApproveSession,
+    handleRejectSession,
     handleModal,
     handleApprove,
   } = useApproveSessionManagement();
@@ -59,10 +64,48 @@ const SessionApproval = memo(() => {
                     )
                   }
                 >
-                  Approve Session
+                  Approve & Details
                 </button>
+
+                <button
+                  className="rounded bg-red-900 mt-4 p-2 cursor-pointer hover:bg-red-500"
+                  onClick={() => {
+                    setSessionToRejectId(session.id);
+                    setIsConfirmModalOpen(true);
+                  }} 
+                >
+                  Reject
+                </button>
+
               </div>
             ))}
+
+            {isConfirmModalOpen && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+                    <div className="p-8 border w-96 shadow-lg rounded-md bg-gray-900 text-center">
+                        <h3 className="text-lg font-bold">Are you sure you want to reject this session?</h3>
+                        <p className="py-4">This action cannot be undone.</p>
+                        <div className="flex justify-around mt-4">
+                            <button 
+                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                                onClick={() => {
+                                  setSessionToRejectId(null);
+                                  setIsConfirmModalOpen(false);
+                                }} 
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded"
+                                onClick={handleRejectSession} 
+                            >
+                                Confirm Reject
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {isOverlayActive && <div className="overlay active"></div>}
             <ToastContainer
               autoClose={1000}

@@ -42,6 +42,9 @@ export const TutorEndPoints = {
 
     
     'CreateSessionUsingWallet' : 'session-buy/pay-using-wallet/',
+    
+    'DeleteSubscription' :'session-buy/subscription-delete/',
+    'DeleteSession' :'session-tutor/delete/',
 
     'GetWalletDetails': 'wallet/tutor-wallet/',
     'AddToWallet': 'wallet/create-wallet-transaction/',

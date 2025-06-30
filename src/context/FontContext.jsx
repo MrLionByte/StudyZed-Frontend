@@ -15,7 +15,6 @@ export function FontProvider({ children }) {
   };
   
   const fontUpdateSettings = (newSettings) => {
-    console.log('NEW FONT', newSettings);
     setFontSettings(prev => ({ ...prev, ...newSettings }));
   };
   

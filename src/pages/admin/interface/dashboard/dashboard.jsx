@@ -17,7 +17,6 @@ export default function Dashboard() {
       const response = await api.get('session-admin/admin/dashboard/', {
         baseURL: API_BASE_URLS['Session_Service']
       });
-      console.log("DASHBOARD", response);
       
       setDashboardData(response.data);
       setLoading(false);

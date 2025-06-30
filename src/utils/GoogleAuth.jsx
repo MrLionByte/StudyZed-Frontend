@@ -82,9 +82,9 @@ function GoogleApp() {
         const role_location = role.toLowerCase();
         navigate(`/${role_location}/choose-session/`);
       } else if (response.data['auth-status'] === 'blocked') {
-        console.log('Z Z Z BLOCK');
+        ''
       } else {
-        console.log('Z Z Z Some error occurred try again.');
+       ''
       }
     } catch (error) {
       console.error('New Error :', error);
@@ -107,7 +107,6 @@ function GoogleApp() {
 
   const handleRoleSelect = (selectedRole) => {
     setRole(selectedRole.toUpperCase());
-    console.log(selectedRole);
   };
 
   return (

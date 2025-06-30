@@ -11,10 +11,9 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_MEASUREMENT_ID
   };
 
-navigator.serviceWorker
-  .register("/firebase-messaging-sw.js")
-  .then((registration) => {
-    console.log("Service Worker registered:", registration);
+navigator?.serviceWorker
+  ?.register("/firebase-messaging-sw.js")
+  ?.then((registration) => {
   })
   .catch((err) => {
     console.error("Service Worker registration failed:", err);

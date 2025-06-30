@@ -121,7 +121,6 @@ export default function CardWithForm({ cancelModal }) {
           const delay = (ms) =>
             new Promise((resolve) => setTimeout(resolve, ms));
           await delay(2000);
-          console.log('WHAT ', selectedPayment);
 
           const payment_response = await api.post(
             TutorEndPoints.CreateSessionUsingWallet,
@@ -130,7 +129,6 @@ export default function CardWithForm({ cancelModal }) {
               baseURL: url,
             },
           );
-          console.log('WALLET :', payment_response);
         } else {
           const payment_response = await api.post(
             TutorEndPoints.CreateSessionPayment,

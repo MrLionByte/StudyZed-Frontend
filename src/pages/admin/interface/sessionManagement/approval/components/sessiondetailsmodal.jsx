@@ -67,8 +67,8 @@ export default function SessionPaymentDetails({SessionData,cancelModal,handleSes
 
         <div className="flex justify-between p-4">
           <Button
-            onClick={(e) => handleSessionApproval(e)}
-            className="hover:bg-red-600"
+            onClick={(e) => handleSessionReject(e)}
+            className="hover:bg-green-600"
             variant="outline"
           >
             Approve
@@ -76,7 +76,7 @@ export default function SessionPaymentDetails({SessionData,cancelModal,handleSes
 
           <Button
             onClick={cancelModal}
-            className="hover:bg-red-600"
+            className="hover:bg-secondary-600"
             variant="outline"
           >
             Close

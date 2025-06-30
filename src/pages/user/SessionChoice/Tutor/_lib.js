@@ -23,12 +23,10 @@ export const useTutorSessions = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Fetch all sessions initially
   useEffect(() => {
     fetchSessionsData();
   }, []);
 
-  // Filter and paginate sessions based on active tab and current page
   useEffect(() => {
     if (allSessions.length > 0) {
       const filteredSessions = allSessions.filter(session => {
@@ -42,12 +40,10 @@ export const useTutorSessions = () => {
       const total = Math.ceil(filteredSessions.length / ITEMS_PER_PAGE);
       setTotalPages(total || 1);
       
-      // Adjust current page if it exceeds total pages
       if (currentPage > total) {
         setCurrentPage(total || 1);
       }
       
-      // Paginate the filtered sessions
       const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
       const paginatedSessions = filteredSessions.slice(startIndex, startIndex + ITEMS_PER_PAGE);
       
@@ -61,7 +57,6 @@ export const useTutorSessions = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    // Refresh data when modal closes
     fetchSessionsData();
   };
 
@@ -130,9 +125,7 @@ export const useTutorSessions = () => {
       });
       
       if (response?.data?.results) {
-        // Sort sessions by creation date or another relevant field
         const sortedSessions = response.data.results.sort((a, b) => {
-          // Sort active sessions first, then by days remaining
           if (a.days_left > 0 && b.days_left <= 0) return -1;
           if (a.days_left <= 0 && b.days_left > 0) return 1;
           return b.days_left - a.days_left;

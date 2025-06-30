@@ -22,7 +22,6 @@ const SessionPriceSetter = memo(() => {
       const responses = await api.get(adminEndPoints.GetSubscriptionPrice, {
         baseURL: url,
       });
-      console.log(responses);
       setSessions(responses.data);
     } catch (error) {}
   };
@@ -90,7 +89,6 @@ const SessionPriceSetter = memo(() => {
         { amount: editedPrices[sessionId] },
         { baseURL: url },
       );
-      console.log(responses);
       setSessions(responses.data);
       toast.success('Successfully updated price');
       setFetchFromBackend(true);

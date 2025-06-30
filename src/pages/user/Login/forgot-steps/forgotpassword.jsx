@@ -25,11 +25,8 @@ export default function ForgotPassword({ passwordForgot }) {
       const response = await api.post('auth-app/login/forgot-password/', {
         email,
       });
-      console.log('FORGOT PASSWORD', response.data['auth-status']);
       setEmailVarified(response.data['auth-status']);
     } catch (error) {
-      console.log('Error :', error);
-      console.log('Error :', error.response.data.error);
       toast.error(error.response.data.error);
     }
   };
@@ -42,11 +39,8 @@ export default function ForgotPassword({ passwordForgot }) {
         'auth-app/login/forgot-password/otp-verify/',
         { email, otp },
       );
-      console.log('FORGOT OTP', response.data['auth-status']);
       setIsOtpVarified(response.data['auth-status']);
     } catch (error) {
-      console.log(error.response.data);
-
       toast.error(error.response.data.message);
     }
   };
@@ -74,13 +68,11 @@ export default function ForgotPassword({ passwordForgot }) {
         'auth-app/login/forgot-password/change-password/',
         { email, new_password: newPassword },
       );
-      console.log('FORGOT NEW PASSWORD', response.data['auth-status']);
       toast.success('Password changed successfully');
       setTimeout(() => {
         passwordForgot();
       }, 1000);
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     }
   };

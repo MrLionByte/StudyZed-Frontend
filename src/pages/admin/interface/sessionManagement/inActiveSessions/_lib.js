@@ -25,14 +25,12 @@ export const useApproveSessionManagement = () => {
                 });
                 
                 setSessions(response.data);
-                console.log("RESPONSE BRUT",response.data)
             } catch (e) {
                 setError(e);
                 setLoading(false);
                 console.error("Error :", e);
             }
         };
-        console.log("RESPONSE Session",sessions)
         if (fetchFromBackend){
             fetchSessionsData();
             setFetchFromBackend(false);
@@ -51,7 +49,7 @@ export const useApproveSessionManagement = () => {
               Pkey,{
                 baseURL: url,
             });
-            console.log("SEE PAYMENT :", response);
+
             toast.success(response.data.message)
             setIsModalOpen(false)
             setFetchFromBackend(true)

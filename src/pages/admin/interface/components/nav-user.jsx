@@ -32,8 +32,6 @@ export function NavUser({ user }) {
   const { isMobile } = useSidebar();
   const dispatch = useDispatch();
   const handleLogout = () => {
-    console.log('WORKING ');
-
     dispatch(adminLogout());
   };
   return (

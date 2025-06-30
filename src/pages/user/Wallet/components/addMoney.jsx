@@ -35,7 +35,6 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
   };
 
   const handleSubmit = async (e) => {
-    // For adding Cart
     e.preventDefault();
     try {
       const user_data = getSavedAuthData();
@@ -48,7 +47,6 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
         url: `${window.location.origin}${window.location.pathname}`,
       };
 
-      console.log('Session Data:', transactionData);
       const url = api_dictionary.Payment_Service;
 
       const response = await api.post(
@@ -58,19 +56,17 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
           baseURL: url,
         },
       );
-      console.log('RESPONSE CREATE', response);
 
       if (response.data?.checkout_url) {
         sessionStorage.setItem('stripeStatus', 'pending');
         window.location.href = response.data.checkout_url;
       }
-      console.log(response.data.error);
       if (response.data.status === 400) {
         toast.warning('Failed to complete transaction');
       }
-    } catch {
+    } catch(error) {
       console.error('Error creating payment session:', error);
-      alert('There was an error initiating payment.');
+      toast.error('There was an error initiating payment.');
     }
   };
 
@@ -83,10 +79,7 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
           <div className="flex items-center justify-between">
             <CardTitle>Add to Wallet</CardTitle>
             <div className="relative group">
-              <Banknote className="cursor-pointer hover:text-blue-500" />
-              {/* <div className="absolute left-1/2 transform -translate-x-1/2 top-6 bg-black text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 z-50 transition-opacity duration-300">
-              Payment Details
-            </div> */}
+              <Banknote className="hover:text-blue-500" />
             </div>
           </div>
           <CardDescription>
@@ -133,8 +126,7 @@ export default function CardWithForm({ cancelModal, accountNumber }) {
           >
             Cancel
           </Button>
-          {/* <Button>Add to Cart</Button> */}
-          <Button onClick={handleSubmit} className="hover:bg-green-600">
+          <Button onClick={handleSubmit} className="bg-slate-600 hover:bg-green-600">
             ADD MONEY
           </Button>
         </CardFooter>

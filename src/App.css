@@ -1,3 +1,11 @@
 .student-card {
     @apply bg-gradient-to-br from-[#1B4D4A] to-[#163F3C] rounded-lg p-6 shadow-lg hover:shadow-xl transition-all;
   }
+
+.loader {
+  animation: spin 2s linear infinite;
+  }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+  }
