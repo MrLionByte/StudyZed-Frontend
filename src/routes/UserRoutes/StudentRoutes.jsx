@@ -27,7 +27,7 @@ export default function TutorRoutes() {
                   } />
 
       <Route path="profile/" element={<MyProfile />} />
-      <Route path="student-wallet/" element={<Wallet />} />
+      {/* <Route path="student-wallet/" element={<Wallet />} /> */}
 
       <Route path="/*" element={<NotFound />} />
     </Routes>

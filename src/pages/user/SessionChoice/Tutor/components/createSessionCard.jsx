@@ -187,7 +187,12 @@ export default function CardWithForm({ cancelModal }) {
         setErrorFound('Session name is already exist');
       }
     } catch (error) {
-      toast.error('There was an error initiating payment.');
+      console.log(error);
+      if (error?.response?.data?.errors?.non_field_errors[0]){
+        toast.error("Change session name.Cannot use this name");
+      }else{
+        toast.error('There was an error initiating payment.');
+      }
       if (timerInterval) clearInterval(timerInterval);
       setIsLoading(false);
       setTimerCountdown(0);

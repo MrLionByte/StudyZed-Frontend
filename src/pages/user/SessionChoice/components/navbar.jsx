@@ -76,21 +76,14 @@ export default function Navbar() {
             <Link to="/" className="flex items-center text-emerald-400 hover:bg-teal-800 transition-colors rounded-full p-2">
               <Home />
             </Link>
-            {userRole === 'STUDENT' ? (
-              <Link
-                to="/student/student-wallet/"
-                className="text-emerald-400 hover:bg-teal-800 transition-colors p-2 rounded-full"
-              >
-                <Wallet />
-              </Link>
-            ) : (
+            {userRole !== 'STUDENT' && 
               <Link
                 to="/tutor/tutor-wallet/"
                 className="text-emerald-400 hover:bg-teal-800 rounded-full p-2"
               >
                 <Wallet />
               </Link>
-            )}
+            }
 
             <Notification ref={notificationRef} />
 
