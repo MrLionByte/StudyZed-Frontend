@@ -187,8 +187,8 @@ export default function CardWithForm({ cancelModal }) {
         setErrorFound('Session name is already exist');
       }
     } catch (error) {
-      console.log(error);
-      if (error?.response?.data?.errors?.non_field_errors[0]){
+      const nonFieldErrors = error?.response?.data?.errors?.non_field_errors;
+      if (Array.isArray(nonFieldErrors) && nonFieldErrors.length > 0) {
         toast.error("Change session name.Cannot use this name");
       }else{
         toast.error('There was an error initiating payment.');
@@ -196,7 +196,8 @@ export default function CardWithForm({ cancelModal }) {
       if (timerInterval) clearInterval(timerInterval);
       setIsLoading(false);
       setTimerCountdown(0);
-    } 
+      handleCancelButton();
+    }  
   };
 
   const handleBuySession = () => {};
