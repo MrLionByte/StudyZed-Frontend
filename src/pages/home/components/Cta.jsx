@@ -1,6 +1,13 @@
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function FAQ() {
+   const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
   return (
     <section className="container mx-auto px-6 py-20">
       <div className="glass rounded-2xl p-12 text-center">
@@ -11,7 +18,10 @@ export default function FAQ() {
           Join thousands of students and tutors who are already experiencing the
           future of personalized education.
         </p>
-        <button className="px-8 py-4 btn-primary rounded-lg inline-flex items-center">
+        <button
+          onClick={handleLogin} 
+          className="px-8 py-4 btn-primary rounded-lg inline-flex items-center"
+          >
           Get Started Now <ArrowRight className="ml-2" size={20} />
         </button>
       </div>

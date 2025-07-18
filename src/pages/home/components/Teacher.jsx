@@ -1,6 +1,13 @@
+import { motion } from 'framer-motion';
 import { BarChart, Target, Zap, DollarSign, Shield, Globe } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Teacher() {
+   const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
   return (
     <section id="tutor-benefits" className="container mx-auto px-6 py-20">
       <h2 className="text-4xl font-bold text-center mb-4 gradient-text">
@@ -59,6 +66,17 @@ export default function Teacher() {
             Protected payments and verified student profiles
           </p>
         </div>
+      </div>
+      <div className="mt-16 text-center">
+        <motion.button
+          onClick={handleLogin}
+          className="px-6 py-3 bg-[#00FFB2] text-black font-semibold rounded-full hover:bg-[#1ed75c] transition"
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 1, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut' }}
+          whileHover={{ scale: 1.5 }}
+        >
+          Join Study-zed?
+        </motion.button>
       </div>
     </section>
   );

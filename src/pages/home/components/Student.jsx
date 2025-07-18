@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import {
   CheckCircle,
   Brain,
@@ -6,8 +7,15 @@ import {
   DollarSign,
   Shield,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Student() {
+  const navigate = useNavigate(); 
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <section
       id="student-benefits"
@@ -26,8 +34,7 @@ export default function Student() {
           <Brain className="text-[#00FFB2] mb-4" size={32} />
           <h3 className="text-lg font-semibold mb-2">Personalized Learning</h3>
           <p className="text-gray-400">
-            Custom-tailored study plans that adapt to your learning style and
-            pace
+            Custom-tailored study plans that adapt to your learning style and pace.
           </p>
         </div>
 
@@ -35,7 +42,7 @@ export default function Student() {
           <CheckCircle className="text-[#00FFB2] mb-4" size={32} />
           <h3 className="text-lg font-semibold mb-2">Expert Tutors</h3>
           <p className="text-gray-400">
-            Learn from verified experts in your subject area
+            Learn from verified experts in your subject area.
           </p>
         </div>
 
@@ -43,7 +50,7 @@ export default function Student() {
           <TrendingUp className="text-[#00FFB2] mb-4" size={32} />
           <h3 className="text-lg font-semibold mb-2">Track Progress</h3>
           <p className="text-gray-400">
-            Monitor your improvement with detailed performance analytics
+            Monitor your improvement with detailed performance analytics.
           </p>
         </div>
 
@@ -51,17 +58,15 @@ export default function Student() {
           <Clock className="text-[#00FFB2] mb-4" size={32} />
           <h3 className="text-lg font-semibold mb-2">Flexible Schedule</h3>
           <p className="text-gray-400">
-            Book sessions at times that work best for you
+            Book sessions at times that work best for you.
           </p>
         </div>
 
         <div className="glass p-6 rounded-xl">
           <Shield className="text-[#00FFB2] mb-4" size={32} />
-          <h3 className="text-lg font-semibold mb-2">
-            Safe Learning Environment
-          </h3>
+          <h3 className="text-lg font-semibold mb-2">Safe Learning Environment</h3>
           <p className="text-gray-400">
-            Secure platform with verified tutors and monitored sessions
+            Secure platform with verified tutors and monitored sessions.
           </p>
         </div>
 
@@ -69,9 +74,27 @@ export default function Student() {
           <DollarSign className="text-[#00FFB2] mb-4" size={32} />
           <h3 className="text-lg font-semibold mb-2">Affordable Pricing</h3>
           <p className="text-gray-400">
-            Competitive rates with flexible payment options
+            Competitive rates with flexible payment options.
           </p>
         </div>
+      </div>
+
+       <div className="mt-16 text-center">
+        <motion.button
+          onClick={handleLogin}
+          className="px-6 py-3 bg-[#00FFB2] text-black font-semibold rounded-full hover:bg-[#00eaa5] transition"
+          whileHover={{
+            y: -10,           
+            scale: 1.1,      
+            transition: {
+              type: 'spring',
+              stiffness: 300,
+              damping: 10,
+            },
+          }}
+        >
+          Learn with Study-zed?
+        </motion.button>
       </div>
     </section>
   );

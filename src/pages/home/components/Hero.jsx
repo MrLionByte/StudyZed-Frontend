@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react';
-
 import LandingPageImage from '../../../assets/landingpageimage.png';
+
+
 export default function Hero() {
   return (
     <section className="container mx-auto px-6 py-20">

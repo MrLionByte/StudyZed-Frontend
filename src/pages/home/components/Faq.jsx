@@ -56,8 +56,7 @@ export default function FAQ() {
             Is there a mobile app available?
           </h3>
           <p className="text-gray-400">
-            Yes, StudyZed is available on both iOS and Android devices, allowing
-            you to learn or teach on the go.
+            No, StudyZed is available as web version for now, but we will defiantly make it available for ios and android soon.
           </p>
         </div>
       </div>

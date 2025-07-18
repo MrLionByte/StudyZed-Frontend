@@ -17,9 +17,9 @@ function App() {
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 hero-pattern opacity-20"></div>
       <div className="relative">
-        {/* Wrap with Suspense to handle lazy loading */}
+        
         <Suspense
-          fallback={<div className="text-center mt-10">Loading...</div>}
+          fallback={<div className="justify-center content-center text-center mt-10">Loading...</div>}
         >
           <Navbar />
           <Hero />
