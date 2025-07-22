@@ -50,28 +50,42 @@ const Wallet = () => {
 
   const getDataFromBackend = async (page = 1) => {
     try {
-
       setLoading(true);
+
       const response = await api.get(TutorEndPoints.GetWalletDetails, {
         baseURL: API_BASE_URLS.Payment_Service,
         params: { page },
       });
 
-    const fetchedTransactions = response.data.results.transactions;
+      const fetchedTransactions = response.data.results.transactions;
 
-    const combinedTransactions = [...transactions, ...fetchedTransactions];
-    const uniqueTransactionsMap = new Map();
-    for (const txn of combinedTransactions) {
-      uniqueTransactionsMap.set(txn.id, txn);
-    }
+      // Filter out empty or null transaction_id before merging
+      const validFetched = fetchedTransactions.filter(
+        (txn) => txn.transaction_id && txn.transaction_id.trim() !== ''
+      );
 
-    const uniqueTransactions = Array.from(uniqueTransactionsMap.values());
+      const existingTransactionMap = new Map();
+      // Build map from current transactions
+      transactions.forEach((txn) => {
+        if (txn.transaction_id && txn.transaction_id.trim() !== '') {
+          existingTransactionMap.set(txn.transaction_id, txn);
+        }
+      });
 
+      validFetched.forEach((txn) => {
+        if (!existingTransactionMap.has(txn.transaction_id)) {
+          existingTransactionMap.set(txn.transaction_id, txn);
+        }
+      });
+
+      const uniqueTransactions = Array.from(existingTransactionMap.values());
+
+      // Update state
       setBalance(response.data.results.balance);
       setCurrencyMode(response.data.results.currency_mode);
       setAccountNumber(response.data.results.account_number);
       setTransactions(uniqueTransactions);
-      
+
       if (response.data.next) {
         const nextUrl = new URL(response.data.next);
         const nextPage = nextUrl.searchParams.get("page");
@@ -86,8 +100,6 @@ const Wallet = () => {
       setLoading(false);
     }
   };
-
-
 
   const handleAddMoney = () => {
     setIsAddMoney(true);
